@@ -29,14 +29,18 @@ import javax.xml.bind.annotation.XmlRootElement;
 @NamedQueries({
     @NamedQuery(name = "Information.findAll", query = "SELECT i FROM Information i"),
     @NamedQuery(name = "Information.findByInformationId", query = "SELECT i FROM Information i WHERE i.informationId = :informationId"),
-    @NamedQuery(name = "Information.findByText", query = "SELECT i FROM Information i WHERE i.text = :text")})
+    @NamedQuery(name = "Information.findByText", query = "SELECT i FROM Information i WHERE i.text = :text")
+})
 public class Information implements Serializable {
+
     private static final long serialVersionUID = 1L;
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "information_id", nullable = false)
     private Integer informationId;
+    
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 255)
@@ -46,10 +50,12 @@ public class Information implements Serializable {
     public Information() {
     }
 
+    // TODO:  we should remove informationId (id is autoincremental)
     public Information(Integer informationId) {
         this.informationId = informationId;
     }
 
+    // TODO:  we should remove informationId (id is autoincremental)
     public Information(Integer informationId, String text) {
         this.informationId = informationId;
         this.text = text;
@@ -59,6 +65,7 @@ public class Information implements Serializable {
         return informationId;
     }
 
+    // TODO:  we should remove informationId (id is autoincremental)
     public void setInformationId(Integer informationId) {
         this.informationId = informationId;
     }

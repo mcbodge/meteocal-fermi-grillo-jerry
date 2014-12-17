@@ -26,13 +26,14 @@ import org.eclipse.persistence.annotations.PrimaryKey;
 @Table(name = "invitations", catalog = "meteocaldb", schema = "")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Invitations.findAll", query = "SELECT i FROM Invitations i"),
-    @NamedQuery(name = "Invitations.findByEventId", query = "SELECT i FROM Answers i WHERE i.invitationsPK.eventId = :eventId"),
-    @NamedQuery(name = "Invitations.findByUserId", query = "SELECT i FROM Answers i WHERE i.invitationsPK.userId = :userId"),
+    //@NamedQuery(name = "Invitations.findAll", query = "SELECT i FROM Invitations i"),
+    //@NamedQuery(name = "Invitations.findByEventId", query = "SELECT i FROM Invitations i WHERE i.invitationsPK.eventId = :eventId"),
+    //@NamedQuery(name = "Invitations.findByUserId", query = "SELECT i FROM Invitations i WHERE i.invitationsPK.userId = :userId"),
 })
 public class Invitation implements Serializable {
     
     private static final long serialVersionUID = 1L;
+    
     @EmbeddedId
     protected InvitationPK invitationPK;
     
