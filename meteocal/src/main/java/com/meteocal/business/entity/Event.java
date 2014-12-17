@@ -38,39 +38,49 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Event.findByEnd", query = "SELECT e FROM Event e WHERE e.end = :end"),
     @NamedQuery(name = "Event.findByPublic1", query = "SELECT e FROM Event e WHERE e.public1 = :public1"),
     @NamedQuery(name = "Event.findByDescription", query = "SELECT e FROM Event e WHERE e.description = :description"),
-    @NamedQuery(name = "Event.findByPersonal", query = "SELECT e FROM Event e WHERE e.personal = :personal")})
+    @NamedQuery(name = "Event.findByPersonal", query = "SELECT e FROM Event e WHERE e.personal = :personal")
+})
 public class Event implements Serializable {
+   
     private static final long serialVersionUID = 1L;
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "event_id", nullable = false)
     private Integer eventId;
+    
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 45)
     @Column(name = "name", nullable = false, length = 45)
     private String name;
+    
     @Size(max = 100)
     @Column(name = "location", length = 100)
     private String location;
+    
     @Basic(optional = false)
     @NotNull
     @Column(name = "start", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date start;
+    
     @Basic(optional = false)
     @NotNull
     @Column(name = "end", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date end;
+    
     @Basic(optional = false)
     @NotNull
     @Column(name = "public", nullable = false)
-    private boolean public1;
+    private boolean publicEvent;
+    
     @Size(max = 255)
     @Column(name = "description", length = 255)
     private String description;
+    
     @Basic(optional = false)
     @NotNull
     @Column(name = "personal", nullable = false)
@@ -78,24 +88,27 @@ public class Event implements Serializable {
 
     public Event() {
     }
-
+    
+    // TODO:  we should remove eventId (id is autoincremental)
     public Event(Integer eventId) {
         this.eventId = eventId;
     }
 
-    public Event(Integer eventId, String name, Date start, Date end, boolean public1, boolean personal) {
+    // TODO:  we should remove eventId (id is autoincremental)
+    public Event(Integer eventId, String name, Date start, Date end, boolean publicEvent, boolean personal) {
         this.eventId = eventId;
         this.name = name;
         this.start = start;
         this.end = end;
-        this.public1 = public1;
+        this.publicEvent = publicEvent;
         this.personal = personal;
     }
 
     public Integer getEventId() {
         return eventId;
     }
-
+    
+    // TODO:  we should remove setEventId (id is autoincremental)
     public void setEventId(Integer eventId) {
         this.eventId = eventId;
     }
@@ -132,12 +145,12 @@ public class Event implements Serializable {
         this.end = end;
     }
 
-    public boolean getPublic1() {
-        return public1;
+    public boolean getPublicEvent() {
+        return publicEvent;
     }
 
-    public void setPublic1(boolean public1) {
-        this.public1 = public1;
+    public void setPublicEvent(boolean publicEvent) {
+        this.publicEvent = publicEvent;
     }
 
     public String getDescription() {
@@ -170,7 +183,8 @@ public class Event implements Serializable {
             return false;
         }
         Event other = (Event) object;
-        if ((this.eventId == null && other.eventId != null) || (this.eventId != null && !this.eventId.equals(other.eventId))) {
+        if ((this.eventId == null && other.eventId != null) || 
+                (this.eventId != null && !this.eventId.equals(other.eventId))) {
             return false;
         }
         return true;

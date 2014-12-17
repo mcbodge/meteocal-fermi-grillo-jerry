@@ -38,40 +38,49 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "User.findByLastName", query = "SELECT u FROM User u WHERE u.lastName = :lastName"),
     @NamedQuery(name = "User.findByEmail", query = "SELECT u FROM User u WHERE u.email = :email"),
     @NamedQuery(name = "User.findByPassword", query = "SELECT u FROM User u WHERE u.password = :password"),
-    @NamedQuery(name = "User.findByPublicCalendar", query = "SELECT u FROM User u WHERE u.publicCalendar = :publicCalendar")})
+    @NamedQuery(name = "User.findByPublicCalendar", query = "SELECT u FROM User u WHERE u.publicCalendar = :publicCalendar")
+})
 public class User implements Serializable {
+
     private static final long serialVersionUID = 1L;
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "user_id", nullable = false)
     private Integer userId;
+    
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 15)
     @Column(name = "user_name", nullable = false, length = 15)
     private String userName;
+    
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 45)
     @Column(name = "first_name", nullable = false, length = 45)
     private String firstName;
+    
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 45)
     @Column(name = "last_name", nullable = false, length = 45)
     private String lastName;
+    
     @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="Invalid email")//if the field contains email address consider using this annotation to enforce field validation
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 45)
     @Column(name = "email", nullable = false, length = 45)
     private String email;
+    
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 20)
     @Column(name = "password", nullable = false, length = 20)
     private String password;
+    
     @Basic(optional = false)
     @NotNull
     @Column(name = "public_calendar", nullable = false)
@@ -80,10 +89,12 @@ public class User implements Serializable {
     public User() {
     }
 
+    // TODO:  we should remove userId (id is autoincremental)
     public User(Integer userId) {
         this.userId = userId;
     }
-
+    
+    // TODO:  we should remove userId (id is autoincremental)
     public User(Integer userId, String userName, String firstName, String lastName, String email, String password, boolean publicCalendar) {
         this.userId = userId;
         this.userName = userName;
@@ -97,7 +108,8 @@ public class User implements Serializable {
     public Integer getUserId() {
         return userId;
     }
-
+    
+    // TODO:  we should remove userId (id is autoincremental)
     public void setUserId(Integer userId) {
         this.userId = userId;
     }
