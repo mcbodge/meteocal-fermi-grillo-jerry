@@ -11,10 +11,8 @@ import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -26,38 +24,28 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author Francesco
  */
 @Entity
-@Table(name = "weather")
+@Table(name = "weather", catalog = "meteocaldb", schema = "")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Weather.findAll", query = "SELECT w FROM Weather w"),
     @NamedQuery(name = "Weather.findByEventId", query = "SELECT w FROM Weather w WHERE w.eventId = :eventId"),
     @NamedQuery(name = "Weather.findByConstraint", query = "SELECT w FROM Weather w WHERE w.constraint = :constraint"),
     @NamedQuery(name = "Weather.findByForecast", query = "SELECT w FROM Weather w WHERE w.forecast = :forecast"),
-    @NamedQuery(name = "Weather.findByLastUpdate", query = "SELECT w FROM Weather w WHERE w.lastUpdate = :lastUpdate")
-})
+    @NamedQuery(name = "Weather.findByLastUpdate", query = "SELECT w FROM Weather w WHERE w.lastUpdate = :lastUpdate")})
 public class Weather implements Serializable {
-    
     private static final long serialVersionUID = 1L;
-    
     @Id
     @Basic(optional = false)
     @NotNull
-    @Column(name = "event_id")
+    @Column(name = "event_id", nullable = false)
     private Integer eventId;
-    
     @Column(name = "constraint")
     private Integer constraint;
-    
     @Column(name = "forecast")
     private Integer forecast;
-    
     @Column(name = "last_update")
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastUpdate;
-    
-    @JoinColumn(name = "event_id", referencedColumnName = "event_id", insertable = false, updatable = false)
-    @OneToOne(optional = false)
-    private Event event;
 
     public Weather() {
     }
@@ -96,14 +84,6 @@ public class Weather implements Serializable {
 
     public void setLastUpdate(Date lastUpdate) {
         this.lastUpdate = lastUpdate;
-    }
-
-    public Event getEvent() {
-        return event;
-    }
-
-    public void setEvent(Event event) {
-        this.event = event;
     }
 
     @Override

@@ -10,40 +10,32 @@ import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+import javax.xml.bind.annotation.XmlRootElement;
+import org.eclipse.persistence.annotations.PrimaryKey;
 
 /**
  *
  * @author Francesco
  */
 @Entity
-@Table(name = "invitations")
+@Table(name = "invitations", catalog = "meteocaldb", schema = "")
+@XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Invitation.findAll", query = "SELECT a FROM Invitation a"),
+    @NamedQuery(name = "Invitations.findAll", query = "SELECT i FROM Invitations i"),
+    @NamedQuery(name = "Invitations.findByEventId", query = "SELECT i FROM Answers i WHERE i.invitationsPK.eventId = :eventId"),
+    @NamedQuery(name = "Invitations.findByUserId", query = "SELECT i FROM Answers i WHERE i.invitationsPK.userId = :userId"),
 })
 public class Invitation implements Serializable {
+    
     private static final long serialVersionUID = 1L;
     @EmbeddedId
     protected InvitationPK invitationPK;
     
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "value")
-    private boolean value;
-    
-    @JoinColumn(name = "event_id", referencedColumnName = "event_id", insertable = false, updatable = false)
-    @ManyToOne(optional = false)
-    private Event event;
-    
-    @JoinColumn(name = "user_id", referencedColumnName = "user_id", insertable = false, updatable = false)
-    @ManyToOne(optional = false)
-    private User user;
-
     public Invitation() {
     }
 
@@ -63,22 +55,6 @@ public class Invitation implements Serializable {
         this.invitationPK = invitationPK;
     }
 
-    public Event getEvent() {
-        return event;
-    }
-
-    public void setEvent(Event event) {
-        this.event = event;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
     @Override
     public int hashCode() {
         int hash = 0;
@@ -93,7 +69,8 @@ public class Invitation implements Serializable {
             return false;
         }
         Invitation other = (Invitation) object;
-        if ((this.invitationPK == null && other.invitationPK != null) || (this.invitationPK != null && !this.invitationPK.equals(other.invitationPK))) {
+        if ((this.invitationPK == null && other.invitationPK != null) || 
+                (this.invitationPK != null && !this.invitationPK.equals(other.invitationPK))) {
             return false;
         }
         return true;
@@ -101,7 +78,7 @@ public class Invitation implements Serializable {
 
     @Override
     public String toString() {
-        return "com.meteocal.entity.invitation[ invitationPK=" + invitationPK + " ]";
+        return "com.meteocal.entity.Invitation[ invitationPK=" + invitationPK + " ]";
     }
     
 }

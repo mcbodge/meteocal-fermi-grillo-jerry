@@ -12,8 +12,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
@@ -26,36 +24,24 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author Francesco
  */
 @Entity
-@Table(name = "information")
+@Table(name = "information", catalog = "meteocaldb", schema = "")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Information.findAll", query = "SELECT i FROM Information i"),
     @NamedQuery(name = "Information.findByInformationId", query = "SELECT i FROM Information i WHERE i.informationId = :informationId"),
-    @NamedQuery(name = "Information.findByText", query = "SELECT i FROM Information i WHERE i.text = :text")
-})
+    @NamedQuery(name = "Information.findByText", query = "SELECT i FROM Information i WHERE i.text = :text")})
 public class Information implements Serializable {
-    
     private static final long serialVersionUID = 1L;
-    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @Column(name = "information_id")
+    @Column(name = "information_id", nullable = false)
     private Integer informationId;
-    
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 255)
-    @Column(name = "text")
+    @Column(name = "text", nullable = false, length = 255)
     private String text;
-    
-    @JoinColumn(name = "event_id", referencedColumnName = "event_id")
-    @ManyToOne
-    private Event eventId;
-    
-    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
-    @ManyToOne
-    private User userId;
 
     public Information() {
     }
@@ -83,22 +69,6 @@ public class Information implements Serializable {
 
     public void setText(String text) {
         this.text = text;
-    }
-
-    public Event getEventId() {
-        return eventId;
-    }
-
-    public void setEventId(Event eventId) {
-        this.eventId = eventId;
-    }
-
-    public User getUserId() {
-        return userId;
-    }
-
-    public void setUserId(User userId) {
-        this.userId = userId;
     }
 
     @Override
