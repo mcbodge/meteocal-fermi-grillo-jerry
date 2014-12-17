@@ -6,96 +6,75 @@
 package com.meteocal.entity;
 
 import java.io.Serializable;
-import java.util.Collection;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
  * @author Francesco
  */
 @Entity
-@Table(name = "users")
+@Table(name = "users", catalog = "meteocaldb", schema = "", uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"user_name"}),
+    @UniqueConstraint(columnNames = {"email"})})
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Users.findAll", query = "SELECT u FROM Users u"),
-    @NamedQuery(name = "Users.findByUserId", query = "SELECT u FROM Users u WHERE u.userId = :userId"),
-    @NamedQuery(name = "Users.findByUserName", query = "SELECT u FROM Users u WHERE u.userName = :userName"),
-    @NamedQuery(name = "Users.findByFirstName", query = "SELECT u FROM Users u WHERE u.firstName = :firstName"),
-    @NamedQuery(name = "Users.findByLastName", query = "SELECT u FROM Users u WHERE u.lastName = :lastName"),
-    @NamedQuery(name = "Users.findByEmail", query = "SELECT u FROM Users u WHERE u.email = :email"),
-    @NamedQuery(name = "Users.findByPassword", query = "SELECT u FROM Users u WHERE u.password = :password"),
-    @NamedQuery(name = "Users.findByPublicCalendar", query = "SELECT u FROM Users u WHERE u.publicCalendar = :publicCalendar")
-})
+    @NamedQuery(name = "User.findAll", query = "SELECT u FROM User u"),
+    @NamedQuery(name = "User.findByUserId", query = "SELECT u FROM User u WHERE u.userId = :userId"),
+    @NamedQuery(name = "User.findByUserName", query = "SELECT u FROM User u WHERE u.userName = :userName"),
+    @NamedQuery(name = "User.findByFirstName", query = "SELECT u FROM User u WHERE u.firstName = :firstName"),
+    @NamedQuery(name = "User.findByLastName", query = "SELECT u FROM User u WHERE u.lastName = :lastName"),
+    @NamedQuery(name = "User.findByEmail", query = "SELECT u FROM User u WHERE u.email = :email"),
+    @NamedQuery(name = "User.findByPassword", query = "SELECT u FROM User u WHERE u.password = :password"),
+    @NamedQuery(name = "User.findByPublicCalendar", query = "SELECT u FROM User u WHERE u.publicCalendar = :publicCalendar")})
 public class User implements Serializable {
-    
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
-    private Collection<Answer> answerCollection;
-    
-    @OneToMany(mappedBy = "userId")
-    private Collection<Information> informationCollection;
-    
-    @ManyToMany(mappedBy = "userCollection")
-    private Collection<Event> eventCollection;
-    
     private static final long serialVersionUID = 1L;
-    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @Column(name = "user_id")
+    @Column(name = "user_id", nullable = false)
     private Integer userId;
-    
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 15)
-    @Column(name = "user_name")
+    @Column(name = "user_name", nullable = false, length = 15)
     private String userName;
-    
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 45)
-    @Column(name = "first_name")
+    @Column(name = "first_name", nullable = false, length = 45)
     private String firstName;
-    
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 45)
-    @Column(name = "last_name")
+    @Column(name = "last_name", nullable = false, length = 45)
     private String lastName;
-    
+    @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="Invalid email")//if the field contains email address consider using this annotation to enforce field validation
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 45)
-    @Column(name = "email")
-    @Pattern(regexp = "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?",
-            message = "invalid email")
+    @Column(name = "email", nullable = false, length = 45)
     private String email;
-    
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 20)
-    @Column(name = "password")
+    @Column(name = "password", nullable = false, length = 20)
     private String password;
-    
     @Basic(optional = false)
     @NotNull
-    @Column(name = "public_calendar")
+    @Column(name = "public_calendar", nullable = false)
     private boolean publicCalendar;
 
     public User() {
@@ -158,8 +137,7 @@ public class User implements Serializable {
     public String getPassword() {
         return password;
     }
-    
-    // we have to encript it before save it (PswEncrypter required)
+
     public void setPassword(String password) {
         this.password = password;
     }
@@ -194,34 +172,7 @@ public class User implements Serializable {
 
     @Override
     public String toString() {
-        return "com.meteocal.entity.Users[ userId=" + userId + " ]";
+        return "com.meteocal.entity.User[ userId=" + userId + " ]";
     }
-
-    @XmlTransient
-    public Collection<Event> getEventCollection() {
-        return eventCollection;
-    }
-
-    public void setEventCollection(Collection<Event> eventCollection) {
-        this.eventCollection = eventCollection;
-    }
-
-    @XmlTransient
-    public Collection<Information> getInformationCollection() {
-        return informationCollection;
-    }
-
-    public void setInformationCollection(Collection<Information> informationCollection) {
-        this.informationCollection = informationCollection;
-    }
-
-    @XmlTransient
-    public Collection<Answer> getAnswerCollection() {
-        return answerCollection;
-    }
-
-    public void setAnswerCollection(Collection<Answer> answerCollection) {
-        this.answerCollection = answerCollection;
-    }
-  
+    
 }
