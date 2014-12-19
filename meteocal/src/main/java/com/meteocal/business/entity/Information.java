@@ -12,6 +12,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
@@ -32,7 +34,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Information.findByText", query = "SELECT i FROM Information i WHERE i.text = :text")
 })
 public class Information implements Serializable {
-
+    
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -46,36 +48,57 @@ public class Information implements Serializable {
     @Size(min = 1, max = 255)
     @Column(name = "text", nullable = false, length = 255)
     private String text;
+    
+    @JoinColumn(name = "event_id", referencedColumnName = "event_id")
+    @ManyToOne
+    private Event eventId;
+    
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
+    @ManyToOne
+    private User userId;
 
     public Information() {
     }
-
-    // TODO:  we should remove informationId (id is autoincremental)
+    /* we should remove this constructor (autoincrement id)
     public Information(Integer informationId) {
         this.informationId = informationId;
     }
-
-    // TODO:  we should remove informationId (id is autoincremental)
-    public Information(Integer informationId, String text) {
-        this.informationId = informationId;
+    */
+    public Information(/*Integer informationId,*/ String text) {
+        //this.informationId = informationId;
         this.text = text;
     }
 
     public Integer getInformationId() {
         return informationId;
     }
-
-    // TODO:  we should remove informationId (id is autoincremental)
+    /*
     public void setInformationId(Integer informationId) {
         this.informationId = informationId;
     }
-
+    */
     public String getText() {
         return text;
     }
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    public Event getEventId() {
+        return eventId;
+    }
+
+    public void setEventId(Event eventId) {
+        this.eventId = eventId;
+    }
+
+    public User getUserId() {
+        return userId;
+    }
+
+    public void setUserId(User userId) {
+        this.userId = userId;
     }
 
     @Override
@@ -100,7 +123,7 @@ public class Information implements Serializable {
 
     @Override
     public String toString() {
-        return "com.meteocal.entity.Information[ informationId=" + informationId + " ]";
+        return "com.meteocal.business.entity.Information[ informationId=" + informationId + " ]";
     }
     
 }

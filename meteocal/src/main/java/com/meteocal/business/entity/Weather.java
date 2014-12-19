@@ -11,8 +11,10 @@ import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -34,7 +36,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Weather.findByLastUpdate", query = "SELECT w FROM Weather w WHERE w.lastUpdate = :lastUpdate")
 })
 public class Weather implements Serializable {
-
+    
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -52,6 +54,10 @@ public class Weather implements Serializable {
     @Column(name = "last_update")
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastUpdate;
+    
+    @JoinColumn(name = "event_id", referencedColumnName = "event_id", nullable = false, insertable = false, updatable = false)
+    @OneToOne(optional = false)
+    private Event event;
 
     public Weather() {
     }
@@ -92,6 +98,14 @@ public class Weather implements Serializable {
         this.lastUpdate = lastUpdate;
     }
 
+    public Event getEvent() {
+        return event;
+    }
+
+    public void setEvent(Event event) {
+        this.event = event;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -114,7 +128,7 @@ public class Weather implements Serializable {
 
     @Override
     public String toString() {
-        return "com.meteocal.entity.Weather[ eventId=" + eventId + " ]";
+        return "com.meteocal.business.entity.Weather[ eventId=" + eventId + " ]";
     }
     
 }

@@ -6,6 +6,7 @@ package com.meteocal.business.boundary;
 import com.meteocal.business.entity.User;
 import java.util.List;
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
@@ -16,18 +17,29 @@ import javax.persistence.TypedQuery;
  */
 @Stateless
 public class UserTestSessionBean {
-
-    // Add business logic below. (Right-click in editor and choose
-    // "Insert Code > Add Business Method")
     
-    @PersistenceContext(name = "meteocal_PU" )
+    @PersistenceContext
     EntityManager em;
     
+    private EmailTestSessionBean emailBean;
+    
+    //readFron db
     public List<User> findAll(){
         TypedQuery<User> query;
         query = em.createNamedQuery("User.findAll",User.class);
         return query.getResultList();
     }
-    
+  
+    /**
+     * write in db
+     * @param user
+     */
+    public void saveUser(User user){
+        user.setFirstName("bot");
+        user.setLastName("bot");
+        user.setPassword("qqqqq");
+        user.setPublicCalendar(true);
+        em.persist(user);
+    } 
     
 }
