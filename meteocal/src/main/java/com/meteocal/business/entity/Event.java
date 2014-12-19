@@ -6,21 +6,30 @@
 package com.meteocal.business.entity;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Date;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -36,12 +45,12 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Event.findByLocation", query = "SELECT e FROM Event e WHERE e.location = :location"),
     @NamedQuery(name = "Event.findByStart", query = "SELECT e FROM Event e WHERE e.start = :start"),
     @NamedQuery(name = "Event.findByEnd", query = "SELECT e FROM Event e WHERE e.end = :end"),
-    @NamedQuery(name = "Event.findByPublic1", query = "SELECT e FROM Event e WHERE e.public1 = :public1"),
+    @NamedQuery(name = "Event.findByPublicEvent", query = "SELECT e FROM Event e WHERE e.publicEvent = :publicEvent"),
     @NamedQuery(name = "Event.findByDescription", query = "SELECT e FROM Event e WHERE e.description = :description"),
     @NamedQuery(name = "Event.findByPersonal", query = "SELECT e FROM Event e WHERE e.personal = :personal")
 })
 public class Event implements Serializable {
-   
+    
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -85,18 +94,37 @@ public class Event implements Serializable {
     @NotNull
     @Column(name = "personal", nullable = false)
     private boolean personal;
+     /*
+    @JoinTable(name = "invitations", joinColumns = {
+        @JoinColumn(name = "event_id", referencedColumnName = "event_id", nullable = false)}, inverseJoinColumns = {
+        @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)})
+    @ManyToMany
+    private Collection<User> userCollection;
+    */
+    
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "event")
+    private Collection<Answer> answerCollection;
+    
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "event")
+    private Weather weather;
+    
+    @OneToMany(mappedBy = "eventId")
+    private Collection<Information> informationCollection;
+    
+    @JoinColumn(name = "creator", referencedColumnName = "user_id", nullable = false)
+    @ManyToOne(optional = false)
+    private User creator;
 
     public Event() {
     }
-    
-    // TODO:  we should remove eventId (id is autoincremental)
+
+    /* should be removed (autoincrement ID)
     public Event(Integer eventId) {
         this.eventId = eventId;
     }
-
-    // TODO:  we should remove eventId (id is autoincremental)
-    public Event(Integer eventId, String name, Date start, Date end, boolean publicEvent, boolean personal) {
-        this.eventId = eventId;
+    */
+    public Event(/*Integer eventId,*/ String name, Date start, Date end, boolean publicEvent, boolean personal) {
+        //this.eventId = eventId;
         this.name = name;
         this.start = start;
         this.end = end;
@@ -107,11 +135,11 @@ public class Event implements Serializable {
     public Integer getEventId() {
         return eventId;
     }
-    
-    // TODO:  we should remove setEventId (id is autoincremental)
+    /*
     public void setEventId(Integer eventId) {
         this.eventId = eventId;
     }
+    */
 
     public String getName() {
         return name;
@@ -145,6 +173,7 @@ public class Event implements Serializable {
         this.end = end;
     }
 
+    //we should rename it in: isPublicEvent()
     public boolean getPublicEvent() {
         return publicEvent;
     }
@@ -168,6 +197,49 @@ public class Event implements Serializable {
     public void setPersonal(boolean personal) {
         this.personal = personal;
     }
+    /*  
+    @XmlTransient
+    public Collection<User> getUserCollection() {
+        return userCollection;
+    }
+
+    public void setUserCollection(Collection<User> userCollection) {
+        this.userCollection = userCollection;
+    }
+    */
+    @XmlTransient
+    public Collection<Answer> getAnswerCollection() {
+        return answerCollection;
+    }
+
+    public void setAnswerCollection(Collection<Answer> answerCollection) {
+        this.answerCollection = answerCollection;
+    }
+
+    public Weather getWeather() {
+        return weather;
+    }
+
+    public void setWeather(Weather weather) {
+        this.weather = weather;
+    }
+
+    @XmlTransient
+    public Collection<Information> getInformationCollection() {
+        return informationCollection;
+    }
+
+    public void setInformationCollection(Collection<Information> informationCollection) {
+        this.informationCollection = informationCollection;
+    }
+
+    public User getCreator() {
+        return creator;
+    }
+
+    public void setCreator(User creator) {
+        this.creator = creator;
+    }
 
     @Override
     public int hashCode() {
@@ -183,8 +255,7 @@ public class Event implements Serializable {
             return false;
         }
         Event other = (Event) object;
-        if ((this.eventId == null && other.eventId != null) || 
-                (this.eventId != null && !this.eventId.equals(other.eventId))) {
+        if ((this.eventId == null && other.eventId != null) || (this.eventId != null && !this.eventId.equals(other.eventId))) {
             return false;
         }
         return true;
@@ -192,7 +263,7 @@ public class Event implements Serializable {
 
     @Override
     public String toString() {
-        return "com.meteocal.entity.Event[ eventId=" + eventId + " ]";
+        return "com.meteocal.business.entity.Event[ eventId=" + eventId + " ]";
     }
     
 }

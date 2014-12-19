@@ -6,20 +6,25 @@
 package com.meteocal.business.entity;
 
 import java.io.Serializable;
+import java.util.Collection;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -85,18 +90,28 @@ public class User implements Serializable {
     @NotNull
     @Column(name = "public_calendar", nullable = false)
     private boolean publicCalendar;
+    /*
+    @ManyToMany(mappedBy = "userCollection")
+    private Collection<Event> eventCollection;
+    */
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    private Collection<Answer> answerCollection;
+    
+    @OneToMany(mappedBy = "userId")
+    private Collection<Information> informationCollection;
+    
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "creator")
+    private Collection<Event> eventCollection1;
 
     public User() {
     }
-
-    // TODO:  we should remove userId (id is autoincremental)
+    /* we should remove this constructor (autoincrement id)
     public User(Integer userId) {
         this.userId = userId;
     }
-    
-    // TODO:  we should remove userId (id is autoincremental)
-    public User(Integer userId, String userName, String firstName, String lastName, String email, String password, boolean publicCalendar) {
-        this.userId = userId;
+    */
+    public User(/*Integer userId,*/ String userName, String firstName, String lastName, String email, String password, boolean publicCalendar) {
+        //this.userId = userId;
         this.userName = userName;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -108,11 +123,12 @@ public class User implements Serializable {
     public Integer getUserId() {
         return userId;
     }
-    
-    // TODO:  we should remove userId (id is autoincremental)
+
+    /*
     public void setUserId(Integer userId) {
         this.userId = userId;
     }
+    */
 
     public String getUserName() {
         return userName;
@@ -153,13 +169,50 @@ public class User implements Serializable {
     public void setPassword(String password) {
         this.password = password;
     }
-
+    
+    //we should rename this method in isPublicCalendar()
     public boolean getPublicCalendar() {
         return publicCalendar;
     }
 
     public void setPublicCalendar(boolean publicCalendar) {
         this.publicCalendar = publicCalendar;
+    }
+    /*
+    @XmlTransient
+    public Collection<Event> getEventCollection() {
+        return eventCollection;
+    }
+
+    public void setEventCollection(Collection<Event> eventCollection) {
+        this.eventCollection = eventCollection;
+    }
+    */
+    @XmlTransient
+    public Collection<Answer> getAnswerCollection() {
+        return answerCollection;
+    }
+
+    public void setAnswerCollection(Collection<Answer> answerCollection) {
+        this.answerCollection = answerCollection;
+    }
+    
+    @XmlTransient
+    public Collection<Information> getInformationCollection() {
+        return informationCollection;
+    }
+
+    public void setInformationCollection(Collection<Information> informationCollection) {
+        this.informationCollection = informationCollection;
+    }
+
+    @XmlTransient
+    public Collection<Event> getEventCollection1() {
+        return eventCollection1;
+    }
+
+    public void setEventCollection1(Collection<Event> eventCollection1) {
+        this.eventCollection1 = eventCollection1;
     }
 
     @Override
@@ -184,7 +237,7 @@ public class User implements Serializable {
 
     @Override
     public String toString() {
-        return "com.meteocal.entity.User[ userId=" + userId + " ]";
+        return "com.meteocal.business.entity.User[ userId=" + userId + " ]";
     }
     
 }
