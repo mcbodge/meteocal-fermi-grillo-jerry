@@ -5,6 +5,7 @@
  */
 package com.meteocal.business.entity;
 
+import com.meteocal.business.control.LogInManager;
 import java.io.Serializable;
 import java.util.Collection;
 import javax.persistence.Basic;
@@ -14,7 +15,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -90,6 +90,10 @@ public class User implements Serializable {
     @NotNull
     @Column(name = "public_calendar", nullable = false)
     private boolean publicCalendar;
+    
+    @Column(name = "groupname")
+    private String groupname;
+      
     /*
     @ManyToMany(mappedBy = "userCollection")
     private Collection<Event> eventCollection;
@@ -167,7 +171,7 @@ public class User implements Serializable {
     }
 
     public void setPassword(String password) {
-        this.password = password;
+        this.password = LogInManager.encryptPassword(password);
     }
     
     //we should rename this method in isPublicCalendar()
@@ -178,6 +182,15 @@ public class User implements Serializable {
     public void setPublicCalendar(boolean publicCalendar) {
         this.publicCalendar = publicCalendar;
     }
+    
+    public void setGroupName(String groupName) {
+        this.groupname = groupName;
+    }
+
+    public String getGroupName() {
+        return groupname;
+    }
+    
     /*
     @XmlTransient
     public Collection<Event> getEventCollection() {
