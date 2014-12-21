@@ -94,13 +94,13 @@ public class Event implements Serializable {
     @NotNull
     @Column(name = "personal", nullable = false)
     private boolean personal;
-     /*
+   
     @JoinTable(name = "invitations", joinColumns = {
         @JoinColumn(name = "event_id", referencedColumnName = "event_id", nullable = false)}, inverseJoinColumns = {
         @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)})
     @ManyToMany
     private Collection<User> userCollection;
-    */
+   
     
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "event")
     private Collection<Answer> answerCollection;
@@ -197,7 +197,7 @@ public class Event implements Serializable {
     public void setPersonal(boolean personal) {
         this.personal = personal;
     }
-    /*  
+     
     @XmlTransient
     public Collection<User> getUserCollection() {
         return userCollection;
@@ -206,7 +206,7 @@ public class Event implements Serializable {
     public void setUserCollection(Collection<User> userCollection) {
         this.userCollection = userCollection;
     }
-    */
+   
     @XmlTransient
     public Collection<Answer> getAnswerCollection() {
         return answerCollection;

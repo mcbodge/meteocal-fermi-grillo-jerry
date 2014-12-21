@@ -3,15 +3,13 @@
  */
 package com.meteocal.gui;
 
-import com.meteocal.business.boundary.EmailTestSessionBean;
+import com.meteocal.business.boundary.EmailManager;
 import com.meteocal.business.boundary.UserTestSessionBean;
 import com.meteocal.business.entity.User;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.inject.Named;
-import javax.enterprise.context.Dependent;
 import javax.enterprise.context.RequestScoped;
-import javax.enterprise.inject.Model;
 
 /**
  *
@@ -23,8 +21,9 @@ public class UserTestManagedBean {
     
     @EJB 
     private UserTestSessionBean sb;
+    
     @EJB
-    private EmailTestSessionBean emailBean;
+    private EmailManager emailManager;
     
     private User user;
     private String receiver;
@@ -67,7 +66,7 @@ public class UserTestManagedBean {
     }
        
     public String sendMail(){
-        emailBean.sendEmail(receiver);
+        emailManager.sendEmail(receiver, "TEST", "Hello world \n come va?");
         return "index?faces-redirect=true";
     }
 }

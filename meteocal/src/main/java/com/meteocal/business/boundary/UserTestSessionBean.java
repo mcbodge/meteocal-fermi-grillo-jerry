@@ -3,10 +3,10 @@
  */
 package com.meteocal.business.boundary;
 
+import com.meteocal.business.entity.Group;
 import com.meteocal.business.entity.User;
 import java.util.List;
 import javax.ejb.Stateless;
-import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
@@ -20,9 +20,7 @@ public class UserTestSessionBean {
     
     @PersistenceContext
     EntityManager em;
-    
-    private EmailTestSessionBean emailBean;
-    
+        
     //readFron db
     public List<User> findAll(){
         TypedQuery<User> query;
@@ -39,6 +37,7 @@ public class UserTestSessionBean {
         user.setLastName("bot");
         user.setPassword("qqqqq");
         user.setPublicCalendar(true);
+        user.setGroupName(Group.USERS);
         em.persist(user);
     } 
     
