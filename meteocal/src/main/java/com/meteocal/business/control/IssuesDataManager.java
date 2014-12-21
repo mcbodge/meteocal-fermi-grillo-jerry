@@ -5,7 +5,7 @@ import com.meteocal.business.entity.User;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
-//import org.apache.commons.lang.RandomStringUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 
 
 /**
@@ -68,11 +68,14 @@ public class IssuesDataManager{
      */
     public void sendPassword(String e){
         if(verifySubmittedData(e)){
-            //query
+            //query (it is a User)
             TypedQuery<User> query = (TypedQuery<User>) em.createNamedQuery("User.findByEmail").setParameter("email", e);
             String fullname = query.getSingleResult().getFirstName() + " " + query.getSingleResult().getLastName();
-            String password = "polpo"; //pass temporanea generata
-            //call method that edit the password
+            //generate a new lenght-6 password
+            String password = RandomStringUtils.randomAlphanumeric(6);
+            //edit user's pasword
+            query.getSingleResult().setPassword(password);
+            em.merge(query);
             
             //email text parts
             String subject = "METEOCAL: password request";
