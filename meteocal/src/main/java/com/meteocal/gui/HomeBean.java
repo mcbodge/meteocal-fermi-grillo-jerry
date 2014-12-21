@@ -5,10 +5,20 @@
  */
 package com.meteocal.gui;
 
+import com.meteocal.business.boundary.HomeFacade;
+import javax.ejb.EJB;
+
 /**
  *
  * @author Manuel
  */
 public class HomeBean {
+    
+    @EJB
+    HomeFacade hf;
+
+    public HomeBean() {
+    }
+    
     
 }

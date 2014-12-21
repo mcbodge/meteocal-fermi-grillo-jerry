@@ -5,10 +5,20 @@
  */
 package com.meteocal.gui;
 
+import com.meteocal.business.boundary.ResultsFacade;
+import javax.ejb.EJB;
+
 /**
  *
  * @author Manuel
  */
 public class ResultsBean {
+    
+    @EJB
+    ResultsFacade rf;
+
+    public ResultsBean() {
+    }
+    
     
 }

@@ -5,10 +5,20 @@
  */
 package com.meteocal.gui;
 
+import com.meteocal.business.boundary.UploadFacade;
+import javax.ejb.EJB;
+
 /**
  *
  * @author Manuel
  */
 public class UploadBean {
+    
+    @EJB
+    UploadFacade uf;
+
+    public UploadBean() {
+    }
+    
     
 }

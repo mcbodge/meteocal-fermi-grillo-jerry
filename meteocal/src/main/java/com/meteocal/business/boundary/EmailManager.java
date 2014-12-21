@@ -24,7 +24,8 @@ import javax.mail.internet.MimeMessage;
  */
 @Stateless
 public class EmailManager {
-
+    
+    //TODO It would be better to get these infos from an encrypted txt file (after decrypting it in the code). Only if everything else is completed.
     private final int PORT = 465;
     private final String HOST = "smtp.mail.com";
     private final String FROM = "meteocal@mail.com";

@@ -5,10 +5,20 @@
  */
 package com.meteocal.gui;
 
+import com.meteocal.business.boundary.ProfileFacade;
+import javax.ejb.EJB;
+
 /**
  *
  * @author Manuel
  */
 public class ProfileBean {
     
+    @EJB
+    ProfileFacade pf;
+
+    public ProfileBean() {
+    }
+    
+        
 }

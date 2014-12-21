@@ -5,10 +5,20 @@
  */
 package com.meteocal.gui;
 
+import com.meteocal.business.boundary.NotificationsFacade;
+import javax.ejb.EJB;
+
 /**
  *
  * @author Manuel
  */
 public class NotificationsBean {
+    
+    @EJB
+    NotificationsFacade nf;
+
+    public NotificationsBean() {
+    }
+    
     
 }

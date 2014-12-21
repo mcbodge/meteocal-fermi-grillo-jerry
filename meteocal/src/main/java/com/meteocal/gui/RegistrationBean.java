@@ -5,10 +5,20 @@
  */
 package com.meteocal.gui;
 
+import com.meteocal.business.boundary.RegistrationFacade;
+import javax.ejb.EJB;
+
 /**
  *
  * @author Manuel
  */
 public class RegistrationBean {
+    
+    @EJB
+    RegistrationFacade rf;
+
+    public RegistrationBean() {
+    }
+    
     
 }
