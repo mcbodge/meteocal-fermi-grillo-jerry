@@ -5,10 +5,20 @@
  */
 package com.meteocal.gui;
 
+import com.meteocal.business.boundary.DayFacade;
+import javax.ejb.EJB;
+
 /**
  *
  * @author Manuel
  */
 public class DayBean {
+    
+    @EJB
+    DayFacade df;
+
+    public DayBean() {
+    }
+    
     
 }

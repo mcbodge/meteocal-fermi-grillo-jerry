@@ -19,7 +19,6 @@ public class IssuesDataManager{
     EntityManager em;
     EmailManager emailManager;
     
-    //TODO RC
     /**
      * Returns true if the email is a valid email of an user of the system. False otherwise. 
      * It also removes spaces from the very start and the very and of the string.
@@ -40,7 +39,7 @@ public class IssuesDataManager{
         }
     }
     
-    //TODO RC
+ 
     /**
      * If the check of the data is correct it sends an email with the requested username, otherwise it does nothing
      * 
@@ -54,13 +53,13 @@ public class IssuesDataManager{
             String fullname = query.getSingleResult().getFirstName() + " " + query.getSingleResult().getLastName();
 
             //email text parts
-            String subject = "METEOCAL: username request";
-            String body = "METEOCAL ISSUES MANAGER\n\nDear " + fullname + ",\nYour username is:\t" + username + ".\n\nPLEASE DO NOT REPLY TO THIS EMAIL";
+            String subject = "MeteoCal: user name request";
+            String body = "Dear " + fullname + ",\nYour username is:\t" + username + ".\n\nPLEASE DO NOT REPLY TO THIS EMAIL";
             emailManager.sendEmail(e, subject, body);
         }
     }
     
-    //TODO RC
+    //TODO Password generator. :)
     /**
      * If the check of the data is correct it sends an email with the requested password, otherwise it does nothing
      * 
@@ -78,8 +77,8 @@ public class IssuesDataManager{
             em.merge(query);
             
             //email text parts
-            String subject = "METEOCAL: password request";
-            String body = "METEOCAL ISSUES MANAGER\n\nDear " + fullname + ",\nYour new temporally password is:\t" + password + "\nPLEASE CHANGE YOUR PASSWORD ASAP.\n\nPLEASE DO NOT REPLY TO THIS EMAIL";
+            String subject = "MeteoCal: password request";
+            String body = "Dear " + fullname + ",\nYour new temporally password is:\t" + password + "\nPLEASE CHANGE YOUR PASSWORD ASAP.\n\nPLEASE DO NOT REPLY TO THIS EMAIL";
             emailManager.sendEmail(e, subject, body);
         }
     }

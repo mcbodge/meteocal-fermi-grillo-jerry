@@ -5,10 +5,20 @@
  */
 package com.meteocal.gui;
 
+import com.meteocal.business.boundary.EventFacade;
+import javax.ejb.EJB;
+
 /**
  *
  * @author Manuel
  */
 public class EventBean {
+    
+    @EJB
+    EventFacade ef;
+
+    public EventBean() {
+    }
+    
     
 }

@@ -5,10 +5,16 @@
  */
 package com.meteocal.gui;
 
+import javax.enterprise.context.RequestScoped;
+import javax.inject.Named;
+
 /**
  *
  * @author Manuel
  */
+
+@Named
+@RequestScoped
 public class UserBean {
-    
+ 
 }

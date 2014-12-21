@@ -5,10 +5,20 @@
  */
 package com.meteocal.gui;
 
+import com.meteocal.business.boundary.ProblemsFacade;
+import javax.ejb.EJB;
+
 /**
  *
  * @author Manuel
  */
 public class ProblemsBean {
+    
+    @EJB
+    ProblemsFacade pf;
+
+    public ProblemsBean() {
+    }
+    
     
 }
