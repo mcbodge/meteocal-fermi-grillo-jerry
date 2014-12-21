@@ -10,7 +10,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 
 /**
  * FROM/TO - B:ProblemsPage
- * TO: - E:User
+ * TO - E:User
  * 
  * @author Manuel
  */
