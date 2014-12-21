@@ -15,6 +15,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -73,7 +74,8 @@ public class User implements Serializable {
     @Column(name = "last_name", nullable = false, length = 45)
     private String lastName;
     
-    @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="Invalid email")//if the field contains email address consider using this annotation to enforce field validation
+    @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", 
+            message="Invalid email")
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 45)
@@ -94,10 +96,10 @@ public class User implements Serializable {
     @Column(name = "groupname")
     private String groupname;
       
-    /*
+    
     @ManyToMany(mappedBy = "userCollection")
     private Collection<Event> eventCollection;
-    */
+    
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     private Collection<Answer> answerCollection;
     
@@ -109,11 +111,13 @@ public class User implements Serializable {
 
     public User() {
     }
+    
     /* we should remove this constructor (autoincrement id)
     public User(Integer userId) {
         this.userId = userId;
     }
     */
+    
     public User(/*Integer userId,*/ String userName, String firstName, String lastName, String email, String password, boolean publicCalendar) {
         //this.userId = userId;
         this.userName = userName;
@@ -128,7 +132,7 @@ public class User implements Serializable {
         return userId;
     }
 
-    /*
+    /* we should remove setUserId (autoincrement id)
     public void setUserId(Integer userId) {
         this.userId = userId;
     }
@@ -191,7 +195,6 @@ public class User implements Serializable {
         return groupname;
     }
     
-    /*
     @XmlTransient
     public Collection<Event> getEventCollection() {
         return eventCollection;
@@ -200,7 +203,7 @@ public class User implements Serializable {
     public void setEventCollection(Collection<Event> eventCollection) {
         this.eventCollection = eventCollection;
     }
-    */
+    
     @XmlTransient
     public Collection<Answer> getAnswerCollection() {
         return answerCollection;
