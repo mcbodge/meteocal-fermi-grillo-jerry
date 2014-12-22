@@ -12,6 +12,10 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * FROM/TO - B:HomePage
@@ -23,8 +27,11 @@ public class LogInManager{
     
     //TODO
     /**
-     * If the structure of the input is wrong (empty fields, the password is too short, etc.) it returns the registration page.
-     * If the structure of the input is correct, it calls verifyLogin() that, if it returns true, it redirect to the personal page, logging the user.
+     * If the structure of the input is wrong (empty fields, the password is too short, etc.) 
+     * it returns the registration page.
+     * 
+     * If the structure of the input is correct, it calls verifyLogin() that, 
+     * if it returns true, it redirect to the personal page, logging the user.
      * 
      * @return the URL of the appropriate page
      */
@@ -45,26 +52,40 @@ public class LogInManager{
     }
     
     
-    //TODO
+    //TODO RC
     /**
      * Logs out a session
      * 
      * @param u 
-     */
+     */  
+    //USER PARAM. IS NOT NEEDED, BUT WE SHOULD REDIRECT TO LOG IN PAGE.
     private void logOutCurrentSession(User u){
-        
+        FacesContext context = FacesContext.getCurrentInstance();
+        HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();
+        request.getSession().invalidate();
+        //return "/home?faces-redirect=true";
     }
     
     
-    //TODO
+    //TODO RC
     /**
-     * Logs in - a validated user - redirecting him to his/her personal page. It also sends a "welcome" information.
+     * Logs in - a validated user - redirecting him to his/her personal page. 
+     * It also sends a "welcome" information.
      * 
      * @param u the user we want to log in
      * @return the URL of the user's personal page
      */
     private String loadUser(User u){
-        return null;
+        FacesContext context = FacesContext.getCurrentInstance();
+        HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();
+        try {
+            request.login(u.getUserName(),u.getPassword());
+        } catch (ServletException e) {
+            context.addMessage(null, new FacesMessage("Login failed."));
+            return "login";
+        }
+        context.addMessage(null, new FacesMessage("Login OK."));
+        return "/user/personal";
     }
     
  
@@ -79,9 +100,16 @@ public class LogInManager{
      * @return "true" if the the fields are correct
      */
     private boolean verifyLogIn(String un, String p){
+        
         return false;
     }
     
+    /**  
+     * Encrypt the password.
+     * 
+     * @param password
+     * @return password encrypted
+     */
     public static String encryptPassword(String password) {
         String encPass = null;
         try {

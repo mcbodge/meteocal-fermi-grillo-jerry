@@ -30,7 +30,7 @@ public class IssuesDataManager{
         try{
             TypedQuery<User> query;
             query = (TypedQuery<User>) em.createNamedQuery("User.findByEmail").setParameter("email", e);
-            if(query.getSingleResult().getEmail()==e){
+            if(query.getSingleResult().getEmail().equals(e)){
                 return true;
             }
             return false;
