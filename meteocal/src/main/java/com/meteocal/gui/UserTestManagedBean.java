@@ -70,17 +70,17 @@ public class UserTestManagedBean {
    
     public String save(){
         sb.saveUser(user);
-        return "index?faces-redirect=true";
+        return "francescoTEST?faces-redirect=true";
     }
        
     public String sendMail(){
-        EmailManager.getInstance().sendEmail(receiver, "METEOCAL: Test", "Hello world. \nThis is a notification.?");
-        return "index?faces-redirect=true";
+        EmailManager.getInstance().sendEmail(receiver, "METEOCAL: Test", "Hello world. \nThis is a notification.");
+        return "francescoTEST?faces-redirect=true";
     }
     
     public String issues(){
         sb.issues(yem);
-        return "index?faces-redirect=true";
+        return "francescoTEST?faces-redirect=true";
     }
     
 }
