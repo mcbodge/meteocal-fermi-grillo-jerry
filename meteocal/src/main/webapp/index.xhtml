@@ -29,6 +29,14 @@
             Receiver: <h:inputText id="receiver" value="#{userTestManagedBean.receiver}" label="receiver"/>
             <h:commandButton value="sendMail" action="#{userTestManagedBean.sendMail()}"/>
         </h:form>
+        <br/><br/>
+        <h:form style="border: 1px; border-color: black; border-style: solid; padding: 10px;">
+            <h:outputLabel value="TEST ISSUES DATA MANAGER:" /><br/><br/>
+            Your e-mail: <h:inputText id="yem" value="#{userTestManagedBean.yem}" label="yem"/>
+            <br/><br/>
+            <h:commandButton value="send" action="#{userTestManagedBean.issues()}"/>
+            
+        </h:form>
     </h:body>
 </html>
 
