@@ -5,11 +5,13 @@ package com.meteocal.gui;
 
 import com.meteocal.business.boundary.EmailManager;
 import com.meteocal.business.boundary.UserTestSessionBean;
+import com.meteocal.business.control.IssuesDataManager;
 import com.meteocal.business.entity.User;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.inject.Named;
 import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
 
 /**
  *
@@ -22,11 +24,17 @@ public class UserTestManagedBean {
     @EJB 
     private UserTestSessionBean sb;
     
-    @EJB
-    private EmailManager emailManager;
-    
     private User user;
     private String receiver;
+    private String yem;
+
+    public String getYem() {
+        return yem;
+    }
+
+    public void setYem(String yem) {
+        this.yem = yem;
+    }
     
     public UserTestManagedBean() {
     }
@@ -66,7 +74,13 @@ public class UserTestManagedBean {
     }
        
     public String sendMail(){
-        emailManager.sendEmail(receiver, "TEST", "Hello world \n come va?");
+        EmailManager.getInstance().sendEmail(receiver, "METEOCAL: Test", "Hello world. \nThis is a notification.?");
         return "index?faces-redirect=true";
     }
+    
+    public String issues(){
+        sb.issues(yem);
+        return "index?faces-redirect=true";
+    }
+    
 }

@@ -4,7 +4,7 @@ import com.meteocal.business.boundary.EmailManager;
 import com.meteocal.business.entity.User;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
-import javax.persistence.TypedQuery;
+import javax.persistence.PersistenceContext;
 import org.apache.commons.lang3.RandomStringUtils;
 
 
@@ -16,8 +16,10 @@ import org.apache.commons.lang3.RandomStringUtils;
  */
 public class IssuesDataManager{
     
+    @PersistenceContext
     EntityManager em;
-    EmailManager emailManager;
+    
+    public IssuesDataManager(){}
     
     /**
      * Returns true if the email is a valid email of an user of the system. False otherwise. 
@@ -28,9 +30,9 @@ public class IssuesDataManager{
      */
     private boolean verifySubmittedData(String e){
         try{
-            TypedQuery<User> query;
-            query = (TypedQuery<User>) em.createNamedQuery("User.findByEmail").setParameter("email", e);
-            if(query.getSingleResult().getEmail().equals(e)){
+            User query;
+            query = (User) em.createNamedQuery("User.findByEmail").setParameter("email", e).getSingleResult();
+            if(query.getEmail().equals(e)){
                 return true;
             }
             return false;
@@ -48,14 +50,14 @@ public class IssuesDataManager{
     public void sendUserName(String e){
         if(verifySubmittedData(e)){
             //query
-            TypedQuery<User> query = (TypedQuery<User>) em.createNamedQuery("User.findByEmail").setParameter("email", e);
-            String username = query.getSingleResult().getUserName();
-            String fullname = query.getSingleResult().getFirstName() + " " + query.getSingleResult().getLastName();
+            User query = (User)em.createNamedQuery("User.findByEmail").setParameter("email", e).getSingleResult();
+            String username = query.getUserName();
+            String fullname = query.getFirstName() + " " + query.getLastName();
 
             //email text parts
-            String subject = "MeteoCal: user name request";
+            String subject = "METEOCAL: user name request";
             String body = "Dear " + fullname + ",\nYour username is:\t" + username + ".\n\nPLEASE DO NOT REPLY TO THIS EMAIL";
-            emailManager.sendEmail(e, subject, body);
+            EmailManager.getInstance().sendEmail(e, subject, body);
         }
     }
     
@@ -68,18 +70,19 @@ public class IssuesDataManager{
     public void sendPassword(String e){
         if(verifySubmittedData(e)){
             //query (it is a User)
-            TypedQuery<User> query = (TypedQuery<User>) em.createNamedQuery("User.findByEmail").setParameter("email", e);
-            String fullname = query.getSingleResult().getFirstName() + " " + query.getSingleResult().getLastName();
+            User query = (User) em.createNamedQuery("User.findByEmail").setParameter("email", e).getSingleResult();
+            String fullname = query.getFirstName() + " " + query.getLastName();
             //generate a new lenght-6 password
             String password = RandomStringUtils.randomAlphanumeric(6);
-            //edit user's pasword
-            query.getSingleResult().setPassword(password);
-            em.merge(query);
             
             //email text parts
-            String subject = "MeteoCal: password request";
-            String body = "Dear " + fullname + ",\nYour new temporally password is:\t" + password + "\nPLEASE CHANGE YOUR PASSWORD ASAP.\n\nPLEASE DO NOT REPLY TO THIS EMAIL";
-            emailManager.sendEmail(e, subject, body);
+            String subject = "METEOCAL: password request";
+            String body = "Dear " + fullname + ",\nYour new temporary password is:\t" + password + "\n\n\nPLEASE DO NOT REPLY TO THIS EMAIL";
+            EmailManager.getInstance().sendEmail(e, subject, body);
+            
+            //edit user's pasword
+            query.setPassword(password);
+            em.merge(query);
         }
     }
     

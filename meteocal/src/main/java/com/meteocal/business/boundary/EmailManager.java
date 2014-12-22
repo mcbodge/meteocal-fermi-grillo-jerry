@@ -8,6 +8,7 @@ package com.meteocal.business.boundary;
 import com.sun.mail.iap.Protocol;
 import java.util.Date;
 import java.util.Properties;
+import javax.ejb.Singleton;
 import javax.ejb.Stateless;
 import javax.mail.Authenticator;
 import javax.mail.Message;
@@ -23,14 +24,27 @@ import javax.mail.internet.MimeMessage;
  * @author Francesco
  */
 @Stateless
+@Singleton
 public class EmailManager {
+  
+   private static EmailManager instance = null;
+   
+   protected EmailManager() {
+      // Exists only to defeat instantiation.
+   }
+   public static EmailManager getInstance() {
+      if(instance == null) {
+         instance = new EmailManager();
+      }
+      return instance;
+   }
     
     //TODO It would be better to get these infos from an encrypted txt file (after decrypting it in the code). Only if everything else is completed.
-    private final int PORT = 465;
-    private final String HOST = "smtp.mail.com";
-    private final String FROM = "meteocal@mail.com";
+    private final int PORT = 587;
+    private final String HOST = "smtp.aol.com";
+    private final String FROM = "meteocal@aol.com";
     private boolean auth = true;
-    private final String USERNAME = "meteocal@mail.com";
+    private final String USERNAME = "meteocal@aol.com";
     private final String PASSWORD = "D235X2uu";
     
     private boolean debug = true;
@@ -39,7 +53,7 @@ public class EmailManager {
         Properties props = new Properties();
         props.put("mail.smtp.host", HOST);
         props.put("mail.smtp.port", PORT);
-        props.put("mail.smtp.ssl.enable", true);
+        props.put("mail.smtp.ssl.enable", false);
         
         Authenticator authenticator = null;
         if (auth) {
