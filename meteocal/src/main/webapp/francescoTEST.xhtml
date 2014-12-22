@@ -1,0 +1,41 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+    <h:head>
+        <title>CESCO TESTING</title>
+    </h:head>
+    <h:body>
+        METEOCAL: FrancescoTEST page.
+        
+        <!--> This code is used to test the connection to the db <-->
+        <br/><br/>
+        <h:form style="border: 1px; border-color: black; border-style: solid; padding: 10px;">
+            <h:outputLabel value="LOAD USERNAME FROM USER TABLE:" /><br/>
+            <h:outputLabel value="#{userTestManagedBean.allUserNames()}" /><br/>
+        </h:form>
+        <br/><br/>
+        <h:form style="border: 1px; border-color: black; border-style: solid; padding: 10px;">
+            <h:outputLabel value="INSERT NEW USER INTO USER TABLE:" /><br/>
+            username: <h:inputText id="name" value="#{userTestManagedBean.user.userName}" label="name"/>
+            email: <h:inputText id="email" value="#{userTestManagedBean.user.email}" label="email"/>
+            <br/>
+            <h:commandButton value="save" action="#{userTestManagedBean.save()}"/>
+            <br/><br/>
+        </h:form>
+        <br/><br/>
+        <h:form style="border: 1px; border-color: black; border-style: solid; padding: 10px;">
+            <h:outputLabel value="SEND EMAIL NOTIFICATION:" /><br/>
+            Receiver: <h:inputText id="receiver" value="#{userTestManagedBean.receiver}" label="receiver"/>
+            <h:commandButton value="sendMail" action="#{userTestManagedBean.sendMail()}"/>
+        </h:form>
+        <br/><br/>
+        <h:form style="border: 1px; border-color: black; border-style: solid; padding: 10px;">
+            <h:outputLabel value="TEST ISSUES DATA MANAGER:" /><br/><br/>
+            Your e-mail: <h:inputText id="yem" value="#{userTestManagedBean.yem}" label="yem"/>
+            <br/><br/>
+            <h:commandButton value="send" action="#{userTestManagedBean.issues()}"/>
+        </h:form>
+    </h:body>
+</html>
+
