@@ -36,7 +36,7 @@ public class UserTestManagedBean {
         List<User> users = sb.findAll();
         
         for (User next : users) {
-            result= result + " " + next.getUserName();
+            result= result + "\t " + next.getUserName();
         }
         return result;
     }
