@@ -14,6 +14,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
+import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
@@ -24,6 +26,8 @@ import javax.servlet.http.HttpServletRequest;
  * @author Manuel
  */
 public class LogInManager{
+    
+    private EntityManager em;
     
     //TODO
     /**
@@ -100,7 +104,23 @@ public class LogInManager{
      * @return "true" if the the fields are correct
      */
     private boolean verifyLogIn(String un, String p){
+        User usr;
         
+        //check user
+        try{
+            usr = (User)em.createNamedQuery("User.findByUserName")
+                    .setParameter("userName", un).getSingleResult();
+        }catch(NoResultException nre){
+            //user doesn't exists.
+            return false;
+        }
+        
+        //check password
+        if(usr.getPassword().equals(encryptPassword(p))){
+            // user ok AND psw ok
+            return true;
+        }
+        //user ok AND psw mismatch
         return false;
     }
     

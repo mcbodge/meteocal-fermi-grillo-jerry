@@ -10,17 +10,22 @@
         
         <!--> This code is used to test the connection to the db <-->
         <br/><br/>
-        <h:outputLabel value="Load username from user table:" /><br/>
-        <h:outputLabel value="#{userTestManagedBean.allUserNames()}" /><br/>
-        <h:outputLabel value="---" /><br/><br/>
-        <h:form>
+        <h:form style="border: 1px; border-color: black; border-style: solid; padding: 10px;">
+            <h:outputLabel value="LOAD USERNAME FROM USER TABLE:" /><br/>
+            <h:outputLabel value="#{userTestManagedBean.allUserNames()}" /><br/>
+        </h:form>
+        <br/><br/>
+        <h:form style="border: 1px; border-color: black; border-style: solid; padding: 10px;">
+            <h:outputLabel value="INSERT NEW USER INTO USER TABLE:" /><br/>
             username: <h:inputText id="name" value="#{userTestManagedBean.user.userName}" label="name"/>
             email: <h:inputText id="email" value="#{userTestManagedBean.user.email}" label="email"/>
             <br/>
             <h:commandButton value="save" action="#{userTestManagedBean.save()}"/>
             <br/><br/>
         </h:form>
-        <h:form>
+        <br/><br/>
+        <h:form style="border: 1px; border-color: black; border-style: solid; padding: 10px;">
+            <h:outputLabel value="SEND EMAIL NOTIFICATION:" /><br/>
             Receiver: <h:inputText id="receiver" value="#{userTestManagedBean.receiver}" label="receiver"/>
             <h:commandButton value="sendMail" action="#{userTestManagedBean.sendMail()}"/>
         </h:form>
