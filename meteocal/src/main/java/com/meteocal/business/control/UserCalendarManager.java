@@ -24,6 +24,7 @@ public class UserCalendarManager {
     }
     
     
+    //TODO
     /**
      * It does all the required procedures to upload a calendar:
      * - upload the file;
@@ -37,6 +38,7 @@ public class UserCalendarManager {
     }
     
     
+    //TODO
     /**
      * It verify the consistency of the uploaded file:
      * - verify the correct type/extension;
@@ -51,6 +53,7 @@ public class UserCalendarManager {
     }
     
     
+    //TODO
     /**
      * It extracts the interesting events from the calendar:
      * If the user who is importing the calendar is the same who has exported it:
@@ -67,6 +70,7 @@ public class UserCalendarManager {
     }
     
     
+    //TODO
     /**
      * It changes the privacy setting of the given user (from public to private or vice versa).
      * 

@@ -61,7 +61,7 @@ public class IssuesDataManager{
         }
     }
     
-    //TODO Password generator. :)
+    
     /**
      * If the check of the data is correct it sends an email with the requested password, otherwise it does nothing
      * 
@@ -72,8 +72,8 @@ public class IssuesDataManager{
             //query (it is a User)
             User query = (User) em.createNamedQuery("User.findByEmail").setParameter("email", e).getSingleResult();
             String fullname = query.getFirstName() + " " + query.getLastName();
-            //generate a new lenght-6 password
-            String password = RandomStringUtils.randomAlphanumeric(6);
+            //generate a new lenght-8 password
+            String password = RandomStringUtils.randomAlphanumeric(8);
             
             //email text parts
             String subject = "METEOCAL: password request";
