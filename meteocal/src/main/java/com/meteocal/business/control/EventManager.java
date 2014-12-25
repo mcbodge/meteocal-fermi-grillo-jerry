@@ -5,7 +5,8 @@ import com.meteocal.business.entity.User;
 
 /**
  * FROM - C:EventCreationManager
- * TO - E:Event, E:Notification(Invitation & Answer)
+ * FROM/TO - B: NotificationP
+ * TO - E:Event, E:Notification(Invitation & Answer), E:User
  * @author Manuel
  */
 public class EventManager {
