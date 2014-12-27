@@ -16,6 +16,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
+import javax.persistence.PersistenceContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
@@ -27,7 +28,8 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class LogInManager{
     
-    private EntityManager em;
+    @PersistenceContext
+    EntityManager em;
     
     //TODO
     /**
@@ -60,10 +62,10 @@ public class LogInManager{
     /**
      * Logs out a session
      * 
-     * @param u 
+     * //@param u 
      */  
     //USER PARAM. IS NOT NEEDED, BUT WE SHOULD REDIRECT TO LOG IN PAGE.
-    private void logOutCurrentSession(User u){
+    public void logOutCurrentSession(/*User u*/){
         FacesContext context = FacesContext.getCurrentInstance();
         HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();
         request.getSession().invalidate();
@@ -71,29 +73,30 @@ public class LogInManager{
     }
     
     
-    //TODO RC
+    //TODO RC welcome inform. still need to be added.
     /**
      * Logs in - a validated user - redirecting him to his/her personal page. 
      * It also sends a "welcome" information.
      * 
-     * @param u the user we want to log in
+     * @param u the username we want to log in
+     * @param p the password
      * @return the URL of the user's personal page
      */
-    private String loadUser(User u){
+    public String loadUser(String u, String p){
         FacesContext context = FacesContext.getCurrentInstance();
         HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();
         try {
-            request.login(u.getUserName(),u.getPassword());
+            request.login(u,p);
         } catch (ServletException e) {
             context.addMessage(null, new FacesMessage("Login failed."));
-            return "login";
-        }
+            return "home";
+        }        
         context.addMessage(null, new FacesMessage("Login OK."));
         return "/user/personal";
     }
     
  
-    //TODO
+    //TODO RC
     /**
      * False <- User name doesn't exist
      * False <- User name exist && password is wrong
@@ -102,8 +105,8 @@ public class LogInManager{
      * @param un user name
      * @param p password
      * @return "true" if the the fields are correct
-     */
-    private boolean verifyLogIn(String un, String p){
+     */ 
+    /*private*/ public boolean verifyLogIn(String un, String p){
         User usr;
         
         //check user

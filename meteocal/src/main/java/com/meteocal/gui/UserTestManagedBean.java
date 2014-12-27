@@ -8,10 +8,15 @@ import com.meteocal.business.boundary.UserTestSessionBean;
 import com.meteocal.business.control.IssuesDataManager;
 import com.meteocal.business.entity.User;
 import java.util.List;
+import java.util.logging.Level;
 import javax.ejb.EJB;
 import javax.inject.Named;
 import javax.enterprise.context.RequestScoped;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  *
@@ -27,6 +32,42 @@ public class UserTestManagedBean {
     private User user;
     private String receiver;
     private String yem;
+    private String lun;
+    private String lpw;
+    private String lvres;
+    private String logres;
+
+    public String getLogres() {
+        return logres;
+    }
+
+    public void setLogres(String logres) {
+        this.logres = logres;
+    }
+
+    public String getLvres() {
+        return lvres;
+    }
+
+    public void setLvres(String lvres) {
+        this.lvres = lvres;
+    }
+
+    public String getLun() {
+        return lun;
+    }
+
+    public void setLun(String lun) {
+        this.lun = lun;
+    }
+
+    public String getLpw() {
+        return lpw;
+    }
+
+    public void setLpw(String lpw) {
+        this.lpw = lpw;
+    }
 
     public String getYem() {
         return yem;
@@ -83,4 +124,31 @@ public class UserTestManagedBean {
         return "francescoTEST?faces-redirect=true";
     }
     
+    public void verify(){
+        lvres=sb.verifyLogIn(lun, lpw);
+    }
+    /*
+    public void login(){
+        logres=sb.loadUser(lun, lpw);
+    }
+    */
+    public String login() {
+        FacesContext context = FacesContext.getCurrentInstance();
+        HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();
+        try {
+            request.login(this.lun, this.lpw);
+            return "/user/personal";
+        } catch (ServletException e) {
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Login Failed","Login Failed"));
+            //logger.log(Level.SEVERE,"Login Failed");
+            return null;
+        }
+    }
+    public String logout() {
+        FacesContext context = FacesContext.getCurrentInstance();
+        HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();
+        request.getSession().invalidate();
+        //logger.log(Level.INFO, "User Logged out");
+        return "/index?faces-redirect=true";
+    }
 }

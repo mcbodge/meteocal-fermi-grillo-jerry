@@ -1,12 +1,16 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html">
+      xmlns:h="http://xmlns.jcp.org/jsf/html"   
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+ 
     <h:head>
         <title>CESCO TESTING</title>
     </h:head>
     <h:body>
-        METEOCAL: FrancescoTEST page.
+        <h1>METEOCAL: FrancescoTEST page.</h1>
         
         <!--> This code is used to test the connection to the db <-->
         <br/><br/>
@@ -36,6 +40,24 @@
             <br/><br/>
             <h:commandButton value="send" action="#{userTestManagedBean.issues()}"/>
         </h:form>
+        <br/><br/>
+       
+        <h:form id="loginform" style="border: 1px; border-color: black; border-style: solid; padding: 10px;">
+            <p:panel header="TEST LOG IN MANAGER:">
+                <p:panelGrid columns="2">
+                    <p:outputLabel for="username" value="user_name"/>
+                    <p:inputText id="username" value="#{userTestManagedBean.lun}" 
+                                 required="true" />
+                    <p:outputLabel for="pass" value="password"/>
+                    <p:password id="pass" value="#{userTestManagedBean.lpw}" 
+                                required="true" />
+                    <p:commandButton id="submit" action="#{userTestManagedBean.login()}" value="Login" ajax="true" update="@all"/>
+                    <h:outputLabel value="#{userTestManagedBean.logres}" />
+                </p:panelGrid>
+            </p:panel>
+            <h:messages  style="color: red"/>
+        </h:form>
+        
     </h:body>
 </html>
 

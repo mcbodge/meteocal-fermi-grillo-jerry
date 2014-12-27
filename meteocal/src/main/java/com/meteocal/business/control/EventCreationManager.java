@@ -7,8 +7,11 @@ package com.meteocal.business.control;
 
 import com.meteocal.business.entity.Event;
 import com.meteocal.business.entity.User;
+import com.meteocal.business.entity.Weather;
 import java.util.Date;
 import java.util.List;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 /**
  * FROM/TO - B:PersonalPage
@@ -17,8 +20,10 @@ import java.util.List;
  * @author Manuel
  */
 public class EventCreationManager {
+    @PersistenceContext
+    EntityManager em;
     
-    //TODO
+    //TODO RC
     /**
      * Creates a new event, given the required parameters and returns its id. If no valid creator or name or start or end 
      * 
@@ -33,7 +38,30 @@ public class EventCreationManager {
      * @param description the description of the event, or null.
      * @return the eventId of the created event. Null if no event is created.
      */
-    public Integer newEvent(Integer creator, String name, Date start, Date end, String location, List<User> invited, boolean p, Integer constraint, String description){
+    public Integer newEvent(User creator, String name, Date start, Date end, String location, List<User> invited, boolean p, Integer constraint, String description){
+        if(verifyConsistency(constraint, start, end)){
+            Event event = new Event(creator,name, location,start, end,p);
+            event.setDescription(description);
+            event.setInvitedUserCollection(invited);
+            //personal event if and only if the creator is the only attender.
+            if(invited.isEmpty() || invited == null){
+                event.setPersonal(true);
+            }else{
+                event.setPersonal(false);
+            }
+            //save in db
+            em.persist(event);
+            
+            //create weather constraint and bind it to the event
+            Weather weather = new Weather(event.getEventId());
+            weather.setConstraint(constraint);
+            em.persist(weather);
+            
+            //send invitations
+            sendInvitations(invited, event);
+            
+            return event.getEventId();
+        }
         return null;
     }
     
