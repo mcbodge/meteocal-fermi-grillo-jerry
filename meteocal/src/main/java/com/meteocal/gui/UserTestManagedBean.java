@@ -127,23 +127,11 @@ public class UserTestManagedBean {
     public void verify(){
         lvres=sb.verifyLogIn(lun, lpw);
     }
-    /*
+    
     public void login(){
         logres=sb.loadUser(lun, lpw);
     }
-    */
-    public String login() {
-        FacesContext context = FacesContext.getCurrentInstance();
-        HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();
-        try {
-            request.login(this.lun, this.lpw);
-            return "/user/personal";
-        } catch (ServletException e) {
-            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Login Failed","Login Failed"));
-            //logger.log(Level.SEVERE,"Login Failed");
-            return null;
-        }
-    }
+       
     public String logout() {
         FacesContext context = FacesContext.getCurrentInstance();
         HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();
