@@ -7,6 +7,7 @@ package com.meteocal.business.control;
 
 import com.meteocal.business.entity.User;
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
 /**
@@ -17,6 +18,7 @@ import javax.persistence.TypedQuery;
  */
 public class ProfileDataManager {
     
+    @PersistenceContext
     EntityManager em;
     
     //TODO RC

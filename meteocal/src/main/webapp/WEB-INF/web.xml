@@ -4,6 +4,16 @@
         <param-name>javax.faces.PROJECT_STAGE</param-name>
         <param-value>Development</param-value>
     </context-param>
+    <context-param>
+        <param-name>
+            javax.faces.INTERPRET_EMPTY_STRING_SUBMITTED_VALUES_AS_NULL
+        </param-name>
+        <param-value>true</param-value>
+    </context-param>
+    <context-param>
+        <param-name>primefaces.THEME</param-name>
+        <param-value>bootstrap</param-value>
+    </context-param>
     <servlet>
         <servlet-name>Faces Servlet</servlet-name>
         <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
@@ -11,7 +21,7 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>Faces Servlet</servlet-name>
-        <url-pattern>/faces/*</url-pattern>
+        <url-pattern>*.xhtml</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
@@ -19,14 +29,14 @@
         </session-timeout>
     </session-config>
     <welcome-file-list>
-        <welcome-file>faces/index.xhtml</welcome-file>
+        <welcome-file>index.xhtml</welcome-file>
     </welcome-file-list>
     <login-config>
         <auth-method>FORM</auth-method>
-        <realm-name>jdbcRealmRegistration</realm-name>
+        <realm-name>jdbcRealmMeteoCal</realm-name>
         <form-login-config>
-            <form-login-page>/home.xhtml</form-login-page>
-            <form-error-page>/home.xhtml?error=true</form-error-page>
+            <form-login-page>/francescoTEST.xhtml</form-login-page>
+            <form-error-page>/francescoTEST.xhtml?error=true</form-error-page>
         </form-login-config>
     </login-config>
     <security-constraint>

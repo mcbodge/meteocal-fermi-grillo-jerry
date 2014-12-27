@@ -99,7 +99,7 @@ public class Event implements Serializable {
         @JoinColumn(name = "event_id", referencedColumnName = "event_id", nullable = false)}, inverseJoinColumns = {
         @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)})
     @ManyToMany
-    private Collection<User> userCollection;
+    private Collection<User> invitedUserCollection;
    
     
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "event")
@@ -123,18 +123,19 @@ public class Event implements Serializable {
         this.eventId = eventId;
     }
     */
-    public Event(/*Integer eventId,*/ String name, Date start, Date end, boolean publicEvent, boolean personal) {
-        //this.eventId = eventId;
+    public Event(User creator, String name, String location, Date start, Date end, boolean publicEvent) {
         this.name = name;
+        this.location = location;
         this.start = start;
         this.end = end;
         this.publicEvent = publicEvent;
-        this.personal = personal;
+        this.creator = creator;
     }
 
     public Integer getEventId() {
         return eventId;
     }
+    
     /*
     public void setEventId(Integer eventId) {
         this.eventId = eventId;
@@ -199,12 +200,12 @@ public class Event implements Serializable {
     }
      
     @XmlTransient
-    public Collection<User> getUserCollection() {
-        return userCollection;
+    public Collection<User> getInvitedUserCollection() {
+        return invitedUserCollection;
     }
 
-    public void setUserCollection(Collection<User> userCollection) {
-        this.userCollection = userCollection;
+    public void setInvitedUserCollection(Collection<User> userCollection) {
+        this.invitedUserCollection = userCollection;
     }
    
     @XmlTransient
