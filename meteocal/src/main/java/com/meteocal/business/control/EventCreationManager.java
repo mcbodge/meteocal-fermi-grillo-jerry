@@ -8,6 +8,7 @@ package com.meteocal.business.control;
 import com.meteocal.business.entity.Event;
 import com.meteocal.business.entity.User;
 import com.meteocal.business.entity.Weather;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -24,9 +25,11 @@ public class EventCreationManager {
     @PersistenceContext
     EntityManager em;
     
-    //TODO RC
+    //TODO verify :)
     /**
-     * Creates a new event, given the required parameters and returns its id. If no valid creator or name or start or end 
+     * NEW EVENT, GIVING THE LOCATION normal-language STRING
+     * Creates a new event, given the required parameters and returns its id.
+     * Requires valid creator, name, start and end.
      * 
      * @param creator the creator (User).
      * @param name the name of the event.
@@ -41,29 +44,88 @@ public class EventCreationManager {
      */
     public Integer newEvent(User creator, String name, Date start, Date end, String location, List<User> invited, boolean p, Integer constraint, String description){
         
-        if(verifyConsistency(creator, start, end)){
+        if(start != null && end != null && name!= null && verifyConsistency(creator, start, end)){
             //consistency ok
-            Event event = new Event(creator,name, location,start, end,p);
-            event.setDescription(description);
-            event.setInvitedUserCollection(invited);
-            //personal event if and only if the creator is the only attender.
-            if(invited.isEmpty() || invited == null){
-                event.setPersonal(true);
-            }else{
+            Event event = new Event(creator, name, location, start, end, p);
+            
+            if(description.isEmpty()){
+                event.setDescription(description);
+            }
+            
+            if(invited.isEmpty()) {
+                //add nobody
+                event.setPersonal(true); //personal event if and only if the creator is the only attender.
+            } else {
+                event.setInvitedUserCollection(invited);
                 event.setPersonal(false);
             }
+            
+            //save in db
+            em.persist(event);
+            
+            //no weather condition is given
+          
+            //send invitations
+            if(!invited.isEmpty())
+                sendInvitations(invited, event);
+            
+            return event.getEventId();
+        }
+        return null;
+    }
+    
+        //TODO create location string
+    /**
+     * NEW EVENT, GIVING THE LOCATION ID
+     * The name of the location is automatically generated***
+     * Creates a new event, given the required parameters and returns its id.
+     * Requires valid creator, name, start and end.
+     * 
+     * @param creator the creator's userId.
+     * @param name the name of the event.
+     * @param start the start datetime of the event (w/ year, month, day, hour and minute).
+     * @param end the end datetime of the event (w/ year, month, day, hour and minute).
+     * @param geoname the generated location of the event (if it's null no Event is created).
+     * @param invited the list of the users invited to the event, or null.
+     * @param p the privacy value 0 for public, 1 for private.
+     * @param constraint the generated constraint value of the event, or null.
+     * @param description the description of the event, or null.
+     * @return the eventId of the created event. Null if no event is created.
+     */
+    public Integer newEvent(User creator, String name, Date start, Date end, Integer geoname, List<User> invited, boolean p, Integer constraint, String description){
+        if(geoname != null && start != null && end != null && name!= null && verifyConsistency(creator, start, end)){
+            String location = ""; //TODO <getName(geoname)>+" ("+<getAdmin2(geoname)>+") - "+getCountry(geoname) //***
+            Event event = new Event(creator, name, location, start, end, p);
+            
+            if(description.isEmpty())
+                event.setDescription(description);
+            
+            
+            if(invited.isEmpty()) {
+                //add noone
+                event.setPersonal(true); //personal event if and only if the creator is the only attender.
+            } else {
+                event.setInvitedUserCollection(invited);
+                event.setPersonal(false);
+            }
+            
             //save in db
             em.persist(event);
             
             //create weather constraint and bind it to the event
             Weather weather = new Weather(event.getEventId());
-            weather.setConstraint(constraint);
+            
+            if(constraint!=null)
+                weather.setConstraint(constraint);
+            
+            //weather.setLocationCode(geoname);
+            
             em.persist(weather);
             
             //send invitations
-            if(invited.isEmpty() || invited == null){
+            if(!invited.isEmpty())
                 sendInvitations(invited, event);
-            }
+            
             
             return event.getEventId();
         }
@@ -71,7 +133,7 @@ public class EventCreationManager {
         return null;
     }
     
-    //TODO RC
+    //TODO test
     /**
      * Allows to verify the time consistency of an event given its creator.
      * It returns true if no other event of the given user is in the db after start and before end.
@@ -84,9 +146,8 @@ public class EventCreationManager {
     public boolean verifyConsistency(User creator, Date start, Date end){
         
         //check if end is > then start
-        if(end.before(start)){
+        if(end.before(start))
             return false;
-        }
         
         //load event created by the user and events that user attends 
         TypedQuery<Event> query;
@@ -98,12 +159,10 @@ public class EventCreationManager {
                 .setParameter("creator", creator.getUserId())
                 .setParameter("start", start)
                 .setParameter("end", end);
-        if(query.getResultList().isEmpty()){
-            //no events = no overlap
-            return true;            
-        }
-        return false;
+        
+        return start.after(Date.from(Calendar.getInstance().toInstant())) && query.getResultList().isEmpty();
     }
+    
     
     //TODO for-each of newInvitation()
     /**

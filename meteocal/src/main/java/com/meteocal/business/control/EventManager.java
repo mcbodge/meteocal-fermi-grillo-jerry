@@ -87,7 +87,7 @@ public class EventManager {
      * @return false if there are adverse weather conditions -- true otherwise.
      */
     public boolean checkWeather(Event e){
-        return false;
+        return false; 
         
     }
 }
