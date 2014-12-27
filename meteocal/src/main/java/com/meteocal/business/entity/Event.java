@@ -100,8 +100,7 @@ public class Event implements Serializable {
         @JoinColumn(name = "user_id", referencedColumnName = "user_id", nullable = false)})
     @ManyToMany
     private Collection<User> invitedUserCollection;
-   
-    
+       
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "event")
     private Collection<Answer> answerCollection;
     

@@ -19,6 +19,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -33,28 +34,25 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Weather.findByEventId", query = "SELECT w FROM Weather w WHERE w.eventId = :eventId"),
     @NamedQuery(name = "Weather.findByConstraint", query = "SELECT w FROM Weather w WHERE w.constraint = :constraint"),
     @NamedQuery(name = "Weather.findByForecast", query = "SELECT w FROM Weather w WHERE w.forecast = :forecast"),
-    @NamedQuery(name = "Weather.findByLastUpdate", query = "SELECT w FROM Weather w WHERE w.lastUpdate = :lastUpdate")
-})
+    @NamedQuery(name = "Weather.findByLastUpdate", query = "SELECT w FROM Weather w WHERE w.lastUpdate = :lastUpdate"),
+    @NamedQuery(name = "Weather.findByLocationCode", query = "SELECT w FROM Weather w WHERE w.locationCode = :locationCode")})
 public class Weather implements Serializable {
-    
     private static final long serialVersionUID = 1L;
-    
     @Id
     @Basic(optional = false)
     @NotNull
     @Column(name = "event_id", nullable = false)
     private Integer eventId;
-    
     @Column(name = "constraint")
     private Integer constraint;
-    
     @Column(name = "forecast")
     private Integer forecast;
-    
     @Column(name = "last_update")
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastUpdate;
-    
+    @Size(max = 45)
+    @Column(name = "location_code", length = 45)
+    private String locationCode;
     @JoinColumn(name = "event_id", referencedColumnName = "event_id", nullable = false, insertable = false, updatable = false)
     @OneToOne(optional = false)
     private Event event;
@@ -96,6 +94,14 @@ public class Weather implements Serializable {
 
     public void setLastUpdate(Date lastUpdate) {
         this.lastUpdate = lastUpdate;
+    }
+
+    public String getLocationCode() {
+        return locationCode;
+    }
+
+    public void setLocationCode(String locationCode) {
+        this.locationCode = locationCode;
     }
 
     public Event getEvent() {
