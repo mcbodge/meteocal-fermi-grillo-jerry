@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 
 /**
  * FROM/TO - B:PersonalPage
@@ -27,7 +28,7 @@ public class EventCreationManager {
     /**
      * Creates a new event, given the required parameters and returns its id. If no valid creator or name or start or end 
      * 
-     * @param creator the creator's userId.
+     * @param creator the creator (User).
      * @param name the name of the event.
      * @param start the start datetime of the event (w/ year, month, day, hour and minute).
      * @param end the end datetime of the event (w/ year, month, day, hour and minute).
@@ -39,7 +40,9 @@ public class EventCreationManager {
      * @return the eventId of the created event. Null if no event is created.
      */
     public Integer newEvent(User creator, String name, Date start, Date end, String location, List<User> invited, boolean p, Integer constraint, String description){
-        if(verifyConsistency(constraint, start, end)){
+        
+        if(verifyConsistency(creator, start, end)){
+            //consistency ok
             Event event = new Event(creator,name, location,start, end,p);
             event.setDescription(description);
             event.setInvitedUserCollection(invited);
@@ -58,26 +61,48 @@ public class EventCreationManager {
             em.persist(weather);
             
             //send invitations
-            sendInvitations(invited, event);
+            if(invited.isEmpty() || invited == null){
+                sendInvitations(invited, event);
+            }
             
             return event.getEventId();
         }
+        //no consistency
         return null;
     }
     
-    //TODO
+    //TODO RC
     /**
      * Allows to verify the time consistency of an event given its creator.
      * It returns true if no other event of the given user is in the db after start and before end.
      * 
-     * @param creator the creator's userId.
+     * @param creator the creator (User).
      * @param start the start datetime of the event (w/ year, month, day, hour and minute).
      * @param end the end datetime of the event (w/ year, month, day, hour and minute).
      * @return true if no events overlaps -- false otherwise.
      */    
-    public boolean verifyConsistency(Integer creator, Date start, Date end){
-        return false;
+    public boolean verifyConsistency(User creator, Date start, Date end){
         
+        //check if end is > then start
+        if(end.before(start)){
+            return false;
+        }
+        
+        //load event created by the user and events that user attends 
+        TypedQuery<Event> query;
+        query = (TypedQuery<Event>) em.createNativeQuery(
+                "SELECT e FROM Event e, Answer a"
+                        + "WHERE (e.start <= :start AND e.end >= :end) "
+                            + "AND ((e.creator = :creator) "
+                            + "OR (a.event_id = e.event_id AND a.value = 1 AND :creator = a.user_id))")
+                .setParameter("creator", creator.getUserId())
+                .setParameter("start", start)
+                .setParameter("end", end);
+        if(query.getResultList().isEmpty()){
+            //no events = no overlap
+            return true;            
+        }
+        return false;
     }
     
     //TODO for-each of newInvitation()
@@ -87,7 +112,8 @@ public class EventCreationManager {
      * @param ul list of users that have to receive the invitations.
      * @param event the event the users have to be invited to.
      */
-    public void sendInvitations(List<User> ul, Event event){        
+    public void sendInvitations(List<User> ul, Event event){ 
+        
     }
     
     
