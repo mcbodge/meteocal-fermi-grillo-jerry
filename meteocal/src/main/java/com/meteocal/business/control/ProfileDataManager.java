@@ -21,7 +21,7 @@ public class ProfileDataManager {
     @PersistenceContext
     EntityManager em;
     
-    //TODO RC
+    //TODO test it, if not already done
     /**
      * registration page <- s.thing wrong
      * home page <- user successfully created (he/she needs to log in)
@@ -43,7 +43,7 @@ public class ProfileDataManager {
                 .setParameter("userName", username)
                 .setParameter("email", email);
         if(query.getResultList().isEmpty()){
-            //OK, email and username are not already in DB
+            //OK, email or username are not already in DB
             newUser(first, last, username, email, password);
             return "home";
         }
@@ -51,7 +51,7 @@ public class ProfileDataManager {
         return "registration";
     }
     
-    //TODO RC
+    
     /**
      * It creates a new user, giving the previously submitted and checked data.
      * 
