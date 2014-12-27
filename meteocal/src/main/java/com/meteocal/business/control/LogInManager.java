@@ -58,7 +58,7 @@ public class LogInManager{
     }
     
     
-    //TODO RC
+    //TODO modify it at your willing. ;)
     /**
      * Logs out a session
      * 
@@ -74,7 +74,7 @@ public class LogInManager{
     }
     
     
-    //TODO RC welcome inform. still need to be added.
+    //TODO welcome inform. still need to be added. -- a welcome information is simply a new instance in the information table, with event set to null.
     /**
      * Logs in - a validated user - redirecting him to his/her personal page. 
      * It also sends a "welcome" information.
@@ -99,7 +99,6 @@ public class LogInManager{
     }
     
  
-    //TODO RC
     /**
      * False <- User name doesn't exist
      * False <- User name exist && password is wrong
@@ -121,14 +120,11 @@ public class LogInManager{
             return false;
         }
         
-        //check password
-        if(usr.getPassword().equals(encryptPassword(p))){
-            // user ok AND psw ok
-            return true;
-        }
-        //user ok AND psw mismatch
-        return false;
+        //check password of an existing user
+        return usr.getPassword().equals(encryptPassword(p)); // if the password is ok it returns true, otherwise - if it mismatches - it returns false 
+
     }
+    
     
     /**  
      * Encrypt the password.
