@@ -172,7 +172,7 @@ public class EventCreationManager {
      * @param event the event the users have to be invited to.
      */
     public void sendInvitations(List<User> ul, Event event){ 
-        
+        //richiamato anche quando modifichi...quindi prima check se sono già stati invitati.
     }
     
     

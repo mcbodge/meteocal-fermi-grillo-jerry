@@ -57,8 +57,9 @@ public class Answer implements Serializable {
         this.value = value;
     }
 
-    public Answer(int eventId, int userId) {
+    public Answer(int eventId, int userId, boolean value) {
         this.answerPK = new AnswerPK(eventId, userId);
+        this.value = value;
     }
 
     public AnswerPK getAnswerPK() {

@@ -64,8 +64,15 @@ public class Information implements Serializable {
         this.informationId = informationId;
     }
     */
-    public Information(/*Integer informationId,*/ String text) {
+    public Information(/*Integer informationId,*/ User userId, String text) {
         //this.informationId = informationId;
+        this.userId = userId;
+        this.text = text;
+    }
+    public Information(/*Integer informationId,*/ Event eventId, User userId, String text) {
+        //this.informationId = informationId;
+        this.userId = userId;
+        this.eventId = eventId;
         this.text = text;
     }
 

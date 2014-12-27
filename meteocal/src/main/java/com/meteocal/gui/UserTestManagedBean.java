@@ -124,10 +124,6 @@ public class UserTestManagedBean {
         return "francescoTEST?faces-redirect=true";
     }
     
-    public void verify(){
-        lvres=sb.verifyLogIn(lun, lpw);
-    }
-    
     public void login(){
         logres=sb.loadUser(lun, lpw);
     }
