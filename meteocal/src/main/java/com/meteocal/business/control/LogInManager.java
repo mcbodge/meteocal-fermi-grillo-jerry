@@ -69,7 +69,8 @@ public class LogInManager{
         FacesContext context = FacesContext.getCurrentInstance();
         HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();
         request.getSession().invalidate();
-        //return "/home?faces-redirect=true";
+        //logger.log(Level.INFO, "User Logged out");
+        //return "/index?faces-redirect=true";
     }
     
     
@@ -89,10 +90,12 @@ public class LogInManager{
             request.login(u,p);
         } catch (ServletException e) {
             context.addMessage(null, new FacesMessage("Login failed."));
+            //logger.log(Level.SEVERE,"Login Failed");
             return "home";
         }        
         context.addMessage(null, new FacesMessage("Login OK."));
         return "/user/personal";
+        
     }
     
  
@@ -106,7 +109,7 @@ public class LogInManager{
      * @param p password
      * @return "true" if the the fields are correct
      */ 
-    /*private*/ public boolean verifyLogIn(String un, String p){
+    private boolean verifyLogIn(String un, String p){
         User usr;
         
         //check user
