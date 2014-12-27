@@ -97,7 +97,7 @@ public class User implements Serializable {
     private String groupname;
       
     
-    @ManyToMany(mappedBy = "userCollection")
+    @ManyToMany(mappedBy = "invitedUserCollection")
     private Collection<Event> eventCollection;
     
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
