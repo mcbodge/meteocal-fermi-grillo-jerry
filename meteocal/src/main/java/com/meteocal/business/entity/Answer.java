@@ -119,4 +119,5 @@ public class Answer implements Serializable {
         return "com.meteocal.business.entity.Answer[ answerPK=" + answerPK + " ]";
     }
     
+    
 }

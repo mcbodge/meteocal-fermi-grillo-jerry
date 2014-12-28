@@ -256,4 +256,10 @@ public class User implements Serializable {
         return "com.meteocal.business.entity.User[ userId=" + userId + " ]";
     }
     
+    // <editor-fold desc="Entity properties (User)">
+    
+    
+    
+    // </editor-fold>
+    
 }

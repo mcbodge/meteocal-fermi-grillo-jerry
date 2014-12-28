@@ -133,4 +133,10 @@ public class Information implements Serializable {
         return "com.meteocal.business.entity.Information[ informationId=" + informationId + " ]";
     }
     
+    // <editor-fold desc="Entity properties (Local information notification)">
+    
+    
+    
+    // </editor-fold>
+    
 }

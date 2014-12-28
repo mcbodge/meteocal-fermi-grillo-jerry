@@ -268,4 +268,19 @@ public class Event implements Serializable {
         return "com.meteocal.business.entity.Event[ eventId=" + eventId + " ]";
     }
     
+    
+    // <editor-fold desc="Entity properties (Event)">
+    
+    
+    
+    // </editor-fold>
+    
+    
+    // <editor-fold desc="Entity properties (Invitation notification)">
+    
+    
+    
+    // </editor-fold>
+    
 }
+

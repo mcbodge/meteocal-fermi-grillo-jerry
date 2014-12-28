@@ -56,6 +56,8 @@ public class Weather implements Serializable {
     @JoinColumn(name = "event_id", referencedColumnName = "event_id", nullable = false, insertable = false, updatable = false)
     @OneToOne(optional = false)
     private Event event;
+    
+
 
     public Weather() {
     }
@@ -142,5 +144,18 @@ public class Weather implements Serializable {
     public String toString() {
         return "com.meteocal.business.entity.Weather[ eventId=" + eventId + " ]";
     }
+    
+    // <editor-fold desc="Entity properties (Weather forecast)">
+    
+    
+    
+    // </editor-fold>
+    
+    
+    // <editor-fold desc="Entity properties (Weather constraint)">
+    
+    
+    
+    // </editor-fold>
     
 }
