@@ -113,7 +113,8 @@ public class EventCreationManager {
             em.persist(event);
             
             //create weather constraint and bind it to the event
-            Weather weather = new Weather(event.getEventId());
+            Weather weather;
+            weather = new Weather(event.getEventId(), geoname);
             
             if(constraint!=null)
                 weather.setConstraint(constraint);
