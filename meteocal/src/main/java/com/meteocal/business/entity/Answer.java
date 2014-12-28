@@ -47,16 +47,16 @@ public class Answer implements Serializable {
 
     public Answer() {
     }
-
+    /*
     public Answer(AnswerPK answerPK) {
         this.answerPK = answerPK;
     }
-
+    
     public Answer(AnswerPK answerPK, boolean value) {
         this.answerPK = answerPK;
         this.value = value;
     }
-
+    */
     public Answer(int eventId, int userId, boolean value) {
         this.answerPK = new AnswerPK(eventId, userId);
         this.value = value;

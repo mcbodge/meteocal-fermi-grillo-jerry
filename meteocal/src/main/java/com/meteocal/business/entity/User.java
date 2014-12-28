@@ -98,7 +98,7 @@ public class User implements Serializable {
       
     
     @ManyToMany(mappedBy = "invitedUserCollection")
-    private Collection<Event> eventCollection;
+    private Collection<Event> eventInvitationCollection;
     
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     private Collection<Answer> answerCollection;
@@ -107,7 +107,7 @@ public class User implements Serializable {
     private Collection<Information> informationCollection;
     
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "creator")
-    private Collection<Event> eventCollection1;
+    private Collection<Event> eventCreatedCollection;
 
     public User() {
     }
@@ -196,12 +196,12 @@ public class User implements Serializable {
     }
     
     @XmlTransient
-    public Collection<Event> getEventCollection() {
-        return eventCollection;
+    public Collection<Event> getEventInvitationCollection() {
+        return eventInvitationCollection;
     }
 
-    public void setEventCollection(Collection<Event> eventCollection) {
-        this.eventCollection = eventCollection;
+    public void setEventInvitationCollection(Collection<Event> eventInvitationCollection) {
+        this.eventInvitationCollection = eventInvitationCollection;
     }
     
     @XmlTransient
@@ -223,12 +223,12 @@ public class User implements Serializable {
     }
 
     @XmlTransient
-    public Collection<Event> getEventCollection1() {
-        return eventCollection1;
+    public Collection<Event> getEventCreatedCollection() {
+        return eventCreatedCollection;
     }
 
-    public void setEventCollection1(Collection<Event> eventCollection1) {
-        this.eventCollection1 = eventCollection1;
+    public void setEventCreatedCollection(Collection<Event> eventCreatedCollection) {
+        this.eventCreatedCollection = eventCreatedCollection;
     }
 
     @Override

@@ -30,7 +30,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Locations.findByName", query = "SELECT l FROM Locations l WHERE l.name = :name"),
     @NamedQuery(name = "Locations.findByAsciiname", query = "SELECT l FROM Locations l WHERE l.asciiname = :asciiname"),
     @NamedQuery(name = "Locations.findByCountry", query = "SELECT l FROM Locations l WHERE l.country = :country"),
-    @NamedQuery(name = "Locations.findByAdmin2", query = "SELECT l FROM Locations l WHERE l.admin2 = :admin2"),
+    @NamedQuery(name = "Locations.findByProvince", query = "SELECT l FROM Locations l WHERE l.admin2 = :province"),
     @NamedQuery(name = "Locations.findByTimezone", query = "SELECT l FROM Locations l WHERE l.timezone = :timezone")})
 public class Locations implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -54,7 +54,7 @@ public class Locations implements Serializable {
     @NotNull
     @Size(min = 1, max = 80)
     @Column(name = "admin2", nullable = false, length = 80)
-    private String admin2;
+    private String province;
     @Size(max = 40)
     @Column(name = "timezone", length = 40)
     private String timezone;
@@ -66,58 +66,34 @@ public class Locations implements Serializable {
         this.geonameid = geonameid;
     }
 
-    public Locations(Integer geonameid, String name, String admin2) {
+    public Locations(Integer geonameid, String name, String province) {
         this.geonameid = geonameid;
         this.name = name;
-        this.admin2 = admin2;
+        this.province = province;
     }
 
     public Integer getGeonameid() {
         return geonameid;
     }
 
-    public void setGeonameid(Integer geonameid) {
-        this.geonameid = geonameid;
-    }
-
     public String getName() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getAsciiname() {
         return asciiname;
     }
 
-    public void setAsciiname(String asciiname) {
-        this.asciiname = asciiname;
-    }
-
     public String getCountry() {
         return country;
     }
 
-    public void setCountry(String country) {
-        this.country = country;
-    }
-
-    public String getAdmin2() {
-        return admin2;
-    }
-
-    public void setAdmin2(String admin2) {
-        this.admin2 = admin2;
+    public String getProvince() {
+        return province;
     }
 
     public String getTimezone() {
         return timezone;
-    }
-
-    public void setTimezone(String timezone) {
-        this.timezone = timezone;
     }
 
     @Override
