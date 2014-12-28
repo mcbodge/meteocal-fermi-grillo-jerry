@@ -5,7 +5,10 @@ import com.meteocal.business.entity.Answer;
 import com.meteocal.business.entity.Event;
 import com.meteocal.business.entity.Information;
 import com.meteocal.business.entity.User;
+import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
+import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
@@ -18,6 +21,7 @@ import javax.persistence.TypedQuery;
  * @author Manuel
  */
 public class EventManager {
+    needs to be singleton 
     
     @PersistenceContext
     EntityManager em;
@@ -45,7 +49,7 @@ public class EventManager {
             }catch(NoResultException ex){
                 //OK, create new invitation
                 e.getInvitedUserCollection().add(u);
-                u.getEventCollection().add(e);
+                u.getEventInvitationCollection().add(e);
                 em.merge(e);
                 em.merge(u);
                 //send email notification
@@ -93,7 +97,7 @@ public class EventManager {
         if(e.getInvitedUserCollection().contains(u)){
             //revoke invitaiton
             e.getInvitedUserCollection().remove(u);
-            u.getEventCollection().remove(e);
+            u.getEventInvitationCollection().remove(e);
             em.merge(e);
             em.merge(u);
         } else { 
@@ -136,19 +140,19 @@ public class EventManager {
             if(query.getResultList().isEmpty()){
                 //no overlap
                 //delete invitation
-                u.getEventCollection().remove(e);
+                u.getEventInvitationCollection().remove(e);
                 e.getInvitedUserCollection().remove(u);
                 em.merge(e);
                 em.merge(u);
                 //add answer
                 Answer answer = new Answer(e.getEventId(), u.getUserId(), true);
                 em.persist(answer);
-                //create info 
-                newInformation(u, "You are attending the event: " + e.getName() + "." , e);
-                //send email notification
-                String subject = "METEOCAL: new event in your calendar";
-                String body = "Dear " + u.getFirstName() + " " + u.getLastName() + ",\nCOngratulations, you are now attending the event: " + e.getName() + ".\nCheck your calendar on Meteocal.\n\nPLEASE DO NOT REPLY TO THIS EMAIL";
-                EmailManager.getInstance().sendEmail(u.getEmail(), subject, body);
+                //create info for the creator
+                -newInformation(u, "You are attending the event: " + e.getName() + "." , e);
+                //send email notification for the creator
+                -String subject = "METEOCAL: new event in your calendar";
+                -String body = "Dear " + u.getFirstName() + " " + u.getLastName() + ",\nCongratulations, you are now attending the event: " + e.getName() + ".\nCheck your calendar on Meteocal.\n\nPLEASE DO NOT REPLY TO THIS EMAIL";
+                -EmailManager.getInstance().sendEmail(u.getEmail(), subject, body);
             } else {
                 //overlap
                 declineInvitation(u, e);
@@ -167,7 +171,7 @@ public class EventManager {
      */
     public void declineInvitation(User u, Event e){
         if(e.getInvitedUserCollection().contains(u)){
-            u.getEventCollection().remove(e);
+            u.getEventInvitationCollection().remove(e);
             e.getInvitedUserCollection().remove(u);
             em.merge(e);
             em.merge(u);
@@ -187,5 +191,46 @@ public class EventManager {
     public boolean checkWeather(Event e){
         return false; 
         
+    }
+    
+    //TODO for-each of newInvitation()
+    /**
+     * Invites the given users to the given event.
+     * 
+     * @param ul list of users that have to receive the invitations.
+     * @param event the event the users have to be invited to.
+     */
+    public void sendInvitations(List<User> ul, Event event){ 
+        //richiamato anche quando modifichi...quindi prima check se sono già stati invitati.
+    }
+    
+    //TODO test
+    /**
+     * Allows to verify the time consistency of an event given its creator.
+     * It returns true if no other event of the given user is in the db after start and before end.
+     * 
+     * @param creator the creator (User).
+     * @param start the start datetime of the event (w/ year, month, day, hour and minute).
+     * @param end the end datetime of the event (w/ year, month, day, hour and minute).
+     * @return true if no events overlaps -- false otherwise.
+     */    
+    public boolean verifyConsistency(User creator, Date start, Date end){
+        
+        //check if end is > then start
+        if(end.before(start))
+            return false;
+        
+        //load event created by the user and events that user attends 
+        TypedQuery<Event> query;
+        query = (TypedQuery<Event>) em.createNativeQuery(
+                "SELECT e FROM Event e, Answer a"
+                        + "WHERE (e.start <= :start AND e.end >= :end) "
+                            + "AND ((e.creator = :creator) "
+                            + "OR (a.event_id = e.event_id AND a.value = 1 AND :creator = a.user_id))")
+                .setParameter("creator", creator.getUserId())
+                .setParameter("start", start)
+                .setParameter("end", end);
+        
+        return start.after(Date.from(Calendar.getInstance().toInstant())) && query.getResultList().isEmpty();
     }
 }
