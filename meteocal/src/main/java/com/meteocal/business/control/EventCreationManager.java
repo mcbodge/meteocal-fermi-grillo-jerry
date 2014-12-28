@@ -44,7 +44,7 @@ public class EventCreationManager {
      */
     public Integer newEvent(User creator, String name, Date start, Date end, String location, List<User> invited, boolean p, Integer constraint, String description){
         
-        if(start != null && end != null && name!= null && verifyConsistency(creator, start, end)){
+        if(start != null && end != null && name!= null && EventManager.getInstance().verifyConsistency(creator, start, end)){
             //consistency ok
             Event event = new Event(creator, name, location, start, end, p);
             
@@ -67,7 +67,7 @@ public class EventCreationManager {
           
             //send invitations
             if(!invited.isEmpty())
-                sendInvitations(invited, event);
+                EventManager.getInstance().sendInvitations(invited, event);
             
             return event.getEventId();
         }
@@ -93,7 +93,7 @@ public class EventCreationManager {
      * @return the eventId of the created event. Null if no event is created.
      */
     public Integer newEvent(User creator, String name, Date start, Date end, Integer geoname, List<User> invited, boolean p, Integer constraint, String description){
-        if(geoname != null && start != null && end != null && name!= null && verifyConsistency(creator, start, end)){
+        if(geoname != null && start != null && end != null && name!= null && EventManager.getInstance().verifyConsistency(creator, start, end)){
             String location = ""; //TODO in Locations.toString() -> <getName(geoname)>+" ("+<getAdmin2(geoname)>+") - "+getCountry(geoname) //***
             Event event = new Event(creator, name, location, start, end, p);
             
@@ -124,7 +124,7 @@ public class EventCreationManager {
             
             //send invitations
             if(!invited.isEmpty())
-                sendInvitations(invited, event);
+                EventManager.getInstance().sendInvitations(invited, event);
             
             
             return event.getEventId();

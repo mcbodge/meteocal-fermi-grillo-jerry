@@ -21,10 +21,20 @@ import javax.persistence.TypedQuery;
  * @author Manuel
  */
 public class EventManager {
-    needs to be singleton 
-    
+        
     @PersistenceContext
     EntityManager em;
+    
+    private static EventManager instance = null;
+    protected EventManager() {
+       // Exists only to defeat instantiation.
+    }
+    public static EventManager getInstance() {
+       if(instance == null) {
+          instance = new EventManager();
+       }
+       return instance;
+    }
     
     //TODO RC
     /**
@@ -148,11 +158,11 @@ public class EventManager {
                 Answer answer = new Answer(e.getEventId(), u.getUserId(), true);
                 em.persist(answer);
                 //create info for the creator
-                -newInformation(u, "You are attending the event: " + e.getName() + "." , e);
+                newInformation(e.getCreator(), u.getUserName() + " is attending the event: " + e.getName() + "." , e);
                 //send email notification for the creator
-                -String subject = "METEOCAL: new event in your calendar";
-                -String body = "Dear " + u.getFirstName() + " " + u.getLastName() + ",\nCongratulations, you are now attending the event: " + e.getName() + ".\nCheck your calendar on Meteocal.\n\nPLEASE DO NOT REPLY TO THIS EMAIL";
-                -EmailManager.getInstance().sendEmail(u.getEmail(), subject, body);
+                String subject = "METEOCAL: " + e.getName() + ", new attender";
+                String body = "Dear " + e.getCreator().getFirstName() + " " + e.getCreator().getLastName() + ",\n" + u.getUserName() +" is attending the event: " + e.getName() + ".\n\nPLEASE DO NOT REPLY TO THIS EMAIL";
+                EmailManager.getInstance().sendEmail(u.getEmail(), subject, body);
             } else {
                 //overlap
                 declineInvitation(u, e);
