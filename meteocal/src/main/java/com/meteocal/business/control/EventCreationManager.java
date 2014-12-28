@@ -132,48 +132,4 @@ public class EventCreationManager {
         //no consistency
         return null;
     }
-    
-    //TODO test
-    /**
-     * Allows to verify the time consistency of an event given its creator.
-     * It returns true if no other event of the given user is in the db after start and before end.
-     * 
-     * @param creator the creator (User).
-     * @param start the start datetime of the event (w/ year, month, day, hour and minute).
-     * @param end the end datetime of the event (w/ year, month, day, hour and minute).
-     * @return true if no events overlaps -- false otherwise.
-     */    
-    public boolean verifyConsistency(User creator, Date start, Date end){
-        
-        //check if end is > then start
-        if(end.before(start))
-            return false;
-        
-        //load event created by the user and events that user attends 
-        TypedQuery<Event> query;
-        query = (TypedQuery<Event>) em.createNativeQuery(
-                "SELECT e FROM Event e, Answer a"
-                        + "WHERE (e.start <= :start AND e.end >= :end) "
-                            + "AND ((e.creator = :creator) "
-                            + "OR (a.event_id = e.event_id AND a.value = 1 AND :creator = a.user_id))")
-                .setParameter("creator", creator.getUserId())
-                .setParameter("start", start)
-                .setParameter("end", end);
-        
-        return start.after(Date.from(Calendar.getInstance().toInstant())) && query.getResultList().isEmpty();
-    }
-    
-    
-    //TODO for-each of newInvitation()
-    /**
-     * Invites the given users to the given event.
-     * 
-     * @param ul list of users that have to receive the invitations.
-     * @param event the event the users have to be invited to.
-     */
-    public void sendInvitations(List<User> ul, Event event){ 
-        //richiamato anche quando modifichi...quindi prima check se sono già stati invitati.
-    }
-    
-    
 }

@@ -32,7 +32,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Locations.findByCountry", query = "SELECT l FROM Locations l WHERE l.country = :country"),
     @NamedQuery(name = "Locations.findByProvince", query = "SELECT l FROM Locations l WHERE l.admin2 = :province"),
     @NamedQuery(name = "Locations.findByTimezone", query = "SELECT l FROM Locations l WHERE l.timezone = :timezone")})
-public class Locations implements Serializable {
+public class Location implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
@@ -59,14 +59,14 @@ public class Locations implements Serializable {
     @Column(name = "timezone", length = 40)
     private String timezone;
 
-    public Locations() {
+    public Location() {
     }
 
-    public Locations(Integer geonameid) {
+    public Location(Integer geonameid) {
         this.geonameid = geonameid;
     }
 
-    public Locations(Integer geonameid, String name, String province) {
+    public Location(Integer geonameid, String name, String province) {
         this.geonameid = geonameid;
         this.name = name;
         this.province = province;
@@ -106,10 +106,10 @@ public class Locations implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Locations)) {
+        if (!(object instanceof Location)) {
             return false;
         }
-        Locations other = (Locations) object;
+        Location other = (Location) object;
         if ((this.geonameid == null && other.geonameid != null) || (this.geonameid != null && !this.geonameid.equals(other.geonameid))) {
             return false;
         }
