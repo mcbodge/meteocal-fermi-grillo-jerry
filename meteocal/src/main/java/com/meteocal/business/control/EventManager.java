@@ -5,6 +5,7 @@ import com.meteocal.business.entity.Answer;
 import com.meteocal.business.entity.Event;
 import com.meteocal.business.entity.Information;
 import com.meteocal.business.entity.User;
+import java.util.Collection;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
@@ -55,7 +56,7 @@ public class EventManager {
         }
     }
     
-    //TODO event field in the db is set as null.
+    //TODO RC event field in the db is set as null.
     /**
      * Creates a new Information, not necessarily related to an event.
      * 
@@ -80,7 +81,7 @@ public class EventManager {
         em.persist(info);
     }
     
-    //TODO
+    //TODO RC
     /**
      * Remove a previously created invitation.
      * 
@@ -88,10 +89,32 @@ public class EventManager {
      * @param e the former-related-event.
      */
     public void revokeInvitation(User u, Event e){
-        //lo cancelli e gli si manda un'information.
+        //revoke invitation
+        if(e.getInvitedUserCollection().contains(u)){
+            //revoke invitaiton
+            e.getInvitedUserCollection().remove(u);
+            u.getEventCollection().remove(e);
+            em.merge(e);
+            em.merge(u);
+        } else { 
+            //if user have already accepted,  
+            Collection<Answer> ans = e.getAnswerCollection();
+            for (Answer next : ans) {
+               if(next.getAnswerPK().getUserId()==u.getUserId() && next.getValue()){
+                   //remove from the event
+                   e.getAnswerCollection().remove(next);
+                   u.getAnswerCollection().remove(next);
+                   em.merge(e);
+                   em.merge(u);
+                   //and send him an info
+                   newInformation(u, "You have been removed from the event: " + e.getName() + ".", e);
+               }
+            }
+            //if user declined or he is not in the invited list do nothing.
+        }   
     }
     
-    //TODO remember to check if it exists
+    //TODO RC remember to check if it exists
     /**
      * Accept a received invitation.
      * 
@@ -120,14 +143,22 @@ public class EventManager {
                 //add answer
                 Answer answer = new Answer(e.getEventId(), u.getUserId(), true);
                 em.persist(answer);
-                //create info & send mail
-                
+                //create info 
+                newInformation(u, "You are attending the event: " + e.getName() + "." , e);
+                //send email notification
+                String subject = "METEOCAL: new event in your calendar";
+                String body = "Dear " + u.getFirstName() + " " + u.getLastName() + ",\nCOngratulations, you are now attending the event: " + e.getName() + ".\nCheck your calendar on Meteocal.\n\nPLEASE DO NOT REPLY TO THIS EMAIL";
+                EmailManager.getInstance().sendEmail(u.getEmail(), subject, body);
+            } else {
+                //overlap
+                declineInvitation(u, e);
+                newInformation(u, "The event: " + e.getName() + " overlaps your other events.",e);
             }
         }
-        // what to do?
+        //if the user have not been invited 
     }
     
-    //TODO remember to check if it exists 
+    //TODO RC remember to check if it exists 
     /**
      * Decline a received invitation.
      * 
@@ -135,8 +166,14 @@ public class EventManager {
      * @param e 
      */
     public void declineInvitation(User u, Event e){
-        Answer answer = new Answer(e.getEventId(), u.getUserId(), false);
+        if(e.getInvitedUserCollection().contains(u)){
+            u.getEventCollection().remove(e);
+            e.getInvitedUserCollection().remove(u);
+            em.merge(e);
+            em.merge(u);
+            Answer answer = new Answer(e.getEventId(), u.getUserId(), false);
             em.persist(answer);
+        }
     }
     
     //TODO *any other condition*
