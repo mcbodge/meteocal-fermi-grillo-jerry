@@ -94,7 +94,7 @@ public class EventCreationManager {
      */
     public Integer newEvent(User creator, String name, Date start, Date end, Integer geoname, List<User> invited, boolean p, Integer constraint, String description){
         if(geoname != null && start != null && end != null && name!= null && verifyConsistency(creator, start, end)){
-            String location = ""; //TODO <getName(geoname)>+" ("+<getAdmin2(geoname)>+") - "+getCountry(geoname) //***
+            String location = ""; //TODO in Locations.toString() -> <getName(geoname)>+" ("+<getAdmin2(geoname)>+") - "+getCountry(geoname) //***
             Event event = new Event(creator, name, location, start, end, p);
             
             if(description.isEmpty())
