@@ -71,23 +71,23 @@ public class Event implements Serializable {
     
     @Basic(optional = false)
     @NotNull
-    @Column(name = "start", nullable = false)
+    @Column(name = "start_date", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date start;
     
     @Basic(optional = false)
     @NotNull
-    @Column(name = "end", nullable = false)
+    @Column(name = "end_date", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date end;
     
     @Basic(optional = false)
     @NotNull
-    @Column(name = "public", nullable = false)
+    @Column(name = "public_event", nullable = false)
     private boolean publicEvent;
     
     @Size(max = 255)
-    @Column(name = "description", length = 255)
+    @Column(name = "description", length = 255, columnDefinition = "varchar(255) default 'null'")
     private String description;
     
     @Basic(optional = false)
@@ -129,6 +129,8 @@ public class Event implements Serializable {
         this.end = end;
         this.publicEvent = publicEvent;
         this.creator = creator;
+        this.description = null;
+        this.personal = true;
     }
 
     public Integer getEventId() {

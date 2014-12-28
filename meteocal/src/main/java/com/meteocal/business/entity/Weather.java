@@ -51,7 +51,7 @@ public class Weather implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastUpdate;
     @Size(max = 45)
-    @Column(name = "location_code", length = 45)
+    @Column(name = "location_code", length = 45, nullable = false)
     private String locationCode;
     @JoinColumn(name = "event_id", referencedColumnName = "event_id", nullable = false, insertable = false, updatable = false)
     @OneToOne(optional = false)
@@ -60,8 +60,14 @@ public class Weather implements Serializable {
     public Weather() {
     }
 
-    public Weather(Integer eventId) {
+    public Weather(Integer eventId, String locationCode) {
         this.eventId = eventId;
+        this.locationCode = locationCode;
+    }
+    
+    public Weather(Integer eventId, Integer locationCode) {
+        this.eventId = eventId;
+        this.locationCode = locationCode.toString();
     }
 
     public Integer getEventId() {
