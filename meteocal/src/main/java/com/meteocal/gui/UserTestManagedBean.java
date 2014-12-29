@@ -153,6 +153,7 @@ public class UserTestManagedBean {
         //logger.log(Level.INFO, "User Logged out");
         return "/index?faces-redirect=true";
     }
+
     
     /**
      * Just prints out file content
@@ -176,4 +177,5 @@ public class UserTestManagedBean {
             }
         }
     }
+
 }
