@@ -17,6 +17,17 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
 public class WeatherCondition{
+    
+    private Condition value;
+    private Integer id;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public WeatherCondition(Condition value) {
         this.value = value;
@@ -32,7 +43,7 @@ public class WeatherCondition{
         NA
     }
     
-    private Condition value;
+
     
     
 
