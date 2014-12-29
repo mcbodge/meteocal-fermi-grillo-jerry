@@ -4,7 +4,7 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"   
       xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
       xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui" >
  
     <h:head>
         <title>CESCO TESTING</title>
@@ -57,7 +57,20 @@
             </p:panel>
             <h:messages  style="color: red"/>
         </h:form>
+        <br/><br/>
         
+        <h:form enctype="multipart/form-data">
+            <h:outputLabel value="UPLOAD TEST:" /><br/>
+            <h:inputFile value="#{userTestManagedBean.uploadedFile}" />
+            <h:commandButton value="Upload" action="#{userTestManagedBean.upload()}" /><br/>
+            <h:outputLabel value="#{userTestManagedBean.uplmsg}" />
+        </h:form>    
+        
+        <br/><br/>
+        <h:form style="border: 1px; border-color: black; border-style: solid; padding: 10px;">
+            <h:outputLabel value="DOWNLOAD TEST:" /><br/>
+            <h:outputLink value="files/test.zip">download</h:outputLink>
+        </h:form>
     </h:body>
 </html>
 

@@ -5,18 +5,19 @@ package com.meteocal.gui;
 
 import com.meteocal.business.boundary.EmailManager;
 import com.meteocal.business.boundary.UserTestSessionBean;
-import com.meteocal.business.control.IssuesDataManager;
 import com.meteocal.business.entity.User;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import static java.lang.System.in;
 import java.util.List;
-import java.util.logging.Level;
 import javax.ejb.EJB;
 import javax.inject.Named;
 import javax.enterprise.context.RequestScoped;
-import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
-import javax.inject.Inject;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.Part;
 
 /**
  *
@@ -36,7 +37,24 @@ public class UserTestManagedBean {
     private String lpw;
     private String lvres;
     private String logres;
+    
+    
+    private Part uploadedFile;
+    private String uplmsg;
 
+    public String getUplmsg() {
+        return uplmsg;
+    }
+    public void setUplmsg(String uplmsg) {
+        this.uplmsg = uplmsg;
+    }
+    public Part getUploadedFile() {
+        return uploadedFile;
+    }  
+    public void setUploadedFile(Part file) {
+        this.uploadedFile = file;
+    }
+        
     public String getLogres() {
         return logres;
     }
@@ -134,5 +152,28 @@ public class UserTestManagedBean {
         request.getSession().invalidate();
         //logger.log(Level.INFO, "User Logged out");
         return "/index?faces-redirect=true";
+    }
+    
+    /**
+     * Just prints out file content
+     */
+    public void upload() {
+        if (null != uploadedFile) {
+            try {
+                InputStream is = uploadedFile.getInputStream();
+                //uploadedFile.write("files/UPLOAD.txt");
+                BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+                StringBuilder out = new StringBuilder();
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    out.append(line);
+                }
+                uplmsg = out.toString();   //Prints the string content read from input stream
+                reader.close();
+                //uplmsg = "UPLOAD DONE";
+            } catch (IOException ex) {
+                uplmsg = "UPLOAD FAILED";
+            }
+        }
     }
 }
