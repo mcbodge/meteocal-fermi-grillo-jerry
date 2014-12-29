@@ -243,4 +243,5 @@ public class EventManager {
         
         return start.after(Date.from(Calendar.getInstance().toInstant())) && query.getResultList().isEmpty();
     }
+ 
 }
