@@ -8,12 +8,10 @@ package com.meteocal.business.control;
 import com.meteocal.business.entity.Event;
 import com.meteocal.business.entity.User;
 import com.meteocal.business.entity.Weather;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
 
 /**
  * FROM/TO - B:PersonalPage

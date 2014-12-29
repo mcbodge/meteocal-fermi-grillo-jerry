@@ -138,6 +138,7 @@ public class EventManager {
     public void acceptInvitation(User u, Event e){
         if(e.getInvitedUserCollection().contains(u)){
             //Check overlap 
+            /*
             TypedQuery<Event> query;
             query = (TypedQuery<Event>) em.createNativeQuery(
                     "SELECT e FROM Event e, Answer a"
@@ -146,8 +147,11 @@ public class EventManager {
                                 + "OR (a.event_id = e.event_id AND a.value = 1 AND :creator = a.user_id))")
                     .setParameter("creator", u.getUserId())
                     .setParameter("start", e.getStart())
-                    .setParameter("end", e.getEnd());
+                    .setParameter("end", e.getEnd()); 
+            
             if(query.getResultList().isEmpty()){
+                */
+            if(verifyConsistency(u, e.getStart(), e.getEnd())){
                 //no overlap
                 //delete invitation
                 u.getEventInvitationCollection().remove(e);
@@ -236,7 +240,7 @@ public class EventManager {
                 "SELECT e FROM Event e, Answer a"
                         + "WHERE (e.start <= :start AND e.end >= :end) "
                             + "AND ((e.creator = :creator) "
-                            + "OR (a.event_id = e.event_id AND a.value = 1 AND :creator = a.user_id))")
+                            + "OR (a.answerPK.event_id = e.event_id AND a.value = 1 AND :creator = a.answerPK.user_id))")
                 .setParameter("creator", creator.getUserId())
                 .setParameter("start", start)
                 .setParameter("end", end);
