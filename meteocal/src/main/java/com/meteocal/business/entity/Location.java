@@ -25,13 +25,14 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Table(name = "locations", catalog = "meteocaldb", schema = "")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Locations.findAll", query = "SELECT l FROM Locations l"),
-    @NamedQuery(name = "Locations.findByGeonameid", query = "SELECT l FROM Locations l WHERE l.geonameid = :geonameid"),
-    @NamedQuery(name = "Locations.findByName", query = "SELECT l FROM Locations l WHERE l.name = :name"),
-    @NamedQuery(name = "Locations.findByAsciiname", query = "SELECT l FROM Locations l WHERE l.asciiname = :asciiname"),
-    @NamedQuery(name = "Locations.findByCountry", query = "SELECT l FROM Locations l WHERE l.country = :country"),
-    @NamedQuery(name = "Locations.findByProvince", query = "SELECT l FROM Locations l WHERE l.admin2 = :province"),
-    @NamedQuery(name = "Locations.findByTimezone", query = "SELECT l FROM Locations l WHERE l.timezone = :timezone")})
+    @NamedQuery(name = "Location.findAll", query = "SELECT l FROM Location l"),
+    @NamedQuery(name = "Location.findByGeonameid", query = "SELECT l FROM Location l WHERE l.geonameid = :geonameid"),
+    @NamedQuery(name = "Location.findByName", query = "SELECT l FROM Location l WHERE l.name = :name"),
+    @NamedQuery(name = "Location.findByAsciiname", query = "SELECT l FROM Location l WHERE l.asciiname = :asciiname"),
+    @NamedQuery(name = "Location.findByCountry", query = "SELECT l FROM Location l WHERE l.country = :country"),
+    @NamedQuery(name = "Location.findByProvince", query = "SELECT l FROM Location l WHERE l.admin2 = :province"),
+    @NamedQuery(name = "Location.findByTimezone", query = "SELECT l FROM Location l WHERE l.timezone = :timezone")
+})
 public class Location implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -54,7 +55,7 @@ public class Location implements Serializable {
     @NotNull
     @Size(min = 1, max = 80)
     @Column(name = "admin2", nullable = false, length = 80)
-    private String province;
+    private String admin2;
     @Size(max = 40)
     @Column(name = "timezone", length = 40)
     private String timezone;
@@ -69,7 +70,7 @@ public class Location implements Serializable {
     public Location(Integer geonameid, String name, String province) {
         this.geonameid = geonameid;
         this.name = name;
-        this.province = province;
+        this.admin2 = province;
     }
 
     public Integer getGeonameid() {
@@ -89,7 +90,7 @@ public class Location implements Serializable {
     }
 
     public String getProvince() {
-        return province;
+        return admin2;
     }
 
     public String getTimezone() {
@@ -118,7 +119,7 @@ public class Location implements Serializable {
 
     @Override
     public String toString() {
-        return "com.meteocal.business.entity.Locations[ geonameid=" + geonameid + " ]";
+        return "com.meteocal.business.entity.Location[ geonameid=" + geonameid + " ]";
     }
     
 }

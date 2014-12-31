@@ -44,5 +44,10 @@
         <auth-constraint>
             <role-name>USERS</role-name>
         </auth-constraint>
-    </security-constraint>
+    </security-constraint><!--
+    <ejb-local-ref>
+        <ejb-ref-name>openWeatherMapInterface</ejb-ref-name>
+        <ejb-ref-type>Session</ejb-ref-type>
+        <ejb-link>meteocal#OpenWeatherMapInterface</ejb-link>
+    </ejb-local-ref>-->
 </web-app>
