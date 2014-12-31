@@ -5,7 +5,6 @@
  */
 package com.meteocal.business.boundary;
 
-import com.sun.mail.iap.Protocol;
 import java.util.Date;
 import java.util.Properties;
 import javax.ejb.Singleton;
