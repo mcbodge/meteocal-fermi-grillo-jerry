@@ -23,35 +23,71 @@ public class OpenWeatherMapInterface {
 
     public static String getMessage(Integer geoid){
         
+//<editor-fold defaultstate="collapsed" desc="old version">
+        /*
+        
         String result="";
+        
+        try {
+        URL url_weather = new URL(url + geoid.toString());
+        
+        HttpURLConnection httpURLConnection = (HttpURLConnection) url_weather.openConnection();
+        
+        if (httpURLConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+        
+        InputStreamReader inputStreamReader =
+        new InputStreamReader(httpURLConnection.getInputStream());
+        try (BufferedReader bufferedReader = new BufferedReader(inputStreamReader, 8192)) {
+        String line;
+        while((line = bufferedReader.readLine()) != null){
+        result += line;
+        }
+        }
+        
+        }
+        
+        } catch (MalformedURLException ex) {
+        Logger.getLogger(OpenWeatherMapInterface.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+        Logger.getLogger(OpenWeatherMapInterface.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return result;
+        
+        
+        */
+        
+        
+        ///*
+//</editor-fold>
+        
+        String line;
+        StringBuilder builder = new StringBuilder();
+        URL url_weather;
 
         try {
-            URL url_weather = new URL(url + geoid.toString());
- 
+
+            url_weather = new URL(url + geoid.toString());
+
             HttpURLConnection httpURLConnection = (HttpURLConnection) url_weather.openConnection();
- 
+
             if (httpURLConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
- 
-                InputStreamReader inputStreamReader =
-                    new InputStreamReader(httpURLConnection.getInputStream());
-                try (BufferedReader bufferedReader = new BufferedReader(inputStreamReader, 8192)) {
-                    String line;
-                    while((line = bufferedReader.readLine()) != null){
-                        result += line;
-                    }
+
+                BufferedReader reader = new BufferedReader(new InputStreamReader(httpURLConnection.getInputStream()), 512);
+                while ((line = reader.readLine()) != null) {
+                    builder.append(line);
                 }
- 
-            } 
- 
+
+            }
+
         } catch (MalformedURLException ex) {
             Logger.getLogger(OpenWeatherMapInterface.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             Logger.getLogger(OpenWeatherMapInterface.class.getName()).log(Level.SEVERE, null, ex);
         }
+
+        return builder.toString();    
         
-        return result;
     }
-    
-    
     
 }
