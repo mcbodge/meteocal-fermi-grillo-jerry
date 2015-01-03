@@ -106,7 +106,7 @@ public class Location implements Serializable {
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
+        // Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof Location)) {
             return false;
         }
@@ -116,10 +116,13 @@ public class Location implements Serializable {
         }
         return true;
     }
-
+    
+    //TODO RC 
+    //in Locations.toString() -> <getName(geoname)>+" ("+<getAdmin2(geoname)>+") - "+getCountry(geoname)
     @Override
     public String toString() {
-        return "com.meteocal.business.entity.Location[ geonameid=" + geonameid + " ]";
+        //return "com.meteocal.business.entity.Location[ geonameid=" + geonameid + " ]";
+        return this.getName() + " (" + this.getProvince() + ") - " + this.getCountry();
     }
     
 }
