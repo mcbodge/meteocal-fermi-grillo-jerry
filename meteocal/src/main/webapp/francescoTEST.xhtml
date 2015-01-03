@@ -64,13 +64,13 @@
             <h:inputFile value="#{userTestManagedBean.uploadedFile}" />
             <h:commandButton value="Upload" action="#{userTestManagedBean.upload()}" /><br/>
             <h:outputLabel value="#{userTestManagedBean.uplmsg}" />
+            <br/>
+            <br/>
+            <h:outputLabel value="DOWNLOAD TEST: " />
+            <h:outputLink value="#{userTestManagedBean.downloadLink}">download</h:outputLink>
         </h:form>    
         
-        <br/><br/>
-        <h:form style="border: 1px; border-color: black; border-style: solid; padding: 10px;">
-            <h:outputLabel value="DOWNLOAD TEST:" /><br/>
-            <h:outputLink value="files/test.zip">download</h:outputLink>
-        </h:form>
+
     </h:body>
 </html>
 
