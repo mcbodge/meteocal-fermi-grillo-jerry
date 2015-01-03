@@ -6,11 +6,15 @@ package com.meteocal.gui;
 import com.meteocal.business.boundary.EmailManager;
 import com.meteocal.business.boundary.UserTestSessionBean;
 import com.meteocal.business.entity.User;
+import com.sun.messaging.jmq.util.log.SysLog;
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import static java.lang.System.in;
+import java.net.URI;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.inject.Named;
@@ -18,6 +22,7 @@ import javax.enterprise.context.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.Part;
+import org.apache.commons.lang3.RandomStringUtils;
 
 /**
  *
@@ -37,11 +42,18 @@ public class UserTestManagedBean {
     private String lpw;
     private String lvres;
     private String logres;
-    
+    private String downloadLink;
     
     private Part uploadedFile;
     private String uplmsg;
-
+    
+    public String getDownloadLink() {
+        return downloadLink;
+    }
+    public void setDownloadLink(String downloadLink) {
+        this.downloadLink = downloadLink;
+    }
+    
     public String getUplmsg() {
         return uplmsg;
     }
@@ -162,16 +174,28 @@ public class UserTestManagedBean {
         if (null != uploadedFile) {
             try {
                 InputStream is = uploadedFile.getInputStream();
-                //uploadedFile.write("files/UPLOAD.txt");
+                String filename = FacesContext.getCurrentInstance().getExternalContext().getRealPath("files/") + File.separatorChar 
+                + "TEST-UPLOAD.dat";
+                
+                File file = new File(filename);
+                if(file.exists() && !file.isDirectory()) { 
+                    file.delete(); 
+                }
                 BufferedReader reader = new BufferedReader(new InputStreamReader(is));
                 StringBuilder out = new StringBuilder();
                 String line;
+                FileWriter w = new FileWriter(file);
+                out.append(file.getPath());
                 while ((line = reader.readLine()) != null) {
-                    out.append(line);
+                    //out.append(line);
+                    w.write("\n"+line);
                 }
-                uplmsg = out.toString();   //Prints the string content read from input stream
+                //Prints the string content read from input stream
+                uplmsg = "the file is in the folder: " + out.toString() + "\n\nUPLOAD DONE";  
+                
+                setDownloadLink("files/TEST-UPLOAD.dat");
                 reader.close();
-                //uplmsg = "UPLOAD DONE";
+                w.close();
             } catch (IOException ex) {
                 uplmsg = "UPLOAD FAILED";
             }

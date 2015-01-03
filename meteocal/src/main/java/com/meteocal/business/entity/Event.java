@@ -175,8 +175,14 @@ public class Event implements Serializable {
         this.end = end;
     }
 
-    //we should rename it in: isPublicEvent()
+    /**
+     * 
+     * @deprecated 
+     */
     public boolean getPublicEvent() {
+        return publicEvent;
+    }
+    public boolean isPublicEvent() {
         return publicEvent;
     }
 
@@ -191,8 +197,15 @@ public class Event implements Serializable {
     public void setDescription(String description) {
         this.description = description;
     }
-
+    
+    /**
+     * 
+     * @deprecated 
+     */
     public boolean getPersonal() {
+        return personal;
+    }
+    public boolean isPersonal() {
         return personal;
     }
 
