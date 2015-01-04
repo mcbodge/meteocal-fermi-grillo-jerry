@@ -31,7 +31,6 @@ public enum WeatherCondition {
                 break;
             default:
                 out = false;
-                break;
 
         }
 
@@ -69,7 +68,6 @@ public enum WeatherCondition {
                 break;
             default:
                 out = false;
-                break;
         }
 
         return out;
@@ -90,7 +88,6 @@ public enum WeatherCondition {
                 break;
             default:
                 out = false;
-                break;
         }
 
         return out;
@@ -110,7 +107,9 @@ public enum WeatherCondition {
 
     @Override
     public String toString() {
+        
         String value;
+        
         switch (this) {
             case CLEAR_SKY:
                 value = "Clear sky";

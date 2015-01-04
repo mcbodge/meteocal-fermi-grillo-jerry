@@ -100,19 +100,27 @@ public class OpenWeatherMapController {
     
     public static Integer parseForecastId(String json) throws JSONException {
 
-        Integer result_id = null;
+        Integer result_id = 0;
 
-        JSONObject jsonObject = new JSONObject(json);
 
-        JSONArray JSONArray_weather = jsonObject.getJSONArray("weather");
 
-        if (JSONArray_weather.length() > 0) {
-            JSONObject JSONObject_weather = JSONArray_weather.getJSONObject(0);
-            result_id = JSONObject_weather.getInt("id");
+        if (json.startsWith("{") && json.endsWith("}")) {
+            
+            JSONObject jsonObject = new JSONObject(json);
+        
+            JSONArray JSONArray_weather = jsonObject.getJSONArray("weather");
+
+            if (JSONArray_weather.length() > 0) {
+                JSONObject JSONObject_weather = JSONArray_weather.getJSONObject(0);
+                result_id = JSONObject_weather.getInt("id");
+            }
+
+            
+            
         }
-
+        
         return result_id;
-
+    
     }
     
     
