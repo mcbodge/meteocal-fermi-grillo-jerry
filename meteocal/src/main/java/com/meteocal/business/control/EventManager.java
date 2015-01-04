@@ -82,7 +82,7 @@ public class EventManager {
         em.persist(info);
     }
     
-    //TODO
+    //TODO RC
     /**
      * Creates a new Information, related to an event.
      * 
@@ -138,19 +138,7 @@ public class EventManager {
     public void acceptInvitation(User u, Event e){
         if(e.getInvitedUserCollection().contains(u)){
             //Check overlap 
-            /*
-            TypedQuery<Event> query;
-            query = (TypedQuery<Event>) em.createNativeQuery(
-                    "SELECT e FROM Event e, Answer a"
-                            + "WHERE (e.start <= :start AND e.end >= :end) "
-                                + "AND ((e.creator = :creator) "
-                                + "OR (a.event_id = e.event_id AND a.value = 1 AND :creator = a.user_id))")
-                    .setParameter("creator", u.getUserId())
-                    .setParameter("start", e.getStart())
-                    .setParameter("end", e.getEnd()); 
             
-            if(query.getResultList().isEmpty()){
-                */
             if(verifyConsistency(u, e.getStart(), e.getEnd())){
                 //no overlap
                 //delete invitation
@@ -207,7 +195,7 @@ public class EventManager {
         
     }
     
-    //TODO for-each of newInvitation()
+    //TODO RC for-each of newInvitation()
     /**
      * Invites the given users to the given event.
      * 
@@ -216,6 +204,9 @@ public class EventManager {
      */
     public void sendInvitations(List<User> ul, Event event){ 
         //richiamato anche quando modifichi...quindi prima check se sono già stati invitati.
+        for (User user : ul) {
+            newInvitation(user, event);
+        }
     }
     
     //TODO test
