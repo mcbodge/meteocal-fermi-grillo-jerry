@@ -34,7 +34,7 @@ public class HomeFacade {
     @PersistenceContext
     EntityManager em;
     
-    //TODO RC welcome inform. still need to be added. -- a welcome information is simply a new instance in the information table, with event set to null.
+    //welcome inform. still need to be added. -- a welcome information is simply a new instance in the information table, with event set to null.
     /**
      * Logs in - a validated user - redirecting him to his/her personal page. 
      * It also sends a "welcome" information.

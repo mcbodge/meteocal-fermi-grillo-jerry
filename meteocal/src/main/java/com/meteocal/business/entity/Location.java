@@ -117,7 +117,7 @@ public class Location implements Serializable {
         return true;
     }
     
-    //TODO RC 
+    
     //in Locations.toString() -> <getName(geoname)>+" ("+<getAdmin2(geoname)>+") - "+getCountry(geoname)
     @Override
     public String toString() {

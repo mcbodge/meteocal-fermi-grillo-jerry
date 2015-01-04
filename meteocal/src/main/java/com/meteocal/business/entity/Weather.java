@@ -156,6 +156,8 @@ public class Weather implements Serializable {
     
     
     // <editor-fold desc="Entity properties (Weather constraint)">
+    
+    //TODO
     /**
      * true <- w/o constraints
      * true <- w/constrainsts && constraints are ok wrt the forecast

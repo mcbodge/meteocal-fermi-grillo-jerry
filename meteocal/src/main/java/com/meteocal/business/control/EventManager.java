@@ -108,7 +108,7 @@ public class EventManager {
         em.persist(info);
     }
     
-    //TODO RC
+ 
     /**
      * Creates a new Information, related to an event.
      * 
