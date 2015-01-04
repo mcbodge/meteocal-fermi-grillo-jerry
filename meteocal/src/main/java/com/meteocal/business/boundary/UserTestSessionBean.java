@@ -8,6 +8,7 @@ import com.meteocal.business.control.LogInManager;
 import com.meteocal.business.entity.Group;
 import com.meteocal.business.entity.User;
 import java.util.List;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -26,9 +27,10 @@ public class UserTestSessionBean {
     
     @Inject
     IssuesDataManager idm;
+    
     @Inject
     LogInManager lm;
-        
+            
     //readFron db
     public List<User> findAll(){
         TypedQuery<User> query;
@@ -54,8 +56,5 @@ public class UserTestSessionBean {
         idm.sendUserName(email);
     }
     
-    //login_mng
-    public String loadUser(String un, String p){
-        return lm.loadUser(un, p);
-    }
+    
 }
