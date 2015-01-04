@@ -6,6 +6,7 @@
 package com.meteocal.business.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -285,26 +286,40 @@ public class Event implements Serializable {
     
     
     // <editor-fold desc="Entity properties (Event)">
-    public List<WeatherCondition> getConstraints(){
-        return Collections.sort(getConstraints());
+    /*public List<WeatherCondition> getConstraints(){
+        return null;
         
     }
     
     public WeatherCondition getForecast(){
         return null;
         
-    }
+    }*/
     
+    
+    //TODO
+    /**
+     * All the users that has answer=1 for this event
+     * @return 
+     */
     public List<User> getAttendee(){
         return null;
         
     }
     
+
     public List<User> getMaybeGoing(){
-        return null;
+        List<User> list = new ArrayList<>(invitedUserCollection);
+        return list;
         
     }
     
+    
+    //TODO
+    /**
+     * All the users that has answer=0 for this event
+     * @return 
+     */
     public List<User> getDeclined(){
         return null;
     }

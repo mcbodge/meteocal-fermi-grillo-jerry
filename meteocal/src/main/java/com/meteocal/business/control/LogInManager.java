@@ -52,7 +52,7 @@ public class LogInManager{
     }
     
     
-    //TODO RC - To be implemented only if needed. Cannot be public.
+
     /**
      * Returns true if the user is currently logged. False otherwise.
      * 
@@ -84,7 +84,7 @@ public class LogInManager{
     }
     
    
-    //TODO RC welcome inform. still need to be added. -- a welcome information is simply a new instance in the information table, with event set to null.
+    //welcome inform. still need to be added. -- a welcome information is simply a new instance in the information table, with event set to null.
     /**
      * Logs in - a validated user - redirecting him to his/her personal page. 
      * It also sends a "welcome" information.

@@ -86,7 +86,7 @@ public class OpenWeatherMapInterface {
             Logger.getLogger(OpenWeatherMapInterface.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        return builder.toString();    
+        return null;//builder.toString();    
         
     }
     

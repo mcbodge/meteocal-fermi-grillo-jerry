@@ -15,7 +15,9 @@ public class OpenWeatherMapController {
     public static WeatherCondition getValueFromCode(Integer code){
     WeatherCondition out;
     
-        if (199 < code && code < 233) {
+        if(code == null){
+            out = WeatherCondition.NA;
+        }else if (199 < code && code < 233) {
             out = WeatherCondition.THUNDERSTORM;
         } else if (299 < code && code < 322) {
             out = WeatherCondition.DRIZZLE;
@@ -100,11 +102,10 @@ public class OpenWeatherMapController {
     
     public static Integer parseForecastId(String json) throws JSONException {
 
-        Integer result_id = 0;
+        Integer result_id=null;
 
 
-
-        if (json.startsWith("{") && json.endsWith("}")) {
+    if (json!=null && json.startsWith("{") && json.endsWith("}")) {
             
             JSONObject jsonObject = new JSONObject(json);
         

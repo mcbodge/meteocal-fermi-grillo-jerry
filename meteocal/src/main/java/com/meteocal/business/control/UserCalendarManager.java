@@ -70,7 +70,6 @@ public class UserCalendarManager {
     }
     
     
-    //TODO RC
     /**
      * It does all the required procedures to upload a calendar:
      * - upload the file;
@@ -87,7 +86,6 @@ public class UserCalendarManager {
     }
     
     
-    //TODO RC
     /**
      * It verify the consistency of the uploaded file:
      * - verify the correct type/extension;
@@ -114,8 +112,8 @@ public class UserCalendarManager {
                     
                     //Done with the file
                     reader.close();
-                    reader = null;
-                    is = null;
+                    //reader = null;
+                    //is = null;
                     return true;
                 } catch (FileNotFoundException ex) {
                     Logger.getLogger(UserCalendarManager.class.getName()).log(Level.SEVERE, null, ex);
@@ -163,7 +161,7 @@ public class UserCalendarManager {
                 ecm.newEvent(u, eventName, e.getStart(), e.getEnd(), e.getLocation(), null, true, null, e.getDescription());
                 
             }
-            ecm = null;
+            //ecm = null;
         } catch (FileNotFoundException ex) {
             Logger.getLogger(UserCalendarManager.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
@@ -171,8 +169,7 @@ public class UserCalendarManager {
         }
     }
     
-    
-    //TODO RC
+
     /**
      * It changes the privacy setting of the given user (from public to private or vice versa).
      * 

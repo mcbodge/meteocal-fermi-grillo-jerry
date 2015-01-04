@@ -72,7 +72,7 @@ public class EventCreationManager {
         return null;
     }
     
-        //TODO RC check in location class -> create location string
+    //TODO (find location and call toString()) check in location class -> create location string
     /**
      * NEW EVENT, GIVING THE LOCATION ID
      * The name of the location is automatically generated***
