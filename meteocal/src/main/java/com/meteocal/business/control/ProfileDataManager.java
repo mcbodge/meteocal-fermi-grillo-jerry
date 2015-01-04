@@ -21,7 +21,7 @@ public class ProfileDataManager {
     @PersistenceContext
     EntityManager em;
     
-    //TODO test it, if not already done
+    //TODO already tested, but we should do a little edit (new user should call verifySubmittedData)
     /**
      * registration page <- s.thing wrong
      * home page <- user successfully created (he/she needs to log in)

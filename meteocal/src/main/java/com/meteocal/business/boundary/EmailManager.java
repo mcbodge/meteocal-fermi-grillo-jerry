@@ -28,15 +28,15 @@ public class EmailManager {
   
    private static EmailManager instance = null;
    
-   protected EmailManager() {
-      // Exists only to defeat instantiation.
-   }
-   public static EmailManager getInstance() {
-      if(instance == null) {
-         instance = new EmailManager();
-      }
-      return instance;
-   }
+    protected EmailManager() {
+       // Exists only to defeat instantiation.
+    }
+    public static EmailManager getInstance() {
+       if(instance == null) {
+          instance = new EmailManager();
+       }
+       return instance;
+    }
     
     //TODO It would be better to get these infos from an encrypted txt file (after decrypting it in the code). Only if everything else is completed.
     private final int PORT = 587;
