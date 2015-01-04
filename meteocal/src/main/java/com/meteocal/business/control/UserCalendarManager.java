@@ -30,7 +30,7 @@ public class UserCalendarManager {
     
     private final String EXT = ".bin";
     
-    //TODO RC the file contains the name of the owner and a list of eventId(one per line).
+    //TODO add event infos
     //nb we need to put also the information about the owner of the calendar 
     //(if - for some reason - is tricky, just put its userId as the name of the file).
     // aaa.bin
@@ -54,12 +54,12 @@ public class UserCalendarManager {
         
         try{
             writer = new FileWriter(dir+filename);
-            writer.write(u.getUserId());
+            writer.write(u.getUserName());
             //get all personal public events
             for (Event e : u.getEventCreatedCollection()){
                 if(e.isPersonal() && e.isPublicEvent()){
                    //write in file
-                   writer.write("\n"+e.getEventId());
+                   writer.write("\n"+e.getEventId()+"\t"+e.getName());
                 }
             }   
             writer.close();
@@ -101,7 +101,7 @@ public class UserCalendarManager {
         String line;
         InputStream is;
         BufferedReader reader;
-        String user_id;
+        String user_name;
         //size < 2MB
         if(kilobytes < 2048){
             //check extension
@@ -110,18 +110,8 @@ public class UserCalendarManager {
                     is = new FileInputStream(f);
                     reader = new BufferedReader(new InputStreamReader(is));
                     //check user existance.
-                    user_id = reader.readLine();
-                    em.createNamedQuery("User.findByUserId",User.class).setParameter("userId", Integer.parseInt(user_id)).getSingleResult();
-                    while ((line = reader.readLine()) != null) {
-                        //check each event if exist have been created from the user_id
-                        Event e = null;
-                        try {    
-                            e = em.createNamedQuery("Event.findByEventId",Event.class).setParameter("eventId", line).getSingleResult();
-                        } catch (NoResultException exNoRes){ /*the event doesn't exist*/ }
-                        if(e != null && !e.getCreator().getUserId().toString().equals(user_id)){
-                            return false;
-                        }
-                    }
+                    user_name = reader.readLine();
+                    
                     //Done with the file
                     reader.close();
                     reader = null;
@@ -131,8 +121,6 @@ public class UserCalendarManager {
                     Logger.getLogger(UserCalendarManager.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (IOException exIO) {
                     Logger.getLogger(UserCalendarManager.class.getName()).log(Level.SEVERE, null, exIO);
-                } catch (NoResultException exNoRes){
-                    //user that exported the file doesn't exist
                 }
             }
         }
@@ -140,7 +128,7 @@ public class UserCalendarManager {
     }
     
     
-    //TODO RC
+    //TODO 
     /**
      * It extracts the interesting events from the calendar:
      * If the user who is importing the calendar is the same who has exported it:
@@ -153,7 +141,7 @@ public class UserCalendarManager {
      * @param u the user who is importing the file.
      */
     private void extractFromFile(File f, User u){
-        int user_id;
+        String username;
         InputStream is;
         BufferedReader reader;
         String line;
@@ -161,21 +149,19 @@ public class UserCalendarManager {
             is = new FileInputStream(f);
             reader = new BufferedReader(new InputStreamReader(is));
             //first line = user_id
-            user_id = Integer.parseInt(reader.readLine());
+            username = reader.readLine();
             EventCreationManager ecm = new EventCreationManager();
+            
             while ((line = reader.readLine()) != null){
-                try{
-                    Event e = em.createNamedQuery("Event.findByEventId",Event.class).setParameter("eventId", line).getSingleResult();
-                    String eventName;
-                    if (user_id == u.getUserId()){
-                        eventName = e.getName() + " [Imported]";
-                    } else {
-                        eventName = e.getName() +" ["+ em.createNamedQuery("User.findByUserId",User.class).setParameter("userId", user_id).getSingleResult().getUserName()+"]";
-                    }
-                    ecm.newEvent(u, eventName, e.getStart(), e.getEnd(), e.getLocation(), null, true, null, e.getDescription());
-                }catch(NoResultException e){
-                    //event doesn't exits
+                //stringtokenizer per info evento
+                String eventName;
+                if (username.equals(u.getUserName())){
+                    eventName = e.getName() + " [Imported]";
+                } else {
+                    eventName = e.getName() +" ["+ username +"]";
                 }
+                ecm.newEvent(u, eventName, e.getStart(), e.getEnd(), e.getLocation(), null, true, null, e.getDescription());
+                
             }
             ecm = null;
         } catch (FileNotFoundException ex) {
