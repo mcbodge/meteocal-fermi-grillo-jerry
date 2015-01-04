@@ -8,6 +8,7 @@ package com.meteocal.business.entity;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -283,15 +284,42 @@ public class Event implements Serializable {
     
     
     // <editor-fold desc="Entity properties (Event)">
+    public List<WeatherCondition> getConstraints(){
+        return null;
+        
+    }
     
+    public WeatherCondition getForecast(){
+        return null;
+        
+    }
     
+    public List<User> getAttendee(){
+        return null;
+        
+    }
+    
+    public List<User> getMaybeGoing(){
+        return null;
+        
+    }
+    
+    public List<User> getDeclined(){
+        return null;
+    }
     
     // </editor-fold>
     
     
     // <editor-fold desc="Entity properties (Invitation notification)">
     
+
+    //if necessary, move in control (event manager)
+
+    /*    public Integer loadOptions(User u){
+    return null;
     
+    } */   
     
     // </editor-fold>
     

@@ -36,7 +36,7 @@ public class EventManager {
        return instance;
     }
     
-    //TODO RC
+    //TODO added TODOs
     /**
      * Creates a new invitation.
      * 
@@ -45,7 +45,7 @@ public class EventManager {
      */
     public void newInvitation(User u, Event e){
         //check user has not been already invited
-        if(e.getInvitedUserCollection().contains(u)){
+        if(e.getInvitedUserCollection().contains(u)){ //TODO *** use the new method w/ List<User> (don't use the collections***).
             //user has been already invited
         }else{
             //check user not already answered
@@ -56,9 +56,9 @@ public class EventManager {
                         .setParameter("eventId", e.getEventId())
                         .getSingleResult();
                 //user has already answered -> do nothing
-            }catch(NoResultException ex){
+            }catch(NoResultException ex){                   //TODO It's better to convert it in if-else. try catch is very slow unless the catch statement is very unlikely to happen 
                 //OK, create new invitation
-                e.getInvitedUserCollection().add(u);
+                e.getInvitedUserCollection().add(u);        //TODO create method that incapsulate it in control (
                 u.getEventInvitationCollection().add(e);
                 em.merge(e);
                 em.merge(u);
@@ -70,7 +70,7 @@ public class EventManager {
         }
     }
     
-    //TODO RC event field in the db is set as null.
+    //TODO --> check if event field in the db is set as null.
     /**
      * Creates a new Information, not necessarily related to an event.
      * 
@@ -95,7 +95,7 @@ public class EventManager {
         em.persist(info);
     }
     
-    //TODO RC
+    //TODO added TODOs
     /**
      * Remove a previously created invitation.
      * 
@@ -104,31 +104,31 @@ public class EventManager {
      */
     public void revokeInvitation(User u, Event e){
         //revoke invitation
-        if(e.getInvitedUserCollection().contains(u)){
+        if(e.getInvitedUserCollection().contains(u)){ //TODO ***
             //revoke invitaiton
-            e.getInvitedUserCollection().remove(u);
+            e.getInvitedUserCollection().remove(u);     //TODO (later)
             u.getEventInvitationCollection().remove(e);
             em.merge(e);
             em.merge(u);
         } else { 
             //if user have already accepted,  
-            Collection<Answer> ans = e.getAnswerCollection();
+            Collection<Answer> ans = e.getAnswerCollection(); //TODO ***
             for (Answer next : ans) {
                if(next.getAnswerPK().getUserId()==u.getUserId() && next.getValue()){
                    //remove from the event
-                   e.getAnswerCollection().remove(next);
+                   e.getAnswerCollection().remove(next); //TODO (later)
                    u.getAnswerCollection().remove(next);
                    em.merge(e);
                    em.merge(u);
                    //and send him an info
-                   newInformation(u, "You have been removed from the event: " + e.getName() + ".", e);
+                   newInformation(u, "You have been removed from the event: " + e.getName() + ".");
                }
             }
             //if user declined or he is not in the invited list do nothing.
         }   
     }
     
-    //TODO RC remember to check if it exists
+    //TODO added TODOs
     /**
      * Accept a received invitation.
      * 
@@ -136,13 +136,13 @@ public class EventManager {
      * @param e the event.
      */
     public void acceptInvitation(User u, Event e){
-        if(e.getInvitedUserCollection().contains(u)){
+        if(e.getInvitedUserCollection().contains(u)){ //TODO ***
             //Check overlap 
             
-            if(verifyConsistency(u, e.getStart(), e.getEnd())){
+            if(verifyConsistency(u, e.getStart(), e.getEnd())){ 
                 //no overlap
                 //delete invitation
-                u.getEventInvitationCollection().remove(e);
+                u.getEventInvitationCollection().remove(e); //TODO (later)
                 e.getInvitedUserCollection().remove(u);
                 em.merge(e);
                 em.merge(u);
@@ -164,7 +164,7 @@ public class EventManager {
         //if the user have not been invited 
     }
     
-    //TODO RC remember to check if it exists 
+    //TODO added TODOs
     /**
      * Decline a received invitation.
      * 
@@ -172,8 +172,8 @@ public class EventManager {
      * @param e 
      */
     public void declineInvitation(User u, Event e){
-        if(e.getInvitedUserCollection().contains(u)){
-            u.getEventInvitationCollection().remove(e);
+        if(e.getInvitedUserCollection().contains(u)){ //TODO ***
+            u.getEventInvitationCollection().remove(e); //TODO (later)
             e.getInvitedUserCollection().remove(u);
             em.merge(e);
             em.merge(u);
@@ -195,7 +195,8 @@ public class EventManager {
         
     }
     
-    //TODO RC for-each of newInvitation()
+
+    //for-each (or functional similar) of newInvitation()
     /**
      * Invites the given users to the given event.
      * 

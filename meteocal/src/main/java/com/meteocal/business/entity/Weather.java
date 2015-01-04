@@ -146,14 +146,26 @@ public class Weather implements Serializable {
     }
     
     // <editor-fold desc="Entity properties (Weather forecast)">
+
+    /*    public void update(){
     
+    }*/
     
     
     // </editor-fold>
     
     
     // <editor-fold desc="Entity properties (Weather constraint)">
-    
+    /**
+     * true <- w/o constraints
+     * true <- w/constrainsts && constraints are ok wrt the forecast
+     * false <- otherwise
+     * @return 
+     */
+    public boolean check(){
+        return false;
+       
+    }
     
     
     // </editor-fold>

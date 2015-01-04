@@ -8,6 +8,7 @@ package com.meteocal.business.entity;
 import com.meteocal.business.control.LogInManager;
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -258,7 +259,37 @@ public class User implements Serializable {
     
     // <editor-fold desc="Entity properties (User)">
     
+    //TODO
+    /**
+     * Returns all the events that the user is attending, including the ones created by him
+     * @return 
+     */
+    public List<Event> getEvents(){
+        return null;
+        
+    }
     
+    //TODO
+    /**
+     * Returns all the events with invitations for this user
+     * @return 
+     */
+    public List<Event> getInvitations(){
+        return null;
+        
+    }
+    
+    //TODO
+    /**
+     * Returns all the information "sent" to this user
+     * @return 
+     */
+    public List<Information> getInformations(){
+        return null;
+        
+    }
+    
+    //TODO other gets, to use Lists instead of collections in controls or boudaries -- if needed.
     
     // </editor-fold>
     
