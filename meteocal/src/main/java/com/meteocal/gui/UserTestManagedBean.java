@@ -4,6 +4,7 @@
 package com.meteocal.gui;
 
 import com.meteocal.business.boundary.EmailManager;
+import com.meteocal.business.boundary.HomeFacade;
 import com.meteocal.business.boundary.UserTestSessionBean;
 import com.meteocal.business.entity.User;
 import com.sun.messaging.jmq.util.log.SysLog;
@@ -34,6 +35,8 @@ public class UserTestManagedBean {
     
     @EJB 
     private UserTestSessionBean sb;
+    @EJB
+    private HomeFacade hf;
     
     private User user;
     private String receiver;
@@ -155,7 +158,8 @@ public class UserTestManagedBean {
     }
     
     public void login(){
-        logres=sb.loadUser(lun, lpw);
+        //logres=sb.loadUser(lun, lpw);
+        logres = hf.loadUser(lun, lpw);
     }
        
     public String logout() {

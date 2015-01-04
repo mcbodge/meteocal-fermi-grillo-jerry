@@ -22,7 +22,7 @@ import javax.persistence.TypedQuery;
  */
 public class EventManager {
         
-    @PersistenceContext
+    @PersistenceContext(unitName = "meteocal_PU")
     EntityManager em;
     
     private static EventManager instance = null;
@@ -43,7 +43,7 @@ public class EventManager {
      * @param u the receiver.
      * @param e the involved event.
      */
-    public void newInvitation(User u, Event e){
+    public void newInvitation42(User u, Event e){
         //check user has not been already invited
         if(e.getInvitedUserCollection().contains(u)){ //TODO *** use the new method w/ List<User> (don't use the collections***).
             //user has been already invited
@@ -57,6 +57,32 @@ public class EventManager {
                         .getSingleResult();
                 //user has already answered -> do nothing
             }catch(NoResultException ex){                   //TODO It's better to convert it in if-else. try catch is very slow unless the catch statement is very unlikely to happen 
+                //OK, create new invitation
+                e.getInvitedUserCollection().add(u);        //TODO create method that incapsulate it in control (
+                u.getEventInvitationCollection().add(e);
+                em.merge(e);
+                em.merge(u);
+                //send email notification
+                String subject = "METEOCAL: new invitation";
+                String body = "Dear " + u.getFirstName() + " " + u.getLastName() + ",\nYou have been invited to the event: " + e.getName() + ".\nCheck your invitation request on Meteocal.\n\nPLEASE DO NOT REPLY TO THIS EMAIL";
+                EmailManager.getInstance().sendEmail(u.getEmail(), subject, body);
+            }
+        }
+    }
+    public void newInvitation(User u, Event e){
+        //check user has not been already invited
+        if(e.getInvitedUserCollection().contains(u)){ //TODO *** use the new method w/ List<User> (don't use the collections***).
+            //user has been already invited
+        }else{
+            //check user not already answered
+            Answer ans = (Answer)em.createNativeQuery(
+                        "SELECT a FROM Answer a WHERE a.answerPK.userId = :userId AND a.answerPK.eventId = :eventId")
+                        .setParameter("userId", u.getUserId())
+                        .setParameter("eventId", e.getEventId())
+                        .getSingleResult();
+            if (ans!=null){
+               //user has already answered -> do nothing
+            } else {
                 //OK, create new invitation
                 e.getInvitedUserCollection().add(u);        //TODO create method that incapsulate it in control (
                 u.getEventInvitationCollection().add(e);

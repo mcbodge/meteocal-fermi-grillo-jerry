@@ -7,6 +7,7 @@ package com.meteocal.business.entity;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
@@ -285,7 +286,7 @@ public class Event implements Serializable {
     
     // <editor-fold desc="Entity properties (Event)">
     public List<WeatherCondition> getConstraints(){
-        return null;
+        return Collections.sort(getConstraints());
         
     }
     

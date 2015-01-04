@@ -27,6 +27,7 @@ public class UserCalendarManager {
     
     @PersistenceContext
     EntityManager em;
+    
     private final String EXT = ".bin";
     
     //TODO RC the file contains the name of the owner and a list of eventId(one per line).
