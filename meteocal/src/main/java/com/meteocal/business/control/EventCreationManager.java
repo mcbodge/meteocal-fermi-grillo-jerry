@@ -6,12 +6,14 @@
 package com.meteocal.business.control;
 
 import com.meteocal.business.entity.Event;
+import com.meteocal.business.entity.Location;
 import com.meteocal.business.entity.User;
 import com.meteocal.business.entity.Weather;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import org.glassfish.grizzly.http.util.Header;
 
 /**
  * FROM/TO - B:PersonalPage
@@ -22,6 +24,17 @@ import javax.persistence.PersistenceContext;
 public class EventCreationManager {
     @PersistenceContext
     EntityManager em;
+    
+    private static EventCreationManager instance = null;
+    protected EventCreationManager() {
+       // Exists only to defeat instantiation.
+    }
+    public static EventCreationManager getInstance() {
+       if(instance == null) {
+          instance = new EventCreationManager();
+       }
+       return instance;
+    }
     
     //TODO verify :)
     /**
@@ -72,7 +85,7 @@ public class EventCreationManager {
         return null;
     }
     
-    //TODO (find location and call toString()) check in location class -> create location string
+    //TODO RC(find location and call toString()) check in location class -> create location string
     /**
      * NEW EVENT, GIVING THE LOCATION ID
      * The name of the location is automatically generated***
@@ -92,12 +105,11 @@ public class EventCreationManager {
      */
     public Integer newEvent(User creator, String name, Date start, Date end, Integer geoname, List<User> invited, boolean p, Integer constraint, String description){
         if(geoname != null && start != null && end != null && name!= null && EventManager.getInstance().verifyConsistency(creator, start, end)){
-            String location = ""; //TODO in Locations.toString() -> <getName(geoname)>+" ("+<getAdmin2(geoname)>+") - "+getCountry(geoname) //***
+            String location = em.createNamedQuery("Location.findByGeonameid",Location.class).setParameter("geonameid", geoname).getSingleResult().toString();
             Event event = new Event(creator, name, location, start, end, p);
             
             if(description.isEmpty())
                 event.setDescription(description);
-            
             
             if(invited.isEmpty()) {
                 //add noone
@@ -114,7 +126,7 @@ public class EventCreationManager {
             Weather weather;
             weather = new Weather(event.getEventId(), geoname);
             
-            if(constraint!=null)
+            if(constraint != null)
                 weather.setConstraint(constraint);
             
             //weather.setLocationCode(geoname);
@@ -124,8 +136,7 @@ public class EventCreationManager {
             //send invitations
             if(!invited.isEmpty())
                 EventManager.getInstance().sendInvitations(invited, event);
-            
-            
+
             return event.getEventId();
         }
         //no consistency
