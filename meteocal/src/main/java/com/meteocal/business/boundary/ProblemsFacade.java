@@ -5,7 +5,9 @@
  */
 package com.meteocal.business.boundary;
 
+import com.meteocal.business.control.IssuesDataManager;
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 
 /**
  *
@@ -13,7 +15,16 @@ import javax.ejb.Stateless;
  */
 @Stateless
 public class ProblemsFacade {
-
-    // Add business logic below. (Right-click in editor and choose
-    // "Insert Code > Add Business Method")
+    
+    @Inject
+    IssuesDataManager idm;
+    
+    public void forgotUsername(String email){
+        idm.sendUserName(email);
+    }
+    
+    public void forgotPassword(String email){
+        idm.sendPassword(email);
+    }
+    
 }
