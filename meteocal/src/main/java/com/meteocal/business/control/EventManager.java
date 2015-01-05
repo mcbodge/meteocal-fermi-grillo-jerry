@@ -5,6 +5,7 @@ import com.meteocal.business.entity.Answer;
 import com.meteocal.business.entity.Event;
 import com.meteocal.business.entity.Information;
 import com.meteocal.business.entity.User;
+import com.meteocal.business.entity.WeatherCondition;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
@@ -225,8 +226,32 @@ public class EventManager {
      * @return false if there are adverse weather conditions -- true otherwise.
      */
     public boolean checkWeather(Event e){
-        return false; 
         
+        boolean out=false;
+        
+        if (e.getConstraints() == null || canBeDone(OpenWeatherMapController.getValueFromCode(e.getForecast()), e.getConstraints()))
+            out=true;
+        
+        return out;
+        
+    }
+    
+    //TODO (Manuel)
+    private boolean canBeDone(WeatherCondition wc, Integer constraint){
+        
+        switch(constraint){
+            case 1: //Requires sun
+                break;
+            case 2: //Requires no precipitation
+                break;
+            case 3: //Requires snow
+                break;
+            case 4: //No extreme conditions
+                break;
+            
+        }
+        
+        return false;
     }
     
 
