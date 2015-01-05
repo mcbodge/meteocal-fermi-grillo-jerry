@@ -22,17 +22,15 @@ public class ProfileDataManager {
     @PersistenceContext
     EntityManager em;
     
-    //TODO already tested, but we should do a little edit (new user should call verifySubmittedData)
+    
     /**
-     * registration page <- s.thing wrong
-     * home page <- user successfully created (he/she needs to log in)
-     * 
+     *  
      * @param first first name
      * @param last last name
      * @param username user name
      * @param email email
      * @param password password
-     * @return true = ok
+     * @return true = valid data
      */
     private boolean verifySubmittedData(String first, String last, String username, String email, String password){
         //check email & username !alreadyInDB      
@@ -57,6 +55,7 @@ public class ProfileDataManager {
      * @param username user name
      * @param email email
      * @param password password
+     * @return true = user saved in db
      */
     public boolean newUser(String first, String last, String username, String email, String password){
         if(verifySubmittedData(first, last, username, email, password)){

@@ -35,10 +35,7 @@ public class RegistrationFacade {
      * 
      * @return true if registration is ok.
      */
-    public String registerUser(String firstname, String lastname, String username, String email, String password){
-        if(pdm.newUser(firstname, email, username, email, password))
-            return "/home?faces-redirect=true";
-        //Submitted data not valid
-        return "/registration?faces-redirect=true";
+    public boolean registerUser(String firstname, String lastname, String username, String email, String password){
+        return pdm.newUser(firstname, email, username, email, password);
     } 
 }

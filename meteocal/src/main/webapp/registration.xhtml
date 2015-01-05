@@ -34,7 +34,7 @@
                     <p:message for="email" />
                                                          
                     <h:outputLabel for="emailagain" value="Reenter email:" />
-                    <p:inputText type="email" id="emailagain" required="true" validatorMessage="Value does not match email pattern." />
+                    <p:inputText type="email" id="emailagain" value="#{registrationBean.emailagain}" required="true" validatorMessage="Value does not match email pattern." />
                     <p:message for="emailagain" />
                                                             
                     <h:outputLabel for="newpassword" value="Create password (8-characters minimun)" />
