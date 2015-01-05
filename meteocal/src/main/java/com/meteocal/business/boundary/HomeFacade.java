@@ -34,6 +34,7 @@ public class HomeFacade {
     @PersistenceContext
     EntityManager em;
     
+       
     //welcome inform. still need to be added. -- a welcome information is simply a new instance in the information table, with event set to null.
     /**
      * Logs in - a validated user - redirecting him to his/her personal page. 
@@ -44,24 +45,27 @@ public class HomeFacade {
      * @return the URL of the user's personal page
      */
     public String loadUser(String u, String p){
-        if (loginManager.checkLogIn(em.createNamedQuery("User.findByUserName",User.class).setParameter("userName", u).getSingleResult())){
-            loginManager.logOutCurrentSession();
-            return "/home?faces-redirect=true";
+        if(loginManager.checkLogInFields(u, p)){
+            if (loginManager.checkAlreadyLoggedIn(em.createNamedQuery("User.findByUserName",User.class).setParameter("userName", u).getSingleResult())){
+                loginManager.logOutCurrentSession();
+                return "/home?faces-redirect=true";
+            }
+            FacesContext context = FacesContext.getCurrentInstance();
+            HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();
+            try {
+                request.login(u,p);
+            } catch (ServletException e) {
+                context.addMessage(null, new FacesMessage("Login failed."));
+                Logger.getLogger(LogInManager.class.getName()).log(Level.SEVERE, "Login Failed");
+                return "/home?faces-redirect=true";
+            }        
+            context.addMessage(null, new FacesMessage("Login OK."));
+            Logger.getLogger(LogInManager.class.getName()).log(Level.INFO, "LoggedIN");
+            //welcome information
+            User user_param = (User)em.createNamedQuery("User.findByUserName",User.class).setParameter("userName", u).getSingleResult();
+            eventmanager.newInformation(user_param, "Welcome!");
+            return "/user/personal?faces-redirect=true";
         }
-        FacesContext context = FacesContext.getCurrentInstance();
-        HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();
-        try {
-            request.login(u,p);
-        } catch (ServletException e) {
-            context.addMessage(null, new FacesMessage("Login failed."));
-            Logger.getLogger(LogInManager.class.getName()).log(Level.SEVERE, "Login Failed");
-            return "/home?faces-redirect=true";
-        }        
-        context.addMessage(null, new FacesMessage("Login OK."));
-        Logger.getLogger(LogInManager.class.getName()).log(Level.INFO, "LoggedIN");
-        //welcome information
-        User user_param = (User)em.createNamedQuery("User.findByUserName",User.class).setParameter("userName", u).getSingleResult();
-        eventmanager.newInformation(user_param, "Welcome!");
-        return "/user/personal";
+        return "/home?faces-redirect=true";
     }
 }

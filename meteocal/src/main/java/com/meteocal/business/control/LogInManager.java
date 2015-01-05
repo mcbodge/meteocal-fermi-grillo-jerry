@@ -34,31 +34,40 @@ public class LogInManager{
     Principal principal;
     
     
-    //TODO i think this method is useless
+    
+    /**
+     * 
+     * @return the username of the user logged in
+     */
+    public String getLoggedUser(){
+        return principal.getName();
+    }
+
+    //TODO
     /**
      * If the structure of the input is wrong (empty fields, the password is too short, etc.) 
-     * it returns the registration page.
+     * it returns false.
      * 
-     * If the structure of the input is correct, it calls verifyLogin() that, 
-     * if it returns true, it redirect to the personal page, logging the user.
-     * 
-     * @return the URL of the appropriate page
+     * If the structure of the input is correct, it returns true
+     * @param u the username
+     * @param p the password
+     * @return false if the structure of the input is wrong
      */
-    public String checkLogInFields(){
-        return null;
+    public boolean checkLogInFields(String u, String p){
+        if(p == null || p.length() < 8 || u == null || u.length() < 4 )
+            return false;
+        return true;
     }
     
-    
-
     /**
      * Returns true if the user is currently logged. False otherwise.
      * 
      * @param u the user that we want to log in
      * @return "true" if the user is logged
      */
-    public boolean checkLogIn(User u){         
-        if(u != null && principal != null){
-            if(u.getUserName().equals(principal.getName()))
+    public boolean checkAlreadyLoggedIn(User u){         
+        if(u != null && getLoggedUser() != null){
+            if(u.getUserName().equals(getLoggedUser()))
                 return true;
         }
         return false;
