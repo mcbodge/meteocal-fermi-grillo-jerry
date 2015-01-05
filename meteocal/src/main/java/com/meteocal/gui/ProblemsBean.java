@@ -35,7 +35,7 @@ public class ProblemsBean {
     }
     
     public String forgotMyPassword() {
-        pf.forgotPassword(null);
+        pf.forgotPassword(email);
         return "home?faces-redirect=true";
     }
     public String forgotMyUserName() {

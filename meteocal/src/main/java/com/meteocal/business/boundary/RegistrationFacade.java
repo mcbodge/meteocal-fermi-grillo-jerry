@@ -36,6 +36,6 @@ public class RegistrationFacade {
      * @return true if registration is ok.
      */
     public boolean registerUser(String firstname, String lastname, String username, String email, String password){
-        return pdm.newUser(firstname, email, username, email, password);
+        return pdm.newUser(firstname, lastname, username, email, password);
     } 
 }
