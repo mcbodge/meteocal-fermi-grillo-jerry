@@ -13,7 +13,6 @@ import java.util.Date;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import org.glassfish.grizzly.http.util.Header;
 
 /**
  * FROM/TO - B:PersonalPage
@@ -85,7 +84,7 @@ public class EventCreationManager {
         return null;
     }
     
-    //TODO RC(find location and call toString()) check in location class -> create location string
+    //TODO RC
     /**
      * NEW EVENT, GIVING THE LOCATION ID
      * The name of the location is automatically generated***

@@ -84,10 +84,7 @@ public class EventManager {
                //user has already answered -> do nothing
             } else {
                 //OK, create new invitation
-                e.getInvitedUserCollection().add(u);        //TODO create method that incapsulate it in control (
-                u.getEventInvitationCollection().add(e);
-                em.merge(e);
-                em.merge(u);
+                saveInvitation(u,e);
                 //send email notification
                 String subject = "METEOCAL: new invitation";
                 String body = "Dear " + u.getFirstName() + " " + u.getLastName() + ",\nYou have been invited to the event: " + e.getName() + ".\nCheck your invitation request on Meteocal.\n\nPLEASE DO NOT REPLY TO THIS EMAIL";
@@ -96,7 +93,18 @@ public class EventManager {
         }
     }
     
-    //TODO --> check if event field in the db is set as null.
+    /**
+     * Store the invitation into the DB
+     * @param u the receiver.
+     * @param e the involved event.
+     */
+    private void saveInvitation(User u, Event e){
+        e.getInvitedUserCollection().add(u);        
+        u.getEventInvitationCollection().add(e);
+        em.merge(e);
+        em.merge(u);
+    }
+      
     /**
      * Creates a new Information, not necessarily related to an event.
      * 
