@@ -5,7 +5,11 @@
  */
 package com.meteocal.business.boundary;
 
+import com.meteocal.business.control.ProfileDataManager;
 import javax.ejb.Stateless;
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 /**
  *
@@ -14,6 +18,24 @@ import javax.ejb.Stateless;
 @Stateless
 public class RegistrationFacade {
 
-    // Add business logic below. (Right-click in editor and choose
-    // "Insert Code > Add Business Method")
+    @PersistenceContext
+    EntityManager em;
+    
+    @Inject
+    ProfileDataManager pdm;
+    
+    //TODO check user
+    /**
+     * write in db
+     * @param firstname
+     * @param lastname
+     * @param username
+     * @param email
+     * @param password
+     * 
+     * @return true if registration is ok.
+     */
+    public String registerUser(String firstname, String lastname, String username, String email, String password){
+        return pdm.verifySubmittedData(firstname, email, username, email, password);
+    } 
 }

@@ -9,8 +9,7 @@ import com.meteocal.business.boundary.HomeFacade;
 import javax.ejb.EJB;
 import java.io.Serializable;
 import javax.faces.bean.ManagedBean;
-import javax.faces.context.FacesContext;
-import javax.enterprise.context.SessionScoped;
+import javax.faces.bean.RequestScoped;
 
 
 /**
@@ -20,14 +19,12 @@ import javax.enterprise.context.SessionScoped;
 
 
 @ManagedBean
-@SessionScoped
+@RequestScoped
 public class HomeBean implements Serializable{
     
     @EJB
     HomeFacade hf;
 
-   
-     
     private String username;
     private String password;
     private boolean remainlogged;
@@ -58,13 +55,9 @@ public class HomeBean implements Serializable{
         this.remainlogged = remainlogged;
     }
     
-
     public String signIn() {
-        return "user/personal.xhtml";
-        
-    }
-    
-              
+        return hf.loadUser(username, password);
+    }        
 
 }
     
