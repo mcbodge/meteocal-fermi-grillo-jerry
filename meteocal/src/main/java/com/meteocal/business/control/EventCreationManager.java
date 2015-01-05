@@ -84,7 +84,7 @@ public class EventCreationManager {
         return null;
     }
     
-    //TODO RC
+
     /**
      * NEW EVENT, GIVING THE LOCATION ID
      * The name of the location is automatically generated***

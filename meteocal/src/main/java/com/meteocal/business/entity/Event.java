@@ -286,15 +286,17 @@ public class Event implements Serializable {
     
     
     // <editor-fold desc="Entity properties (Event)">
-    /*public List<WeatherCondition> getConstraints(){
+    //TODO get the constraint code for this event from the Weather table. Null if it doesn't exist
+    public Integer getConstraints(){
         return null;
         
     }
     
-    public WeatherCondition getForecast(){
+    //TODO get the weather code for this event from the Weather table
+    public Integer getForecast(){
         return null;
         
-    }*/
+    }
     
     
     //TODO
