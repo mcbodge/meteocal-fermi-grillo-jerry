@@ -16,38 +16,38 @@
                                               
                 <h:panelGrid id="grid" columns="3" cellpadding="5">
                     <h:outputLabel for="firstname" value="First Name:" />
-                    <p:inputText id="firstname" value="" label="FirstName" required="true" validatorMessage="this field is required" />
+                    <p:inputText id="firstname" value="#{registrationBean.firstName}" label="FirstName" required="true" validatorMessage="this field is required" />
                     <p:message for="firstname" />
                     
                     <h:outputLabel for="lastname" value="Last Name:" />
-                    <p:inputText id="lastname" value="" required="true" label="LastName" validatorMessage="this field is required" />
+                    <p:inputText id="lastname" value="#{registrationBean.lastName}" required="true" label="LastName" validatorMessage="this field is required" />
                     <p:message for="lastname" />
                     
                     <h:outputLabel for="username" value="User Name:" />                    
-                    <p:inputText id="username" value="" required="true" label="UserName" validatorMessage="this field is required" />
+                    <p:inputText id="username" value="#{registrationBean.username}" required="true" label="UserName" validatorMessage="this field is required" />
                     <p:message for="username" />
                     
                     <h:outputLabel for="email" value="Personal email:" />                    
-                    <p:inputText id="email" value="" validatorMessage="An e-mail address is required">
-                        <f:validateRegex pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+                    <p:inputText id="email" value="#{registrationBean.email}" validatorMessage="An e-mail address is required" >
+                        <f:validateRegex pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$"/>
                     </p:inputText>
                     <p:message for="email" />
                                                          
                     <h:outputLabel for="emailagain" value="Reenter email:" />
-                    <p:inputText type="email" id="emailagain" value="" required="true" validatorMessage="Value does not match email pattern." />
+                    <p:inputText type="email" id="emailagain" required="true" validatorMessage="Value does not match email pattern." />
                     <p:message for="emailagain" />
                                                             
                     <h:outputLabel for="newpassword" value="Create password (8-characters minimun)" />
-                    <p:password id="newpassword" value="" required="true" match="newpasswordagain" validatorMessage="Password mis-match" />
+                    <p:password id="newpassword" value="#{registrationBean.password}" required="true" match="newpasswordagain" validatorMessage="Password mis-match" />
                     <p:message for="newpassword" />
                     
                     <h:outputLabel for="newpasswordagain" value="re-enter password:" />
-                    <p:password id="newpasswordagain" value="" required="true" validatorMessage="Password mis-match" />
+                    <p:password id="newpasswordagain" required="true" validatorMessage="Password mis-match" />
                     <p:message for="newpasswordagain" />
                     
-                    <p:commandButton value="Create Account" id="createaccount" actionListener="#{registrationBean.createAccount()}" update="grid" validateClient="true" style="margin-right:10px" />
+                    <p:commandButton value="Create Account" id="createaccount" action="#{registrationBean.createAccount()}" update="grid" validateClient="true" style="margin-right:10px" />
                     
-                    <p:button outcome="#{navigation.redirectToLogin()}" value="Cancel" />
+                    <p:button outcome="home" value="Cancel" />
                                                           
                 </h:panelGrid>
 
@@ -56,5 +56,3 @@
         </div>        
     </h:body>
 </html>
-</html>
-

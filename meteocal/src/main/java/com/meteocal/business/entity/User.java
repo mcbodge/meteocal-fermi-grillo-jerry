@@ -115,31 +115,18 @@ public class User implements Serializable {
     public User() {
     }
     
-    /* we should remove this constructor (autoincrement id)
-    public User(Integer userId) {
-        this.userId = userId;
-    }
-    */
-    
-    public User(/*Integer userId,*/ String userName, String firstName, String lastName, String email, String password, boolean publicCalendar) {
-        //this.userId = userId;
+    public User(String userName, String firstName, String lastName, String email, String password, boolean publicCalendar) {
         this.userName = userName;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
-        this.password = password;
+        this.password = LogInManager.encryptPassword(password);
         this.publicCalendar = publicCalendar;
     }
 
     public Integer getUserId() {
         return userId;
     }
-
-    /* we should remove setUserId (autoincrement id)
-    public void setUserId(Integer userId) {
-        this.userId = userId;
-    }
-    */
 
     public String getUserName() {
         return userName;
@@ -181,8 +168,14 @@ public class User implements Serializable {
         this.password = LogInManager.encryptPassword(password);
     }
     
-    //we should rename this method in isPublicCalendar()
+    /**
+     * 
+     * @deprecated use isPublicCalendar 
+     */
     public boolean getPublicCalendar() {
+        return publicCalendar;
+    }
+    public boolean isPublicCalendar() {
         return publicCalendar;
     }
 

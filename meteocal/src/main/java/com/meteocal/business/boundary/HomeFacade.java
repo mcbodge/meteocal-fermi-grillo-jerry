@@ -46,7 +46,7 @@ public class HomeFacade {
     public String loadUser(String u, String p){
         if (loginManager.checkLogIn(em.createNamedQuery("User.findByUserName",User.class).setParameter("userName", u).getSingleResult())){
             loginManager.logOutCurrentSession();
-            return "re-log";
+            return "/home?faces-redirect=true";
         }
         FacesContext context = FacesContext.getCurrentInstance();
         HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();
@@ -55,14 +55,13 @@ public class HomeFacade {
         } catch (ServletException e) {
             context.addMessage(null, new FacesMessage("Login failed."));
             Logger.getLogger(LogInManager.class.getName()).log(Level.SEVERE, "Login Failed");
-            return "home";
+            return "/home?faces-redirect=true";
         }        
         context.addMessage(null, new FacesMessage("Login OK."));
         Logger.getLogger(LogInManager.class.getName()).log(Level.INFO, "LoggedIN");
         //welcome information
         User user_param = (User)em.createNamedQuery("User.findByUserName",User.class).setParameter("userName", u).getSingleResult();
         eventmanager.newInformation(user_param, "Welcome!");
-        
         return "/user/personal";
     }
 }

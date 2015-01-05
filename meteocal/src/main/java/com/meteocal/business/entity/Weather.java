@@ -165,7 +165,7 @@ public class Weather implements Serializable {
      * @return 
      */
     public boolean check(){
-        if (this.constraint == null || this.constraint == this.forecast)
+        if (this.constraint == null || this.constraint == this.forecast) //TODO MANUEL pls fix the second condition
             return true;
         return false;
     }
