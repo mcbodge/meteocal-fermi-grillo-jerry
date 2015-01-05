@@ -34,9 +34,7 @@ public class ProfileDataManager {
      * @param password password
      * @return true = ok
      */
-    public boolean verifySubmittedData(String first, String last, String username, String email, String password){
-        //the length of username, first, last ...etc have to be checked in the gui pkg (mng beans)        
-        
+    private boolean verifySubmittedData(String first, String last, String username, String email, String password){
         //check email & username !alreadyInDB      
         TypedQuery<User> query;
         query = (TypedQuery<User>) em.createQuery(
@@ -45,14 +43,12 @@ public class ProfileDataManager {
                 .setParameter("email", email);
         if(query.getResultList().isEmpty()){
             //OK, email or username are not already in DB
-            newUser(first, last, username, email, password);
-            return "/home?faces-redirect=true";
+            return true;
         }
         //Submitted data not valid
-        return "/registration?faces-redirect=true";
+        return false;
     }
-    
-    
+        
     /**
      * It creates a new user, giving the previously submitted and checked data.
      * 
@@ -62,9 +58,13 @@ public class ProfileDataManager {
      * @param email email
      * @param password password
      */
-    private void newUser(String first, String last, String username, String email, String password){
-        User user = new User(username, first, last, email, password, true);
-        user.setGroupName(Group.USERS);
-        em.persist(user);
+    public boolean newUser(String first, String last, String username, String email, String password){
+        if(verifySubmittedData(first, last, username, email, password)){
+            User user = new User(username, first, last, email, password, true);
+            user.setGroupName(Group.USERS);
+            em.persist(user);
+            return true;
+        }
+        return false;
     }
 }
