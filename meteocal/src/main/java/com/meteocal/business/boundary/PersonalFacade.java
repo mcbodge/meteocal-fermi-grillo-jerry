@@ -5,7 +5,11 @@
  */
 package com.meteocal.business.boundary;
 
+import com.meteocal.business.control.EventCreationManager;
+import com.meteocal.business.control.EventManager;
+import com.meteocal.business.control.LogInManager;
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 
 /**
  *
@@ -14,6 +18,24 @@ import javax.ejb.Stateless;
 @Stateless
 public class PersonalFacade {
 
-    // Add business logic below. (Right-click in editor and choose
-    // "Insert Code > Add Business Method")
+    @Inject
+    LogInManager lm;
+    @Inject
+    EventCreationManager eventCreationManager;
+    @Inject
+    EventManager eventManager;
+
+    public String getLoggedUser() {
+        return lm.getLoggedUser();
+    }
+
+    public boolean createEvent(String creator, String name, String location, String dateStart, String timeStart, 
+            double duration, boolean event_private, Integer constraint, String description){
+        //all conversions 
+        //invoke method
+        //eventCreationManager.newEvent(User creator, String name, Date start, Date end, 
+        //             String location, List<User> invited, boolean p, Integer constraint, String description)
+        return true;
+    }
+
 }

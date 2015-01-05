@@ -17,45 +17,7 @@
             <h:outputLabel value="#{userTestManagedBean.allUserNames()}" /><br/>
         </h:form>
         <br/><br/>
-        <h:form style="border: 1px; border-color: black; border-style: solid; padding: 10px;">
-            <h:outputLabel value="INSERT NEW USER INTO USER TABLE:" /><br/>
-            username: <h:inputText id="name" value="#{userTestManagedBean.user.userName}" label="name"/>
-            email: <h:inputText id="email" value="#{userTestManagedBean.user.email}" label="email"/>
-            <br/>
-            <h:commandButton value="save" action="#{userTestManagedBean.save()}"/>
-            <br/><br/>
-        </h:form>
-        <br/><br/>
-        <h:form style="border: 1px; border-color: black; border-style: solid; padding: 10px;">
-            <h:outputLabel value="SEND EMAIL NOTIFICATION:" /><br/>
-            Receiver: <h:inputText id="receiver" value="#{userTestManagedBean.receiver}" label="receiver"/>
-            <h:commandButton value="sendMail" action="#{userTestManagedBean.sendMail()}"/>
-        </h:form>
-        <br/><br/>
-        <h:form style="border: 1px; border-color: black; border-style: solid; padding: 10px;">
-            <h:outputLabel value="TEST ISSUES DATA MANAGER:" /><br/><br/>
-            Your e-mail: <h:inputText id="yem" value="#{userTestManagedBean.yem}" label="yem"/>
-            <br/><br/>
-            <h:commandButton value="send" action="#{userTestManagedBean.issues()}"/>
-        </h:form>
-        <br/><br/>
-       
-        <h:form id="loginform" style="border: 1px; border-color: black; border-style: solid; padding: 10px;">
-            <p:panel header="TEST LOG IN MANAGER:">
-                <p:panelGrid columns="2">
-                    <p:outputLabel for="username" value="user_name"/>
-                    <p:inputText id="username" value="#{userTestManagedBean.lun}" 
-                                 required="true" />
-                    <p:outputLabel for="pass" value="password"/>
-                    <p:password id="pass" value="#{userTestManagedBean.lpw}" 
-                                required="true" />
-                    <p:commandButton id="submit" action="#{userTestManagedBean.login()}" value="Login" ajax="true" update="@all"/>
-                    <h:outputLabel value="#{userTestManagedBean.logres}" />
-                </p:panelGrid>
-            </p:panel>
-            <h:messages  style="color: red"/>
-        </h:form>
-        <br/><br/>
+          
         
         <h:form enctype="multipart/form-data">
             <h:outputLabel value="UPLOAD TEST:" /><br/>

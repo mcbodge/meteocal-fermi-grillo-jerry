@@ -11,6 +11,8 @@ import com.meteocal.business.entity.User;
 import com.meteocal.business.entity.Weather;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
@@ -79,6 +81,7 @@ public class EventCreationManager {
             if(!invited.isEmpty())
                 EventManager.getInstance().sendInvitations(invited, event);
             
+            Logger.getLogger(EventCreationManager.class.getName()).log(Level.INFO, "NEW Event created, ID:" + event.getEventId().toString());
             return event.getEventId();
         }
         return null;

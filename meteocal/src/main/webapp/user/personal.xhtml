@@ -8,147 +8,145 @@
         <title>Personal page</title>
     </h:head>
     <h:body>
-        
-        <h1> Welcome #{homeBean.userName}</h1>
+
         <h:panelGrid id="grid2" columns="5"  cellpadding="3">
+
+            <p:outputLabel for="search" value="Search MeteoCal:" />
+            <p:inputText id="search" value="" size="50"/>
+            <p:commandButton id="searchgo" value="Search" action="secure/personal_page.xhtml"/>
+            <p:growl id="messages" showDetail="true" />
+            <p:outputLabel value="#{personalBean.getLoggedUser()}" />
+
+            <p:toolbar>
+                <f:facet name="left">
+                    <p:commandButton type="button" value="New" icon="ui-icon-document" />
+
+                    <p:commandButton type="button" value="Open" icon="ui-icon-folder-open" />
+
+                    <p:commandButton type="button" title="Save" icon="ui-icon-disk" />
+                    <p:commandButton type="button" title="Delete" icon="ui-icon-trash" />
+                    <p:commandButton type="button" title="Print" icon="ui-icon-print" />
+                </f:facet>
+
+            </p:toolbar>
+
+        </h:panelGrid>
+        <hr style=" background-color: #3366ff; height: 5px" />
+
+        <div style="float: left; border-right: 5px; height: 100%; width: 450px" >
+            <p:panel id="eventpanel" header="New event" style="margin-bottom:5px;">
+
+                <p:growl id="msgs" showDetail="false" />
+
+                <h:panelGrid id="grid3" columns="1" cellpadding="1">
+
+                    <p:outputLabel for="event" value="Event:" />
+                    <p:inputText id="event" value="#{personalBean.eventName}" required="true" size="34" />
+
+                    <p:outputLabel for="location" value="Location:" />
+                    <p:inputText id="location" value="#{personalBean.eventLocation}" required="true" size="34" />
+
+                    <p:outputLabel for="people" value="Invite people:" />
+                    <p:inputText id="people" value="#{personalBean.people}" required="true" size="34" />
+
+                    <p:outputLabel for="startdate" value="Start:" />
+                    <p:calendar id="startdate" value="#{personalBean.date}" pattern="dd-MM-yyyy" mask="true" size="34" required="true" />
+
+                    <p:outputLabel for="starttime" value="Time:" />
+                    <p:calendar id="starttime" value="#{personalBean.time}" pattern="HH:mm a" timeOnly="true" size="34" required="true" />
+
+                    <p:outputLabel for="duration" value="Duration:" />
+                    <p:spinner id="duration" value="#{personalBean.eventDuration}" stepFactor="0.5" min="0.5" max="15"/>
+
+                    <p:outputLabel for="weather" value="Select prefered weather condition:" />
+                    <p:selectOneMenu id="weather" value="#{personalBean.constraint} "> 
+                        <f:selectItem itemLabel="Select One" itemValue="" />
+                        <f:selectItem itemLabel="Requires sun" itemValue="1" />
+                        <f:selectItem itemLabel="Requires no precipitation" itemValue="2" />
+                        <f:selectItem itemLabel="Requires snow" itemValue="3" />
+                        <f:selectItem itemLabel="No extreme conditions" itemValue="4" />
+                    </p:selectOneMenu>
+
+                    <p:outputLabel for="eventdescription" value="Description:" />
+                    <p:inputTextarea id="eventdescription" value="#{personalBean.descr}" cols="38" autoResize="false"/>
                     
-                    <p:outputLabel for="search" value="Search MateoCal:" />
-                    <p:inputText id="search" value="" size="50"/>
-                    <p:commandButton id="searchgo" value="Search" action="secure/personal_page.xhtml"/>
-                    <p:growl id="messages" showDetail="true" />
- 
-                        <p:toolbar>
-                            <f:facet name="left">
-                                <p:commandButton type="button" value="New" icon="ui-icon-document" />
+                </h:panelGrid>
 
-                                <p:commandButton type="button" value="Open" icon="ui-icon-folder-open" />
-
-                                <p:commandButton type="button" title="Save" icon="ui-icon-disk" />
-                                <p:commandButton type="button" title="Delete" icon="ui-icon-trash" />
-                                <p:commandButton type="button" title="Print" icon="ui-icon-print" />
-                            </f:facet>
-
-                            </p:toolbar>
+                <h:panelGrid id="grid4" columns="2" cellpadding="1">
+                    <p:selectBooleanCheckbox value="#{personalBean.event_private}">
+                        <p:ajax update="msgs" listener="#{eventBean.addMessage()}" />
+                    </p:selectBooleanCheckbox>
+                    <h:outputText value=" Mark as private" />
 
                 </h:panelGrid>
-                <hr style=" background-color: #3366ff; height: 5px" />
-                
-                <div style="float: left; border-right: 5px; height: 100%; width: 450px" >
-                    <p:panel id="eventpanel" header="New event" style="margin-bottom:5px;">
-                    
-                        <p:growl id="msgs" showDetail="false" />
-                    
-                    <h:panelGrid id="grid3" columns="1" cellpadding="1">
-                        
-                        <p:outputLabel for="event" value="Event:" />
-                        <p:inputText id="event" value="#{eventBean.eventName}" required="true" size="34" />
-                        
-                        <p:outputLabel for="location" value="Location:" />
-                        <p:inputText id="location" value="#{eventBean.eventLocation}" required="true" size="34" />
-                        
-                        <p:outputLabel for="people" value="Invite people:" />
-                        <p:inputText id="people" value="#{eventBean.people}" required="true" size="34" />
-                        
-                        <p:outputLabel for="startdate" value="Start:" />
-                        <p:calendar id="startdate" value="#{eventBean.startDate}" pattern="dd-MM-yyyy" mask="true" size="34" required="true" />
-                        
-                        <p:outputLabel for="starttime" value="Time:" />
-                        <p:calendar id="starttime" value="#{eventBean.startTime}" pattern="HH:mm a" timeOnly="true" size="34" required="true" />
-                        
-                        <p:outputLabel for="duration" value="Duration:" />
-                        <p:selectOneMenu id="duration" value=" " required="false"> 
-                                                                                                       
-                        </p:selectOneMenu>
-                        
-                        <p:outputLabel for="weather" value="Select prefered weather condition:" />
-                        <p:selectOneMenu id="weather" value=" "> 
-                                                                                                       
-                        </p:selectOneMenu>
-                        
-                        <p:outputLabel for="eventdescription" value="Description:" />
-                        <p:inputTextarea id="eventdescription" value="#{eventBean.description}" cols="38" autoResize="false"/>
-                        
 
-                        
-                    </h:panelGrid>
-                    
-                    <h:panelGrid id="grid4" columns="2" cellpadding="1">
-                        <p:selectBooleanCheckbox value="#{eventBean.privateEvent}">
-                            <p:ajax update="msgs" listener="#{eventBean.addMessage()}" />
-                        </p:selectBooleanCheckbox>
-                        <h:outputText value=" Mark as private" />
-                                                                                 
-                    </h:panelGrid>
-                    
-                        <p:commandButton value="Submit" icon="ui-icon-check" update="eventpanel" oncomplete="PF('dlg').show()"  />
-                        <p:commandButton value="Cancel" update="eventpanel" process="@this" style="margin-right:20px;" >
-                             <p:resetInput target="eventpanel" />
-                        </p:commandButton>
+                <p:commandButton value="Submit" action="#{personalBean.createEvent()}" icon="ui-icon-check" update="eventpanel" oncomplete="PF('dlg').show()"   />
+                <p:commandButton value="Cancel" update="eventpanel" process="@this" style="margin-right:20px;" >
+                    <p:resetInput target="eventpanel" />
+                </p:commandButton>
+                <h:outputText value="#{eventBean.eventName}" />
+
+                <p:dialog header="Values" resizable="false" showEffect="fade" widgetVar="dlg">
+                    <h:outputText value="#{eventBean.eventName}" />
+                    <p:panelGrid id="output" columns="2" columnClasses="label, value">
+                        <h:outputText value="Event:" />
                         <h:outputText value="#{eventBean.eventName}" />
-                        
-                    <p:dialog header="Values" resizable="false" showEffect="fade" widgetVar="dlg">
-                        <h:outputText value="#{eventBean.eventName}" />
-                            <p:panelGrid id="output" columns="2" columnClasses="label, value">
-                                    <h:outputText value="Event:" />
-                                    <h:outputText value="#{eventBean.eventName}" />
 
-                                    <h:outputText value="Location" />
-                                    <h:outputText value="#{eventBean.eventLocation}" />
+                        <h:outputText value="Location" />
+                        <h:outputText value="#{eventBean.eventLocation}" />
 
-                                    <h:outputText value="Invite:" />
-                                    <h:outputText value="#{eventBean.people}" />
+                        <h:outputText value="Invite:" />
+                        <h:outputText value="#{eventBean.people}" />
 
-                                    <h:outputText value="Start Date" />
-                                    <h:outputText value="#{eventBean.startDate}" />
+                        <h:outputText value="Start Date" />
+                        <h:outputText value="#{eventBean.startDate}" />
 
-                                    <h:outputText value="Start Time:" />
-                                    <h:outputText value="#{eventBean.startTime}" />
+                        <h:outputText value="Start Time:" />
+                        <h:outputText value="#{eventBean.startTime}" />
 
-                                    <h:outputText value="Duration:" />
-                                    <h:outputText value="Still working on it" />
+                        <h:outputText value="Duration:" />
+                        <h:outputText value="Still working on it" />
 
-                                    <h:outputText value="Prefered weather condition:" />
-                                    <h:outputText value="Still working on it" />
+                        <h:outputText value="Prefered weather condition:" />
+                        <h:outputText value="Still working on it" />
 
-                                    <h:outputText value="Description:" />
-                                    <h:outputText value="#{eventBean.description}" />
-                                    
-                                    <h:outputText value="Event Status:" />
-                                    <h:outputText value="#{eventBean.addMessage2()}" />
-                            
-                            </p:panelGrid>
-                         </p:dialog>
-                            
+                        <h:outputText value="Description:" />
+                        <h:outputText value="#{eventBean.description}" />
 
-                        
-                    </p:panel>
-                </div>
-                
-                 
-                
+                        <h:outputText value="Event Status:" />
+                        <h:outputText value="#{eventBean.addMessage2()}" />
+
+                    </p:panelGrid>
+                </p:dialog>
+
+
+
+            </p:panel>
+        </div>
+
+
+        <h:form>
         </h:form>
-        
+
         <div style="float: right; border-right: 5px; height: 100%; width: 800px" >
-                   
-                    <h:panelGrid id="calendar" columns="1" >
-                        <h1>
-                            <h:outputText value="#{calendarBean.date}" style="text-align: left; font-size: xx-large;">
-                                <f:convertDateTime type="Date" pattern="MMMMMMM YYYY" />
-                            </h:outputText> 
-                            
-                            <p:calendar id="inline" value="#{calendarBean.calendar}" mode="inline" />
-                        </h1>
-                        
-                        
-                     </h:panelGrid> 
-                    
-                 </div> 
-        
-        
-        
+
+            <h:panelGrid id="calendar" columns="1" >
+                <h1>
+                    <h:outputText value="#{calendarBean.date}" style="text-align: left; font-size: xx-large;">
+                        <f:convertDateTime type="Date" pattern="MMMMMMM YYYY" />
+                    </h:outputText> 
+
+                    <p:calendar id="inline" value="#{calendarBean.calendar}" mode="inline" />
+                </h1>
+
+
+            </h:panelGrid> 
+
+        </div> 
+
+
+
     </h:body>
 </html>
-        
-    </h:body>
-</html>
+
 
