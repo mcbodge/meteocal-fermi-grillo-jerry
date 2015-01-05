@@ -62,6 +62,7 @@ public class RegistrationBean implements Serializable{
     }
     
     public String createAccount() {    //Jude - TODO needs to check the provided data and create account
+        //the length of username, first, last ...etc have to be checked in the gui pkg (mng beans)
         return rf.registerUser(firstname, lastname, username, email, password);
     }
     
