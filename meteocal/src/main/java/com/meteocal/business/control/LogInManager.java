@@ -5,7 +5,6 @@
  */
 package com.meteocal.business.control;
 
-import com.meteocal.business.entity.Information;
 import com.meteocal.business.entity.User;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
@@ -13,14 +12,12 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.Principal;
 import java.util.logging.Level;
-import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import java.util.logging.Logger;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -37,7 +34,7 @@ public class LogInManager{
     Principal principal;
     
     
-    //TODO
+    //TODO i think this method is useless
     /**
      * If the structure of the input is wrong (empty fields, the password is too short, etc.) 
      * it returns the registration page.
@@ -68,55 +65,16 @@ public class LogInManager{
     }
     
     
-    //TODO modify it at your willing. ;)
     /**
      * Logs out a session
      * 
-     * //@param u 
      */  
-    //USER PARAM. IS NOT NEEDED, BUT WE SHOULD REDIRECT TO LOG IN PAGE.
-    public void logOutCurrentSession(/*User u*/){
+    public void logOutCurrentSession(){
         FacesContext context = FacesContext.getCurrentInstance();
         HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();
         request.getSession().invalidate();
         Logger.getLogger(LogInManager.class.getName()).log(Level.INFO, "User Logged out");
-        //return "/index?faces-redirect=true";
     }
-    
-   
-    //welcome inform. still need to be added. -- a welcome information is simply a new instance in the information table, with event set to null.
-    /**
-     * Logs in - a validated user - redirecting him to his/her personal page. 
-     * It also sends a "welcome" information.
-     * 
-     * @param u the username we want to log in
-     * @param p the password
-     * @return the URL of the user's personal page
-     */
-     /*
-    public String loadUser(String u, String p){
-        if (checkLogIn(em.createNamedQuery("User.findByUserName",User.class).setParameter("userName", u).getSingleResult())){
-            logOutCurrentSession();
-            return "re-log";
-        }
-        FacesContext context = FacesContext.getCurrentInstance();
-        HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();
-        try {
-            request.login(u,p);
-        } catch (ServletException e) {
-            context.addMessage(null, new FacesMessage("Login failed."));
-            Logger.getLogger(LogInManager.class.getName()).log(Level.SEVERE, "Login Failed");
-            return "home";
-        }        
-        context.addMessage(null, new FacesMessage("Login OK."));
-        Logger.getLogger(LogInManager.class.getName()).log(Level.INFO, "LoggedIN");
-        //welcome information
-        //User user_param = (User)em.createNamedQuery("User.findByUserName",User.class).setParameter("userName", u).getSingleResult();
-        //EventManager.getInstance().newInformation(user_param, "Welcome!");
-        
-        return "/user/personal";
-    }
-    */
     
     /**
      * False <- User name doesn't exist

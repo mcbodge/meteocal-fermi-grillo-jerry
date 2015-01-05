@@ -157,7 +157,7 @@ public class Weather implements Serializable {
     
     // <editor-fold desc="Entity properties (Weather constraint)">
     
-    //TODO
+    //TODO RC
     /**
      * true <- w/o constraints
      * true <- w/constrainsts && constraints are ok wrt the forecast
@@ -165,8 +165,9 @@ public class Weather implements Serializable {
      * @return 
      */
     public boolean check(){
+        if (this.constraint == null || this.constraint == this.forecast)
+            return true;
         return false;
-       
     }
     
     

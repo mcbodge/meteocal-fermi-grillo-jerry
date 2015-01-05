@@ -137,14 +137,16 @@ public class Information implements Serializable {
     // <editor-fold desc="Entity properties (Local information notification)">
     
     
-    //TODO
+    //TODO RC
     /**
      * Returns false if the event is null, false otherwise.
      * @return 
      */
     public boolean hasEvent(){
-        return false;
+        if (this.eventId != null)
+            return true;
         
+        return false;        
     }
     
     
