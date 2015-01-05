@@ -28,8 +28,14 @@ public class RegistrationBean implements Serializable{
     @EJB
     RegistrationFacade rf;
     
-    private String firstname, lastname, username, email, password;
-   
+    private String firstname, lastname, username, email,  password, emailagain;
+
+    public String getEmailagain() {
+        return emailagain;
+    }
+    public void setEmailagain(String emailagain) {
+        this.emailagain = emailagain;
+    }   
     public String getFirstName() {
        return firstname;
     }
@@ -62,8 +68,12 @@ public class RegistrationBean implements Serializable{
     }
     
     public String createAccount() {    //Jude - TODO needs to check the provided data and create account
-        //the length of username, first, last ...etc have to be checked in the gui pkg (mng beans)
-        return rf.registerUser(firstname, lastname, username, email, password);
+        //check email and create user
+        if(this.email.trim().equals(this.emailagain.trim()) && rf.registerUser(firstname, lastname, username, email, password))
+                return "/home?faces-redirect=true";
+        
+        //Submitted data not valid
+        return "/registration?faces-redirect=true";
     }
     
 
