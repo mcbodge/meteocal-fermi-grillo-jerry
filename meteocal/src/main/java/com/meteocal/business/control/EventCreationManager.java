@@ -52,39 +52,46 @@ public class EventCreationManager {
      * @param p the privacy value 0 for public, 1 for private.
      * @param constraint the generated constraint value of the event, or null.
      * @param description the description of the event, or null.
-     * @return the eventId of the created event. Null if no event is created.
+     * @return false if no event is created.
      */
-    public Integer newEvent(User creator, String name, Date start, Date end, String location, List<User> invited, boolean p, Integer constraint, String description){
+    public boolean newEvent(User creator, String name, Date start, Date end, String location, List<User> invited, boolean p, Integer constraint, String description){
         
         if(start != null && end != null && name!= null && EventManager.getInstance().verifyConsistency(creator, start, end)){
             //consistency ok
             Event event = new Event(creator, name, location, start, end, p);
-            
+            /*
+            Event event = new Event();
+            event.setCreator(creator);
+            event.setName(name);
+            event.setLocation(location);
+            event.setStart(start);
+            event.setEnd(end);
+            event.setPublicEvent(p);
+            */
             if(description.isEmpty()){
                 event.setDescription(description);
             }
             
-            if(invited.isEmpty()) {
+            if(invited == null || invited.isEmpty()) {
                 //add nobody
                 event.setPersonal(true); //personal event if and only if the creator is the only attender.
             } else {
                 event.setInvitedUserCollection(invited);
                 event.setPersonal(false);
             }
-            
+            Logger.getLogger(EventCreationManager.class.getName()).log(Level.INFO, "NEW Event not yet created, ", event.getName());
             //save in db
             em.persist(event);
-            
+            Logger.getLogger(EventCreationManager.class.getName()).log(Level.INFO, "NEW Event created, ", event.getName());
             //no weather condition is given
           
             //send invitations
             if(!invited.isEmpty())
                 EventManager.getInstance().sendInvitations(invited, event);
             
-            Logger.getLogger(EventCreationManager.class.getName()).log(Level.INFO, "NEW Event created, ID:" + event.getEventId().toString());
-            return event.getEventId();
+            return true;
         }
-        return null;
+        return false;
     }
     
 

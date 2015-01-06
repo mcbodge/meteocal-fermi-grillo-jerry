@@ -8,7 +8,6 @@ package com.meteocal.business.entity;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
@@ -140,11 +139,11 @@ public class Event implements Serializable {
         return eventId;
     }
     
-    /*
+    
     public void setEventId(Integer eventId) {
         this.eventId = eventId;
     }
-    */
+    
 
     public String getName() {
         return name;

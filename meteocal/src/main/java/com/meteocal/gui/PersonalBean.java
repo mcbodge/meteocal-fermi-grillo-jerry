@@ -6,35 +6,48 @@
 package com.meteocal.gui;
 
 import com.meteocal.business.boundary.PersonalFacade;
-import java.util.StringTokenizer;
+import java.io.Serializable;
 import javax.ejb.EJB;
 import javax.inject.Named;
+import java.util.Date;
+import javax.enterprise.context.SessionScoped;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.RequestScoped;
 
 /**
  *
  * @author Manuel
  */
-@Named
-public class PersonalBean {
-    
+@ManagedBean
+@RequestScoped
+public class PersonalBean implements Serializable{
+
     @EJB
     PersonalFacade pf;
 
-    private StringTokenizer people;
-    private String eventName, eventLocation, date, time, descr;
-    private int constraint;
-    private double eventDuration;
+    private Date dateTime = new Date();
+    private String eventName, eventLocation, people, descr;
+    private String constraint;
+    private double eventDuration = 0.5;
     private boolean event_private;
-    
+
     public PersonalBean() {
     }
 
-    public StringTokenizer getPeople() {
+    public String getPeople() {
         return people;
     }
 
-    public void setPeople(StringTokenizer people) {
+    public void setPeople(String people) {
         this.people = people;
+    }
+
+    public Date getDateTime() {
+        return dateTime;
+    }
+
+    public void setDateTime(Date dateTime) {
+        this.dateTime = dateTime;
     }
 
     public String getEventName() {
@@ -53,28 +66,12 @@ public class PersonalBean {
         this.eventLocation = eventLocation;
     }
 
-    public String getDate() {
-        return date;
-    }
-
-    public void setDate(String date) {
-        this.date = date;
-    }
-
-    public String getTime() {
-        return time;
-    }
-
     public double getEventDuration() {
         return eventDuration;
     }
 
     public void setEventDuration(double eventDuration) {
-        this.eventDuration = eventDuration;
-    }
-
-    public void setTime(String time) {
-        this.time = time;
+        this.eventDuration = Math.max(eventDuration, 0.5);
     }
 
     public String getDescr() {
@@ -85,11 +82,11 @@ public class PersonalBean {
         this.descr = descr;
     }
 
-    public int getConstraint() {
+    public String getConstraint() {
         return constraint;
     }
 
-    public void setConstraint(int constraint) {
+    public void setConstraint(String constraint) {
         this.constraint = constraint;
     }
 
@@ -100,16 +97,32 @@ public class PersonalBean {
     public void setEvent_private(boolean event_private) {
         this.event_private = event_private;
     }
-    
+
+    public void createEvent() {
+        if (constraint == null) {
+            constraint = "";
+        }
+        
+        pf.createEvent(eventName, eventLocation, dateTime, eventDuration, people, !event_private, constraint, descr);
+    }
     public String getLoggedUser(){
         return pf.getLoggedUser();
     }
-   
-    public void createEvent(){
-        //createEvent(String creator, String name, String dateStart, String timeStart, double duration, boolean private, Integer constraint, String description)
-        pf.createEvent(getLoggedUser(), eventName,eventLocation, date, time, eventDuration, event_private, constraint, descr);
+    /*
+    public void addMessage() {
+        String summary = event_private ? "You have choosen to make the event Private" : "The event will no longer be Private";
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(summary));
     }
-    
-    
-    
+
+    public void addMessage2() {
+        String summary2 = event_private ? "Private" : "Public";
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(summary2));
+    }
+
+    public void currentDate() {
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        Date date = new Date();
+        System.out.println(dateFormat.format(date));
+    }
+    */
 }
