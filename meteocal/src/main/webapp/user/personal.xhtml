@@ -37,9 +37,7 @@
         <div style="float: left; border-right: 5px; height: 100%; width: 450px" >
             <h:form>
                 <p:panel id="eventpanel" header="New event" style="margin-bottom:5px;">
-
-                    <!--<p:growl id="msgs" showDetail="false" />
-                    -->
+                    
                     <h:panelGrid id="grid3" columns="1" cellpadding="1">
 
                         <p:outputLabel for="event" value="Event:" />
@@ -59,8 +57,8 @@
 
                         <p:outputLabel for="weather" value="Select prefered weather condition:" />
                         <p:selectOneMenu id="weather" value="#{personalBean.constraint}"> 
-                            <f:selectItem itemLabel="Select One" itemValue="" />
-                            <f:selectItem itemLabel="Requires sun" itemValue="1" />
+                            <f:selectItem itemLabel="No constraints" itemValue="0" />
+                            <f:selectItem itemLabel="Requires clear sky" itemValue="1" />
                             <f:selectItem itemLabel="Requires no precipitation" itemValue="2" />
                             <f:selectItem itemLabel="Requires snow" itemValue="3" />
                             <f:selectItem itemLabel="No extreme conditions" itemValue="4" />
@@ -75,50 +73,11 @@
                         <h:outputText value=" Mark as private" />
                     </h:panelGrid>
 
-                    <!--<p:commandButton value="Submit" action="#{personalBean.createEvent()}" icon="ui-icon-check" update="eventpanel" oncomplete="PF('dlg').show()"   />
-                    -->
                     <p:commandButton value="Submit" action="#{personalBean.createEvent()}" icon="ui-icon-check"/>
-                    <!--
                     <p:commandButton value="Cancel" update="eventpanel" process="@this" style="margin-right:20px;" >
                         <p:resetInput target="eventpanel" />
-                    </p:commandButton> -->
+                    </p:commandButton> 
                     
-                    
-                    <!--
-                    <p:dialog header="Values" resizable="false" showEffect="fade" widgetVar="dlg">
-                        <h:outputText value="#{personalBean.eventName}" />
-                        <p:panelGrid id="output" columns="2" columnClasses="label, value">
-                            <h:outputText value="Event:" />
-                            <h:outputText value="#{personalBean.eventName}" />
-
-                            <h:outputText value="Location" />
-                            <h:outputText value="#{personalBean.eventLocation}" />
-
-                            <h:outputText value="Invite:" />
-                            <h:outputText value="#{personalBean.people}" />
-
-                            <h:outputText value="Start Date:" />
-                            <h:outputText value="#{personalBean.dateTime}">
-                                <f:convertDateTime pattern="yyyy/MM/dd HH:mm:ss" />
-                            </h:outputText>
-
-                            <h:outputText value="Duration:" />
-                            <h:outputText value="Still working on it" />
-
-                            <h:outputText value="Prefered weather condition:" />
-                            <h:outputText value="Still working on it" />
-
-                            <h:outputText value="Description:" />
-                            <h:outputText value="#{personalBean.descr}" />
-
-                            <h:outputText value="Event Status:" />
-                            <h:outputText value="" />
-
-                        </p:panelGrid>
-                    </p:dialog>
-                    -->
-
-
                 </p:panel>
             </h:form>
         </div>
