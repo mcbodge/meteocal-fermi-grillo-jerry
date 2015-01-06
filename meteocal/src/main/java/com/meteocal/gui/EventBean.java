@@ -98,14 +98,7 @@ public class EventBean implements Serializable{
     public void setprivateEvent(boolean privateEvent){
         this.privateEvent = privateEvent;
     }
-   public void addMessage() {
-        String summary = privateEvent ? "You have choosen to make the event Private" : "The event will no longer be Private";
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(summary));
-    }
-    public void addMessage2() {
-        String summary2 = privateEvent ? "Private" : "Public";
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(summary2));
-    }
+   
    
    public String getDescription(){
        return description;
@@ -122,11 +115,7 @@ public class EventBean implements Serializable{
        
    }
    
-   public void currentDate(){
-    DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-    Date date = new Date();
-    System.out.println(dateFormat.format(date));
-   }
+  
     
     
 }

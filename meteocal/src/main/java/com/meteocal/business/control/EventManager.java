@@ -269,7 +269,7 @@ public class EventManager {
         }
     }
     
-    //TODO test
+    //TODO FIX IT
     /**
      * Allows to verify the time consistency of an event given its creator.
      * It returns true if no other event of the given user is in the db after start and before end.
@@ -285,18 +285,24 @@ public class EventManager {
         if(end.before(start))
             return false;
         
-        //load event created by the user and events that user attends 
-        TypedQuery<Event> query;
-        query = (TypedQuery<Event>) em.createNativeQuery(
+        /*
+        List<Event> query;
+        query = em.createNativeQuery(
                 "SELECT e FROM Event e, Answer a"
                         + "WHERE (e.start <= :start AND e.end >= :end) "
-                            + "AND ((e.creator = :creator) "
-                            + "OR (a.answerPK.event_id = e.event_id AND a.value = 1 AND :creator = a.answerPK.user_id))")
+                        + "AND ((e.creator = :creator) "
+                        + "OR (a.answerPK.event_id = e.event_id AND a.value = 1 AND :creator = a.answerPK.user_id))")
                 .setParameter("creator", creator.getUserId())
                 .setParameter("start", start)
-                .setParameter("end", end);
+                .setParameter("end", end)
+                .getResultList();
         
-        return start.after(Date.from(Calendar.getInstance().toInstant())) && query.getResultList().isEmpty();
+        if(query == null)
+            return true;
+        
+        return start.after(Date.from(Calendar.getInstance().toInstant())) && query.isEmpty();
+                */
+        return true;
     }
  
 }
