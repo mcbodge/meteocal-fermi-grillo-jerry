@@ -16,7 +16,7 @@
                     <p:inputText id="username" value="#{homeBean.userName}" required="true" />
                     <p:outputLabel for="pass" value="password"/>
                     <p:password id="pass" value="#{homeBean.password}" required="true" />
-                    <p:commandButton id="submit" action="#{homeBean.signIn()}" value="Login" ajax="true" update="@all"/>
+                    <p:commandButton id="submit" action="#{homeBean.submitLogIn()}" value="Login" ajax="true" update="@all"/>
                 </p:panelGrid>
             </p:panel>
             <h:messages  style="color: red"/>

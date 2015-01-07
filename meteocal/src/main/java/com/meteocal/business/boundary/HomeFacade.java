@@ -28,10 +28,6 @@ import javax.servlet.http.HttpServletRequest;
 @Stateless
 public class HomeFacade {
 
-    /*
-     signUp();
-     problems();
-     */
     @PersistenceContext
     EntityManager em;
 

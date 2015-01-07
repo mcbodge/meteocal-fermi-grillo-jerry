@@ -37,24 +37,7 @@ public class UserTestSessionBean {
         query = em.createNamedQuery("User.findAll",User.class);
         return query.getResultList();
     }
-  
-    /**
-     * write in db
-     * @param user
-     */
-    public void saveUser(User user){
-        user.setFirstName("bot");
-        user.setLastName("bot");
-        user.setPassword("qqqqq");
-        user.setPublicCalendar(true);
-        user.setGroupName(Group.USERS);
-        em.persist(user);
-    } 
-    
-    public void issues(String email){
-        idm.sendPassword(email);
-        idm.sendUserName(email);
-    }
+   
     
     
 }
