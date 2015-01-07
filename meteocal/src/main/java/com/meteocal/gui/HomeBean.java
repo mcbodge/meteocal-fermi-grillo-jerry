@@ -56,7 +56,12 @@ public class HomeBean implements Serializable{
     }
     
     public String signIn() {
-        return hf.loadUser(username, password);
+        if(hf.submitLogIn(username, password)){
+            //goto personal page
+            return "/user/personal?faces-redirect=true";
+        }
+        //stay in home
+        return "/home?faces-redirect=true";
     }        
 
 }

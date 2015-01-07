@@ -7,15 +7,15 @@
         <title>Sign in to your MeteoCal account</title>
     </h:head>
     <h:body>
+        <!-- username min 4chars max 15 -->
+        <!-- pass min 8chars max 255 -->
         <h:form id="loginform" >
             <p:panel header="TEST LOG IN MANAGER:">
                 <p:panelGrid columns="2">
                     <p:outputLabel for="username" value="user_name"/>
-                    <p:inputText id="username" value="#{homeBean.userName}" 
-                                 required="true" />
+                    <p:inputText id="username" value="#{homeBean.userName}" required="true" />
                     <p:outputLabel for="pass" value="password"/>
-                    <p:password id="pass" value="#{homeBean.password}" 
-                                required="true" />
+                    <p:password id="pass" value="#{homeBean.password}" required="true" />
                     <p:commandButton id="submit" action="#{homeBean.signIn()}" value="Login" ajax="true" update="@all"/>
                 </p:panelGrid>
             </p:panel>

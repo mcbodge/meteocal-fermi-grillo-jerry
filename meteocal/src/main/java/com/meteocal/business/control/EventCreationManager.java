@@ -23,8 +23,9 @@ import javax.persistence.PersistenceContext;
  * @author Manuel
  */
 public class EventCreationManager {
-    @PersistenceContext
-    EntityManager em;
+    
+    @PersistenceContext(unitName = "meteocal_PU")
+    private EntityManager em;
     
     private static EventCreationManager instance = null;
     protected EventCreationManager() {
@@ -59,38 +60,33 @@ public class EventCreationManager {
         if(start != null && end != null && name!= null && EventManager.getInstance().verifyConsistency(creator, start, end)){
             //consistency ok
             Event event = new Event(creator, name, location, start, end, p);
-            /*
-            Event event = new Event();
-            event.setCreator(creator);
-            event.setName(name);
-            event.setLocation(location);
-            event.setStart(start);
-            event.setEnd(end);
-            event.setPublicEvent(p);
-            */
-            if(description.isEmpty()){
+           
+            if(!description.isEmpty()){
                 event.setDescription(description);
             }
             
+            //personal event if and only if the creator is the only attender.
             if(invited == null || invited.isEmpty()) {
-                //add nobody
-                event.setPersonal(true); //personal event if and only if the creator is the only attender.
+                event.setPersonal(true); 
             } else {
-                event.setInvitedUserCollection(invited);
                 event.setPersonal(false);
             }
-            Logger.getLogger(EventCreationManager.class.getName()).log(Level.INFO, "NEW Event not yet created, ", event.getName());
+            
             //save in db
             em.persist(event);
-            Logger.getLogger(EventCreationManager.class.getName()).log(Level.INFO, "NEW Event created, ", event.getName());
+            Logger.getLogger(EventCreationManager.class.getName()).log(Level.INFO, "NEW Event created, event name: {0}", event.getName());
             //no weather condition is given
-          
+                      
             //send invitations
-            if(!invited.isEmpty())
+            if(invited != null && !invited.isEmpty()){
+                Logger.getLogger(EventCreationManager.class.getName()).log(Level.INFO, "---START send invitations---");
                 EventManager.getInstance().sendInvitations(invited, event);
+                Logger.getLogger(EventCreationManager.class.getName()).log(Level.INFO, "---STOP send invitations---");
+            }
             
             return true;
         }
+        Logger.getLogger(EventCreationManager.class.getName()).log(Level.SEVERE, "NEW Event NOT created");
         return false;
     }
     
@@ -117,14 +113,13 @@ public class EventCreationManager {
             String location = em.createNamedQuery("Location.findByGeonameid",Location.class).setParameter("geonameid", geoname).getSingleResult().toString();
             Event event = new Event(creator, name, location, start, end, p);
             
-            if(description.isEmpty())
+            if(!description.isEmpty())
                 event.setDescription(description);
             
-            if(invited.isEmpty()) {
-                //add noone
-                event.setPersonal(true); //personal event if and only if the creator is the only attender.
+            //personal event if and only if the creator is the only attender.
+            if( invited == null || invited.isEmpty()) {
+                event.setPersonal(true);
             } else {
-                event.setInvitedUserCollection(invited);
                 event.setPersonal(false);
             }
             

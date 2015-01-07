@@ -5,8 +5,11 @@
  */
 package com.meteocal.business.boundary;
 
+import com.meteocal.business.control.EventCreationManager;
 import java.util.Date;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.Singleton;
 import javax.ejb.Stateless;
 import javax.mail.Authenticator;
@@ -23,7 +26,7 @@ import javax.mail.internet.MimeMessage;
  * @author Francesco
  */
 @Stateless
-@Singleton
+//@Singleton
 public class EmailManager {
   
    private static EmailManager instance = null;
@@ -91,8 +94,10 @@ public class EmailManager {
 //            multipart.addBodyPart(htmlPart);
 //            message.setContent(multipart);
             Transport.send(message);
+            Logger.getLogger(EmailManager.class.getName()).log(Level.INFO, "Email sent.");
         } catch (MessagingException ex) {
-            ex.printStackTrace();
+            Logger.getLogger(EmailManager.class.getName()).log(Level.SEVERE, "Email NOT sent", ex);
+            //ex.printStackTrace();
         }
     }
 }

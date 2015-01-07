@@ -29,8 +29,8 @@ import javax.persistence.PersistenceContext;
  */
 public class UserCalendarManager {
 
-    @PersistenceContext
-    EntityManager em;
+    @PersistenceContext(unitName = "meteocal_PU")
+    private EntityManager em;
 
     private final String EXT = ".bin";
 

@@ -17,7 +17,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 public class IssuesDataManager{
     
     @PersistenceContext
-    EntityManager em;
+    private EntityManager em;
     
     public IssuesDataManager(){}
     
