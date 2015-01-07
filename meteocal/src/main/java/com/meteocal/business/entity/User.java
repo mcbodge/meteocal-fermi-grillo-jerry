@@ -190,39 +190,70 @@ public class User implements Serializable {
     public String getGroupName() {
         return groupname;
     }
-    
+    /**
+     * @deprecated
+     * @return 
+     */
     @XmlTransient
     public Collection<Event> getEventInvitationCollection() {
         return eventInvitationCollection;
     }
 
+    /**
+     * @deprecated
+     * @param eventInvitationCollection 
+     */
     public void setEventInvitationCollection(Collection<Event> eventInvitationCollection) {
         this.eventInvitationCollection = eventInvitationCollection;
     }
     
+    /**
+     * @deprecated
+     * @return 
+     */
     @XmlTransient
     public Collection<Answer> getAnswerCollection() {
         return answerCollection;
     }
 
+    /**
+     * @deprecated
+     * @param answerCollection 
+     */
     public void setAnswerCollection(Collection<Answer> answerCollection) {
         this.answerCollection = answerCollection;
     }
     
+    /**
+     * @deprecated
+     * @return 
+     */
     @XmlTransient
     public Collection<Information> getInformationCollection() {
         return informationCollection;
     }
 
+    /**
+     * @deprecated
+     * @param informationCollection 
+     */
     public void setInformationCollection(Collection<Information> informationCollection) {
         this.informationCollection = informationCollection;
     }
 
+    /**
+     * @deprecated
+     * @return 
+     */
     @XmlTransient
     public Collection<Event> getEventCreatedCollection() {
         return eventCreatedCollection;
     }
 
+    /**
+     * @deprecated
+     * @param eventCreatedCollection 
+     */
     public void setEventCreatedCollection(Collection<Event> eventCreatedCollection) {
         this.eventCreatedCollection = eventCreatedCollection;
     }
