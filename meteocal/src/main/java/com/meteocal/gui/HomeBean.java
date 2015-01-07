@@ -55,7 +55,7 @@ public class HomeBean implements Serializable{
         this.remainlogged = remainlogged;
     }
     
-    public String signIn() {
+    public String submitLogIn() {
         if(hf.submitLogIn(username, password)){
             //goto personal page
             return "/user/personal?faces-redirect=true";

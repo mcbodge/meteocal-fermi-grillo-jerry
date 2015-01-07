@@ -5,17 +5,17 @@
  */
 package com.meteocal.business.boundary;
 
-import com.meteocal.business.control.EventCreationManager;
+import java.net.ConnectException;
 import java.util.Date;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.ejb.Singleton;
 import javax.ejb.Stateless;
 import javax.mail.Authenticator;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.PasswordAuthentication;
+import javax.mail.SendFailedException;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
@@ -26,7 +26,6 @@ import javax.mail.internet.MimeMessage;
  * @author Francesco
  */
 @Stateless
-//@Singleton
 public class EmailManager {
   
    private static EmailManager instance = null;
@@ -40,16 +39,15 @@ public class EmailManager {
        }
        return instance;
     }
-    
+    //TODO java.net.ConnectException
     //TODO It would be better to get these infos from an encrypted txt file (after decrypting it in the code). Only if everything else is completed.
     private final int PORT = 587;
     private final String HOST = "smtp.aol.com";
     private final String FROM = "meteocal@aol.com";
-    private boolean auth = true;
+    private final boolean AUTH = true;
     private final String USERNAME = "meteocal@aol.com";
-    private final String PASSWORD = "D235X2uu";
-    
-    private boolean debug = true;
+    private final String PASSWORD = "D235X2uu";    
+    private final boolean DEBUG = true;
 
     public void sendEmail(String to, String subject, String body) {
         Properties props = new Properties();
@@ -58,10 +56,11 @@ public class EmailManager {
         props.put("mail.smtp.ssl.enable", false);
         
         Authenticator authenticator = null;
-        if (auth) {
+        if (AUTH) {
             props.put("mail.smtp.auth", true);
             authenticator = new Authenticator() {
                 private PasswordAuthentication pa = new PasswordAuthentication(USERNAME, PASSWORD);
+                
                 @Override
                 public PasswordAuthentication getPasswordAuthentication() {
                     return pa;
@@ -70,7 +69,7 @@ public class EmailManager {
         }
 
         Session session = Session.getInstance(props, authenticator);
-        session.setDebug(debug);
+        session.setDebug(DEBUG);
 
         MimeMessage message = new MimeMessage(session);
         try {
@@ -79,23 +78,30 @@ public class EmailManager {
             message.setRecipients(Message.RecipientType.TO, address);
             message.setSubject(subject);
             message.setSentDate(new Date());
-            message.setText(body);
-//            Multipart multipart = new MimeMultipart("alternative");
-//            
-//            MimeBodyPart textPart = new MimeBodyPart();
-//            String textContent = "Hi, Nice to meet you!";
-//            textPart.setText(textContent);
-//
-//            MimeBodyPart htmlPart = new MimeBodyPart();
-//            String htmlContent = "<html><h1>Hi</h1><p>Nice to meet you!</p></html>";
-//            htmlPart.setContent(htmlContent, "text/html");
-//
-//            multipart.addBodyPart(textPart);
-//            multipart.addBodyPart(htmlPart);
-//            message.setContent(multipart);
+            message.setText(body);  
+            
+            //<editor-fold defaultstate="state" desc="snippet fot html messages">
+                
+                /* snippet fot html messages */
+            
+            //            Multipart multipart = new MimeMultipart("alternative");
+            //            
+            //            MimeBodyPart textPart = new MimeBodyPart();
+            //            String textContent = "Hi, Nice to meet you!";
+            //            textPart.setText(textContent);
+            //
+            //            MimeBodyPart htmlPart = new MimeBodyPart();
+            //            String htmlContent = "<html><h1>Hi</h1><p>Nice to meet you!</p></html>";
+            //            htmlPart.setContent(htmlContent, "text/html");
+            //
+            //            multipart.addBodyPart(textPart);
+            //            multipart.addBodyPart(htmlPart);
+            //            message.setContent(multipart);
+            //</editor-fold>
+            
             Transport.send(message);
             Logger.getLogger(EmailManager.class.getName()).log(Level.INFO, "Email sent.");
-        } catch (MessagingException ex) {
+        } catch (MessagingException ex ) {
             Logger.getLogger(EmailManager.class.getName()).log(Level.SEVERE, "Email NOT sent", ex);
             //ex.printStackTrace();
         }
