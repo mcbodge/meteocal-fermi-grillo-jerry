@@ -29,9 +29,6 @@ import javax.persistence.PersistenceContext;
  */
 public class UserCalendarManager {
 
-    @PersistenceContext(unitName = "meteocal_PU")
-    private EntityManager em;
-
     private final String EXT = ".bin";
 
 
@@ -173,7 +170,7 @@ public class UserCalendarManager {
                 } else {
                     e_name = e_name + " [" + user_file + "]";
                 }
-                EventCreationManager.getInstance().newEvent(u, e_name, e_start, e_end, e_str_location, null, true, Integer.parseInt(e_constraint), e_descr);
+                //EventCreationManager.getInstance().newEvent(u, e_name, e_start, e_end, e_str_location, null, true, Integer.parseInt(e_constraint), e_descr);
             }
 
             //close stream

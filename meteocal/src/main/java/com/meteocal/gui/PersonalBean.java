@@ -8,9 +8,7 @@ package com.meteocal.gui;
 import com.meteocal.business.boundary.PersonalFacade;
 import java.io.Serializable;
 import javax.ejb.EJB;
-import javax.inject.Named;
 import java.util.Date;
-import javax.enterprise.context.SessionScoped;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 
@@ -104,9 +102,9 @@ public class PersonalBean implements Serializable{
         if (constraint == null) {
             constraint = "";
         }
-        
         pf.createEvent(eventName, eventLocation, dateTime, eventDuration, people, !event_private, constraint, descr);
     }
+    
     public String getLoggedUser(){
         return pf.getLoggedUser();
     }

@@ -6,16 +6,11 @@ import com.meteocal.business.entity.Event;
 import com.meteocal.business.entity.Information;
 import com.meteocal.business.entity.User;
 import com.meteocal.business.entity.WeatherCondition;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 
 /**
  * FROM - C:EventCreationManager FROM/TO - B: NotificationP TO - E:Event,
@@ -25,23 +20,6 @@ import javax.persistence.Query;
  */
 public class EventManager {
 
-    @PersistenceContext(unitName = "meteocal_PU")
-    private EntityManager em;
-    
-    private static EventManager instance = null;
-
-    protected EventManager() {
-        // Exists only to defeat instantiation.
-    }
-
-    public static EventManager getInstance() {
-        if (instance == null) {
-            instance = new EventManager();                
-        }
-        return instance;
-    }
-
-    
     //TODO added TODOs
     /**
      * Creates a new invitation.
@@ -50,34 +28,46 @@ public class EventManager {
      * @param e the involved event.
      */
     public void newInvitation(User u, Event e) {
-        
+        Logger.getLogger(EventManager.class.getName()).log(Level.INFO, "- START invitation (email )");
         //check user has not been already invited
         if (e.getMaybeGoing() != null && e.getMaybeGoing().contains(u)) { //TODO *** use the new method w/ List<User> (don't use the collections***).
             //if(e.getMaybeGoing().contains(u)){
             //user has been already invited
-            Logger.getLogger(EventManager.class.getName()).log(Level.INFO, "user has been already invited");
+            Logger.getLogger(EventManager.class.getName()).log(Level.INFO, "--user has been already invited");
         } else {
             //check user not already answered
+            boolean hasAnswered = false;
+            for (Answer ans : e.getAnswerCollection()) {
+                if (ans.getUser().equals(u)) {
+                    hasAnswered = true;
+                }
+            }
+            /*
             Answer ans = (Answer) em.createNativeQuery("SELECT a FROM Answer a WHERE a.answerPK.userId = :userId AND a.answerPK.eventId = :eventId")
                     .setParameter("userId", u.getUserId())
                     .setParameter("eventId", e.getEventId())
                     .getSingleResult();
-            if (ans != null) {
+            */
+            if (hasAnswered) {
                 //user has already answered -> do nothing
-                Logger.getLogger(EventManager.class.getName()).log(Level.INFO, "user has already answered");
+                Logger.getLogger(EventManager.class.getName()).log(Level.INFO, "-- user has already answered");
             } else {
                 //OK, create new invitation
-                Logger.getLogger(EventManager.class.getName()).log(Level.INFO, "call save invitation");
-                saveInvitation(u, e);
-                Logger.getLogger(EventManager.class.getName()).log(Level.INFO, "Load email parts");
+                Logger.getLogger(EventManager.class.getName()).log(Level.INFO, "-- save invitation (in collection)");
+                
+                //saveInvitation(u, e);
+                e.getInvitedUserCollection().add(u);
+                u.getEventInvitationCollection().add(e);
+                
+                
+                Logger.getLogger(EventManager.class.getName()).log(Level.INFO, "-- Load email parts");
                 //send email notification
                 String subject = "METEOCAL: new invitation";
                 String body = "Dear " + u.getFirstName() + " " + u.getLastName() + ",\nYou have been invited to the event: " + e.getName() + ".\nCheck your invitation request on Meteocal.\n\nPLEASE DO NOT REPLY TO THIS EMAIL";
                 EmailManager.getInstance().sendEmail(u.getEmail(), subject, body);
-                //EmailManager.getInstance().sendEmail("francesco.fermi@gmail.com", subject, body);
-                Logger.getLogger(EventManager.class.getName()).log(Level.INFO, "END invitation (email )");
             }
         }
+        Logger.getLogger(EventManager.class.getName()).log(Level.INFO, "- END invitation ");
     }
 
     /**
@@ -86,6 +76,7 @@ public class EventManager {
      * @param u the receiver.
      * @param e the involved event.
      */
+    /*
     private void saveInvitation(User u, Event e) {
         Logger.getLogger(EventManager.class.getName()).log(Level.INFO, "enter in save invitation");
         e.getInvitedUserCollection().add(u);
@@ -95,11 +86,12 @@ public class EventManager {
         em.merge(u);
         Logger.getLogger(EventManager.class.getName()).log(Level.INFO, "merge done");
     }
-
+    */
+    
     /**
      * Creates a new Information, not necessarily related to an event.
      *
-     * @return new information instance.
+     * @return the new information instance.
      */
     public Information newInformation(User u, String message) {
         return new Information(u, message);
@@ -111,10 +103,10 @@ public class EventManager {
      * @param u the receiver.
      * @param message the actual information.
      * @param e the related event.
+     * @return the new information instance.
      */
-    public void newInformation(User u, String message, Event e) {
-        Information info = new Information(e, u, message);
-        em.persist(info);
+    public Information newInformation(User u, String message, Event e) {
+        return new Information(e, u, message);
     }
 
     //TODO added TODOs
@@ -124,6 +116,7 @@ public class EventManager {
      * @param u the former-receiver.
      * @param e the former-related-event.
      */
+    /*
     public void revokeInvitation(User u, Event e) {
         //revoke invitation
         if (e.getInvitedUserCollection().contains(u)) { //TODO ***
@@ -149,6 +142,7 @@ public class EventManager {
             //if user declined or he is not in the invited list do nothing.
         }
     }
+    */
 
     //TODO added TODOs
     /**
@@ -157,6 +151,7 @@ public class EventManager {
      * @param u the receiver.
      * @param e the event.
      */
+    /*
     public void acceptInvitation(User u, Event e) {
         if (e.getInvitedUserCollection().contains(u)) { //TODO ***
             //Check overlap 
@@ -185,7 +180,8 @@ public class EventManager {
         }
         //if the user have not been invited 
     }
-
+    */
+    
     //TODO added TODOs
     /**
      * Decline a received invitation.
@@ -193,6 +189,7 @@ public class EventManager {
      * @param u
      * @param e
      */
+    /*
     public void declineInvitation(User u, Event e) {
         if (e.getInvitedUserCollection().contains(u)) { //TODO ***
             u.getEventInvitationCollection().remove(e); //TODO (later)
@@ -203,7 +200,8 @@ public class EventManager {
             em.persist(answer);
         }
     }
-
+    */
+    
     //TODO *any other condition*
     /**
      * Given an event it says if it has adverse weather conditions. If there are
@@ -225,10 +223,9 @@ public class EventManager {
 
     }
 
+    private boolean canBeDone(WeatherCondition wc, Integer constraint) {
+        boolean out = true;
 
-    private boolean canBeDone(WeatherCondition wc, Integer constraint){
-        boolean out=true;
-        
         switch (constraint) {
             case 1: //Requires clear sky
                 break;
@@ -253,7 +250,7 @@ public class EventManager {
             case 4: //No extreme conditions
                 out = wc.isExtreme();
                 break;
-            default:            
+            default:
         }
 
         return out;
@@ -268,12 +265,12 @@ public class EventManager {
      */
     public void sendInvitations(List<User> ul, Event event) {
         //richiamato anche quando modifichi...quindi prima check se sono già stati invitati.
+               
         for (User user : ul) {
             newInvitation(user, event);
         }
     }
 
-    //TODO FIX IT
     /**
      * Allows to verify the time consistency of an event given its creator. It
      * returns true if no other event of the given user is in the db after start
@@ -286,37 +283,21 @@ public class EventManager {
      * minute).
      * @return true if no events overlaps -- false otherwise.
      */
-    public boolean verifyConsistency(User creator, Date start, Date end) {
+    public boolean verifyConsistency(User creator, Date start, Date end, int numOverlappingEvents) {
         boolean result = false;
-        
-        Logger.getLogger(EventManager.class.getName()).log(Level.INFO, "--- START Verify consistency ---");
-        Logger.getLogger(EventManager.class.getName()).log(Level.INFO, "- {0}",creator.getUserId());
-        Logger.getLogger(EventManager.class.getName()).log(Level.INFO, "- {0}",start.toString());
-        Logger.getLogger(EventManager.class.getName()).log(Level.INFO, "- {0}",end.toString());
+
         //check if end is > then start
-        if (!end.before(start)) {
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            
-            Query query = em.createNativeQuery(
-                    "SELECT COUNT(*) FROM events e JOIN answers a ON e.event_id = a.event_id"
-                        + "WHERE ((e.creator = ?) OR ( a.value = 1 AND a.user_id = ?))"
-                            + "AND (e.start_date <= '?' AND e.end_date >= '?')"  )                    
-                    .setParameter(1, creator.getUserId())
-                    .setParameter(2, creator.getUserId())
-                    .setParameter(3, formatter.format(start))
-                    .setParameter(4, formatter.format(end));
-            Logger.getLogger(EventManager.class.getName()).log(Level.INFO, "- query res: {0}",query.toString());
-            int count = (Integer)query.getSingleResult();
-            Logger.getLogger(EventManager.class.getName()).log(Level.INFO, "- count: {0}",count);               
-            
-            if (count == 0) {
+        if (start != null && end != null && !end.before(start)) {
+
+            //query
+            if (numOverlappingEvents == 0) {
                 result = true;
-            }else{
+            } else {
                 //result = start.after(Date.from(Calendar.getInstance().toInstant())) && query == 0;
-                result = start.after(Calendar.getInstance().getTime()) && count == 0;
+                result = start.after(Calendar.getInstance().getTime()) && numOverlappingEvents == 0;
             }
         }
-        Logger.getLogger(EventManager.class.getName()).log(Level.INFO, "- result: {0}",result);
+        Logger.getLogger(EventManager.class.getName()).log(Level.INFO, "- result: {0}", result);
         Logger.getLogger(EventManager.class.getName()).log(Level.INFO, "--- END Verify consistency ---");
         return result;
     }

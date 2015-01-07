@@ -8,7 +8,6 @@ package com.meteocal.business.boundary;
 import com.meteocal.business.control.EventManager;
 import com.meteocal.business.control.LogInManager;
 import com.meteocal.business.entity.User;
-import java.security.Principal;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.Stateless;
@@ -28,7 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 @Stateless
 public class HomeFacade {
 
-    @PersistenceContext
+    @PersistenceContext(unitName = "meteocal_PU")
     EntityManager em;
 
     @Inject
