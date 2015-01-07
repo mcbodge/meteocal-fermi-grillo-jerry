@@ -1,0 +1,22 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Dec 12, 2014, 5:28:06 PM
+    Author     : Jude
+*/
+
+#indexpage{background-color: whitesmoke; height:400px; width:400px; margin:0 auto}
+#HeaderText{text-align: center; color: #3366ff; font-family: serif; font-size:xx-large}
+#FormTable1{border: 0}
+#td{padding: 15px;}
+#TextField{border-color: #3366ff; } 
+#BodyText{color: #3366ff;}
+#MainSubmit{float: right}
+#MainProblemText{text-align: center;}
+
+#registrationPage{background-color: whitesmoke; float: left; height: 700px; width: 500px; margin: 0 auto}
+
+#signInproblemPage{background-color: whitesmoke; float: left; height: 650px; width: 1350px; margin: 0 auto}
