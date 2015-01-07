@@ -52,7 +52,7 @@ public class EventManager {
     public void newInvitation(User u, Event e) {
         
         //check user has not been already invited
-        if (e.getInvitedUserCollection() != null && e.getInvitedUserCollection().contains(u)) { //TODO *** use the new method w/ List<User> (don't use the collections***).
+        if (e.getMaybeGoing() != null && e.getMaybeGoing().contains(u)) { //TODO *** use the new method w/ List<User> (don't use the collections***).
             //if(e.getMaybeGoing().contains(u)){
             //user has been already invited
             Logger.getLogger(EventManager.class.getName()).log(Level.INFO, "user has been already invited");

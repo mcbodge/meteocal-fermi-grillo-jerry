@@ -217,19 +217,33 @@ public class Event implements Serializable {
     }
      
     @XmlTransient
+    /**
+     * @deprecated
+     */
     public Collection<User> getInvitedUserCollection() {
         return invitedUserCollection;
     }
 
+    /**
+     * @deprecated
+     * @param userCollection 
+     */
     public void setInvitedUserCollection(Collection<User> userCollection) {
         this.invitedUserCollection = userCollection;
     }
    
     @XmlTransient
+    /**
+     * @deprecated
+     */
     public Collection<Answer> getAnswerCollection() {
         return answerCollection;
     }
 
+    /**
+     * @deprecated
+     * @param answerCollection 
+     */
     public void setAnswerCollection(Collection<Answer> answerCollection) {
         this.answerCollection = answerCollection;
     }
@@ -242,11 +256,19 @@ public class Event implements Serializable {
         this.weather = weather;
     }
 
+    /**
+     * @deprecated
+     * @return 
+     */
     @XmlTransient
     public Collection<Information> getInformationCollection() {
         return informationCollection;
     }
 
+    /**
+     * @deprecated
+     * @param informationCollection 
+     */
     public void setInformationCollection(Collection<Information> informationCollection) {
         this.informationCollection = informationCollection;
     }
