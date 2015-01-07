@@ -44,10 +44,10 @@ public class EmailManager {
     private final int PORT = 587;
     private final String HOST = "smtp.aol.com";
     private final String FROM = "meteocal@aol.com";
-    private final boolean AUTH = true;
+    private  boolean auth = true;
     private final String USERNAME = "meteocal@aol.com";
     private final String PASSWORD = "D235X2uu";    
-    private final boolean DEBUG = true;
+    private  boolean debug = true;
 
     public void sendEmail(String to, String subject, String body) {
         Properties props = new Properties();
@@ -56,7 +56,7 @@ public class EmailManager {
         props.put("mail.smtp.ssl.enable", false);
         
         Authenticator authenticator = null;
-        if (AUTH) {
+        if (auth) {
             props.put("mail.smtp.auth", true);
             authenticator = new Authenticator() {
                 private PasswordAuthentication pa = new PasswordAuthentication(USERNAME, PASSWORD);
@@ -69,7 +69,7 @@ public class EmailManager {
         }
 
         Session session = Session.getInstance(props, authenticator);
-        session.setDebug(DEBUG);
+        session.setDebug(debug);
 
         MimeMessage message = new MimeMessage(session);
         try {
