@@ -19,8 +19,8 @@ import javax.persistence.TypedQuery;
  */
 public class ProfileDataManager {
     
-    @PersistenceContext
-    EntityManager em;
+    @PersistenceContext(unitName = "meteocal_PU")
+    private EntityManager em;
     
     
     /**

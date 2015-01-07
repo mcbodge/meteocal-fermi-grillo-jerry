@@ -8,6 +8,7 @@ package com.meteocal.business.boundary;
 import com.meteocal.business.control.EventManager;
 import com.meteocal.business.control.LogInManager;
 import com.meteocal.business.entity.User;
+import java.security.Principal;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.Stateless;
@@ -26,52 +27,81 @@ import javax.servlet.http.HttpServletRequest;
  */
 @Stateless
 public class HomeFacade {
-    
-    @Inject 
-    LogInManager loginManager;
-    @Inject
-    EventManager eventmanager;
-    
+
+    /*
+     signUp();
+     problems();
+     */
     @PersistenceContext
     EntityManager em;
-    
-       
-    //welcome inform. still need to be added. -- a welcome information is simply a new instance in the information table, with event set to null.
+
+    @Inject
+    LogInManager loginManager;
+
+    @Inject
+    EventManager eventmanager;
+
     /**
-     * Logs in - a validated user - redirecting him to his/her personal page. 
-     * It also sends a "welcome" information.
-     * 
+     * Logs in - a validated user - redirecting him to his/her personal page. It
+     * also sends a "welcome" information.
+     *
      * @param u the username we want to log in
      * @param p the password
-     * @return the URL of the user's personal page
+     * @return true if login is ok.
      */
-    public String loadUser(String u, String p){
-        try{
-            if(loginManager.checkLogInFields(u, p)){
-                if (loginManager.checkAlreadyLoggedIn(em.createNamedQuery("User.findByUserName",User.class).setParameter("userName", u).getSingleResult())){
-                    loginManager.logOutCurrentSession();
-                    return "/home?faces-redirect=true";
-                }
-                FacesContext context = FacesContext.getCurrentInstance();
-                HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();
-                try {
-                    request.login(u,p);
-                } catch (ServletException e) {
-                    context.addMessage(null, new FacesMessage("Login failed."));
-                    Logger.getLogger(LogInManager.class.getName()).log(Level.SEVERE, "Login Failed");
-                    return "/home?faces-redirect=true";
-                }        
-                context.addMessage(null, new FacesMessage("Login OK."));
-                Logger.getLogger(LogInManager.class.getName()).log(Level.INFO, "LoggedIN");
-                //welcome information
-                User user_param = (User)em.createNamedQuery("User.findByUserName",User.class).setParameter("userName", u).getSingleResult();
-                eventmanager.newInformation(user_param, "Welcome!");
-                return "/user/personal?faces-redirect=true";
+    public boolean submitLogIn(String u, String p) {
+        boolean result = false;
+
+        if (loginManager.checkLogInFields(u, p)) {
+            //check if user exists and 
+            User user = null;
+            try {
+                user = em.createNamedQuery("User.findByUserName", User.class).setParameter("userName", u).getSingleResult();
+            } catch (NoResultException ex) {
+                Logger.getLogger(LogInManager.class.getName()).log(Level.SEVERE, "Login Failed, invalid username");
             }
-            return "/home?faces-redirect=true";
-        }catch(NoResultException ex){
-            Logger.getLogger(LogInManager.class.getName()).log(Level.SEVERE, "Login Failed");
-            return "/home?faces-redirect=true";
+            if (user == null) {
+                //user does not exist 
+            } else {
+                //chek if the user is already logged in
+                if (u.equals(loginManager.getLoggedUserName())) {
+                    //user is already logged in 
+                    logOut();
+                } else {
+                    //user is not already logged in
+                    //try to login
+                    FacesContext context = FacesContext.getCurrentInstance();
+                    HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();
+                    try {
+                        request.login(u, p);
+                        context.addMessage(null, new FacesMessage("Login OK."));
+                        Logger.getLogger(LogInManager.class.getName()).log(Level.INFO, "Login succeeded, user {0} LoggedIn", u);
+                        result = true;
+
+                        //create a welcome information
+                        String welcome_message = "Welcome " + user.getUserName() + "!";
+                        em.persist(eventmanager.newInformation(user, welcome_message));
+
+                    } catch (ServletException e) {
+                        //login failed
+                        context.addMessage(null, new FacesMessage("Login failed."));
+                        Logger.getLogger(LogInManager.class.getName()).log(Level.SEVERE, "Login Failed, failed to LogIn {0}", u);
+                    }
+                }
+            }
         }
+        return result;
     }
+
+    /**
+     * Perform Log Out
+     * 
+     */
+    public void logOut() {
+        Logger.getLogger(LogInManager.class.getName()).log(Level.INFO, "User {0} Logged out.", loginManager.getLoggedUserName());
+        FacesContext context = FacesContext.getCurrentInstance();
+        HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();
+        request.getSession().invalidate();
+    }
+
 }

@@ -28,22 +28,9 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class LogInManager{
     
-    @PersistenceContext(unitName = "meteocal_PU")
-    EntityManager em;
     @Inject
     Principal principal;
-    
-    
-    
-    /**
-     * 
-     * @return the username of the user logged in
-     */
-    public String getLoggedUser(){
-        return principal.getName();
-    }
 
-    //TODO
     /**
      * If the structure of the input is wrong (empty fields, the password is too short, etc.) 
      * it returns false.
@@ -54,69 +41,23 @@ public class LogInManager{
      * @return false if the structure of the input is wrong
      */
     public boolean checkLogInFields(String u, String p){
-        if(p == null || p.length() < 8 || u == null || u.length() < 4 )
+        if(p == null || p.length() < 8 || p.length() > 255 || u == null || u.length() < 4 || u.length() > 15  )
             return false;
         return true;
     }
     
     /**
-     * Returns true if the user is currently logged. False otherwise.
      * 
-     * @param u the user that we want to log in
-     * @return "true" if the user is logged
+     * @return the username of the current user logged in.
      */
-    public boolean checkAlreadyLoggedIn(User u){         
-        if(u != null && getLoggedUser() != null){
-            if(u.getUserName().equals(getLoggedUser()))
-                return true;
-        }
-        return false;
+    public String getLoggedUserName(){
+        return principal.getName();
     }
-    
-    
-    /**
-     * Logs out a session
-     * 
-     */  
-    public void logOutCurrentSession(){
-        FacesContext context = FacesContext.getCurrentInstance();
-        HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();
-        request.getSession().invalidate();
-        Logger.getLogger(LogInManager.class.getName()).log(Level.INFO, "User Logged out");
-    }
-    
-    /**
-     * False <- User name doesn't exist
-     * False <- User name exist && password is wrong
-     * True <- Otherwise
-     * 
-     * @param un user name
-     * @param p password
-     * @return "true" if the the fields are correct
-     */ 
-    private boolean verifyLogIn(String un, String p){
-        User usr;
-        
-        //check user
-        try{
-            usr = (User)em.createNamedQuery("User.findByUserName")
-                    .setParameter("userName", un).getSingleResult();
-        }catch(NoResultException nre){
-            //user doesn't exists.
-            return false;
-        }
-        
-        //check password of an existing user
-        //if the password is ok it returns true, otherwise - if it mismatches - it returns false
-        return usr.getPassword().equals(encryptPassword(p));  
-
-    }
-    
     
     /**  
      * Encrypt the password.
      * 
-     * @param password
+     * @param password the password not encypted
      * @return password encrypted
      */
     public static String encryptPassword(String password) {

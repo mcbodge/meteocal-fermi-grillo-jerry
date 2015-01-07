@@ -6,29 +6,19 @@
 package com.meteocal.business.boundary;
 
 import com.meteocal.business.control.EventCreationManager;
-import com.meteocal.business.control.EventManager;
 import com.meteocal.business.control.LogInManager;
 import com.meteocal.business.entity.User;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.StringTokenizer;
-import java.util.TimeZone;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.ejb.Stateful;
-import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
-import org.eclipse.persistence.jpa.jpql.parser.DateTime;
-import sun.util.calendar.ZoneInfo;
-
 /**
  *
  * @author Manuel
@@ -36,20 +26,17 @@ import sun.util.calendar.ZoneInfo;
 @Stateful
 public class PersonalFacade {
 
+    @PersistenceContext
+    EntityManager em;
+         
     @Inject
     LogInManager lm;
 
     @Inject
     EventCreationManager eventCreationManager;
 
-    @Inject
-    EventManager eventManager;
-
-    @PersistenceContext
-    EntityManager em;
-
     public String getLoggedUser() {
-        return lm.getLoggedUser();
+        return lm.getLoggedUserName();        
     }
 
     public boolean createEvent(String name, String location, Date dateTime, double duration, String invited, boolean event_private, String constraint, String description) {
@@ -62,10 +49,9 @@ public class PersonalFacade {
 
         //check datetime
         if (dateTime == null) {
-            Logger.getLogger(PersonalFacade.class.getName()).log(Level.SEVERE, "ERROR parsing Date&Time");
             return false;
         }
-        Logger.getLogger(PersonalFacade.class.getName()).log(Level.INFO, "Date&Time: " + dateTime.toString());
+        
         Date end_date = getDateEnd(dateTime, duration);
 
         // invited users list
@@ -83,7 +69,6 @@ public class PersonalFacade {
             list_invited = null;
         }
 
-        Logger.getLogger(PersonalFacade.class.getName()).log(Level.INFO, "Invoke event creation manager");
         return eventCreationManager.newEvent(getUser(getLoggedUser()), name, dateTime, end_date, location, list_invited, event_private, constr, description);
 
     }
@@ -103,15 +88,12 @@ public class PersonalFacade {
         if (duration - hours > 0) {
             minutes = 30;
         }
-        
-        Logger.getLogger(PersonalFacade.class.getName()).log(Level.INFO, "ExpectedEndDate: start+" + hours + ":" + minutes);
 
         Calendar cal = Calendar.getInstance(); // creates calendar
         cal.setTime(dateStart); // sets calendar time/date
         cal.add(Calendar.HOUR_OF_DAY, hours); // adds hours
         cal.add(Calendar.MINUTE, minutes); // adds minutes
 
-        Logger.getLogger(PersonalFacade.class.getName()).log(Level.INFO, "EndDate: " + cal.getTime());
         return cal.getTime(); // returns new date object, in the future
     }
 
