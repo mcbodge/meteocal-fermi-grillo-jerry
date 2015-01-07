@@ -5,16 +5,15 @@
  */
 package com.meteocal.business.control;
 
+import com.meteocal.business.boundary.PersonalFacade;
 import com.meteocal.business.entity.Event;
-import com.meteocal.business.entity.Location;
 import com.meteocal.business.entity.User;
-import com.meteocal.business.entity.Weather;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import javax.inject.Inject;
 
 /**
  * FROM/TO - B:PersonalPage
@@ -24,24 +23,34 @@ import javax.persistence.PersistenceContext;
  */
 public class EventCreationManager {
     
-    @PersistenceContext(unitName = "meteocal_PU")
-    private EntityManager em;
-    
-    private static EventCreationManager instance = null;
-    protected EventCreationManager() {
-       // Exists only to defeat instantiation.
+    @Inject
+    EventManager ev_m;
+
+    /**
+     * Calculate when the event will be over
+     * @param dateStart 
+     * @param duration
+     * @return Date end date, when the event will be over.
+     */
+    public Date calcDateEnd(Date dateStart, double duration) {
+        //get hours and minutes to add
+        int hours = new Double(duration).intValue();
+        int minutes = 0;
+        if (duration - hours > 0) {
+            minutes = 30;
+        }
+
+        Calendar cal = Calendar.getInstance(); // creates calendar
+        cal.setTime(dateStart); // sets calendar time/date
+        cal.add(Calendar.HOUR_OF_DAY, hours); // adds hours
+        cal.add(Calendar.MINUTE, minutes); // adds minutes
+
+        return cal.getTime(); // returns new date object, in the future
     }
-    public static EventCreationManager getInstance() {
-       if(instance == null) {
-          instance = new EventCreationManager();
-       }
-       return instance;
-    }
     
-    //TODO verify :)
     /**
      * NEW EVENT, GIVING THE LOCATION normal-language STRING
-     * Creates a new event, given the required parameters and returns its id.
+     * Creates a new event, given the required parameters and returns the Event Obj.
      * Requires valid creator, name, start and end.
      * 
      * @param creator the creator (User).
@@ -53,44 +62,33 @@ public class EventCreationManager {
      * @param p the privacy value 0 for public, 1 for private.
      * @param constraint the generated constraint value of the event, or null.
      * @param description the description of the event, or null.
-     * @return false if no event is created.
+     * @return null if no event is created.
      */
-    public boolean newEvent(User creator, String name, Date start, Date end, String location, List<User> invited, boolean p, Integer constraint, String description){
-        
-        if(start != null && end != null && name!= null && EventManager.getInstance().verifyConsistency(creator, start, end)){
+    public Event newEvent(User creator, String name, Date start, Date end, String location, List<User> invited, boolean p, Integer constraint, String description, int numOverlappingEvents){
+        Event event_result = null;
+        Logger.getLogger(EventCreationManager.class.getName()).log(Level.INFO, "---START newEvent in EventCreationManager---");
+        if(name!= null && ev_m.verifyConsistency(creator, start, end, numOverlappingEvents)){
             //consistency ok
-            Event event = new Event(creator, name, location, start, end, p);
+            event_result = new Event(creator, name, location, start, end, p);
            
             if(!description.isEmpty()){
-                event.setDescription(description);
+                event_result.setDescription(description);
             }
             
             //personal event if and only if the creator is the only attender.
             if(invited == null || invited.isEmpty()) {
-                event.setPersonal(true); 
+                event_result.setPersonal(true); 
             } else {
-                event.setPersonal(false);
+                event_result.setPersonal(false);
             }
             
-            //save in db
-            em.persist(event);
-            Logger.getLogger(EventCreationManager.class.getName()).log(Level.INFO, "NEW Event created, event name: {0}", event.getName());
-            //no weather condition is given
-                      
-            //send invitations
-            if(invited != null && !invited.isEmpty()){
-                Logger.getLogger(EventCreationManager.class.getName()).log(Level.INFO, "---START send invitations---");
-                EventManager.getInstance().sendInvitations(invited, event);
-                Logger.getLogger(EventCreationManager.class.getName()).log(Level.INFO, "---STOP send invitations---");
-            }
-            
-            return true;
         }
-        Logger.getLogger(EventCreationManager.class.getName()).log(Level.SEVERE, "NEW Event NOT created");
-        return false;
+        boolean param = event_result != null;
+        Logger.getLogger(EventCreationManager.class.getName()).log(Level.INFO, "---END newEvent in EventCreationManager Result: {0}", param);
+        return event_result;
     }
     
-
+    /*
     /**
      * NEW EVENT, GIVING THE LOCATION ID
      * The name of the location is automatically generated***
@@ -108,6 +106,7 @@ public class EventCreationManager {
      * @param description the description of the event, or null.
      * @return the eventId of the created event. Null if no event is created.
      */
+    /*
     public Integer newEvent(User creator, String name, Date start, Date end, Integer geoname, List<User> invited, boolean p, Integer constraint, String description){
         if(geoname != null && start != null && end != null && name!= null && EventManager.getInstance().verifyConsistency(creator, start, end)){
             String location = em.createNamedQuery("Location.findByGeonameid",Location.class).setParameter("geonameid", geoname).getSingleResult().toString();
@@ -146,4 +145,5 @@ public class EventCreationManager {
         //no consistency
         return null;
     }
+    */
 }
