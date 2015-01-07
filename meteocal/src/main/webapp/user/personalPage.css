@@ -1,0 +1,41 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Dec 15, 2014, 3:31:18 PM
+    Author     : Jude
+*/
+#BodyText{background-color: white;}
+#HeaderText2{text-align: left; color: #3366ff; font-family: serif; font-size:xx-large}
+#TextField2{border-color: #3366ff; }
+#EventTable{ border: 5px solid #3366ff; border-collapse: collapse;}
+#CalendarTable{ border: 5px solid #3366ff; border-collapse: collapse; column-count: 7;}
+#td{padding: 10px;}
+#td2{padding: 15px;}
+#td3{padding: 10px; height: 70px; border: 1px solid; vertical-align: text-top;}
+#th{padding: 10px; width: 85px; background-color: whitesmoke; border: 1px solid;}
+
+
+
+#Pagediv{height:680px; width:1350px; margin:0 auto}
+ 
+#Paneldiv-container {height:100px; background:white}
+ 
+#Paneldiv{color: #3366ff; border-bottom: 5px solid; width:1300px; height: 95%; margin:0}
+ 
+//#messages-container {height:50px; margin:0; display: inline-block;}
+ 
+//#messages {background: #44EE00; width:1000px; height: 100%; margin:0; display: inline-block;}
+ 
+#Eventdiv-container {height:100%; margin:0} 
+ 
+#Eventdiv {float:left;  color: #3366ff; width: 450px;  height:100%; margin:0}
+ 
+#Calendardiv {float: right; color: #3366ff; width:900px;  height:100%; margin:0}
+
+
+//#Paneldiv{background-color: white;float: top; height:50px; width:1350px; margin:0 auto}
+//#Event{background-color: white;float: left; height: 500px; width:350px; margin:0 auto}
+//#Calendardiv{background-color: whitesmoke;float: right; height:500px; width:1000px; margin:0 auto}

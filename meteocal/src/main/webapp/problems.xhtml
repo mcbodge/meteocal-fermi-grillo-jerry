@@ -35,3 +35,43 @@
     </h:body>
 </html>
 
+
+<!--
+
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"  
+    xmlns:f="http://java.sun.com/jsf/core"  
+    xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Login Problems</title>
+    </h:head>
+    <h:body style="color: #3366ff">
+        
+       
+        <h1>Why are you having trouble signing in?</h1>
+        
+        <h:form>
+                                                
+                <h:panelGrid id="problemgrid1" columns="1" cellpadding="5">
+                    <p:selectOneRadio id="problem" value="#{problemBean.loginProblem}" layout="grid" columns="1">
+                        <f:selectItem itemLabel="I forgot my password" itemValue="password" />
+                        <f:selectItem itemLabel="I don't remember my username" itemValue="username" />
+                    </p:selectOneRadio>
+                    
+                    <h:outputLabel for="email" value="Please enter Personal email:" />                    
+                    <p:inputText id="email" value="#{problemBean.email}" validatorMessage="An e-mail address is required" size="35">
+                        <f:validateRegex pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+                    </p:inputText>
+                    <p:message for="email" />
+                    
+                    <p:commandButton id="submitProblem" value="Submit" action="#{problemBean.submitProblem()}" update="problemgrid1" />
+                </h:panelGrid>
+            
+            </h:form>
+    </h:body>
+</html>
+
+
+-->
