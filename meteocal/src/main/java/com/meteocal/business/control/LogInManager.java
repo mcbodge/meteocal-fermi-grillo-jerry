@@ -5,20 +5,14 @@
  */
 package com.meteocal.business.control;
 
-import com.meteocal.business.entity.User;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.Principal;
 import java.util.logging.Level;
-import javax.faces.context.FacesContext;
 import java.util.logging.Logger;
 import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import javax.persistence.PersistenceContext;
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * FROM/TO - B:HomePage
@@ -57,7 +51,7 @@ public class LogInManager{
     /**  
      * Encrypt the password.
      * 
-     * @param password the password not encypted
+     * @param password the password not encrypted
      * @return password encrypted
      */
     public static String encryptPassword(String password) {
