@@ -126,22 +126,22 @@ public enum WeatherCondition {
             case OVERCAST_CLOUDS:
                 value = "Clouds (overcast)";
                 break;
-            case DRIZZLE:
+            case DRIZZLE: //P
                 value = "Drizzle";
                 break;
-            case RAIN:
+            case RAIN: //P
                 value = "Rain";
                 break;
-            case FREEZING_RAIN:
+            case FREEZING_RAIN: //P
                 value = "Rain (freezing)";
                 break;
-            case SHOWER_RAIN:
+            case SHOWER_RAIN: //P
                 value = "Rain (shower)";
                 break;
-            case THUNDERSTORM:
+            case THUNDERSTORM: //P
                 value = "Thunderstorm";
                 break;
-            case SNOW:
+            case SNOW: //P
                 value = "Snow";
                 break;
             case MIST:
@@ -154,19 +154,19 @@ public enum WeatherCondition {
                 value = "Breeze";
                 break;
             case GALE:
-                value = "Gale";
+                value = "Gale"; //E?
                 break;
             case STORM:
-                value = "Storm";
+                value = "Storm"; //P
                 break;
             case HURRICANE:
-                value = "Hurricane";
+                value = "Hurricane"; //P
                 break;
             case TORNADO:
-                value = "Tornado";
+                value = "Tornado"; //P
                 break;
             case TROPICAL_STORM:
-                value = "Tropical storm";
+                value = "Tropical storm"; //P
                 break;
             case EXTREME_COLD:
                 value = "Cold (extreme)";
@@ -177,7 +177,7 @@ public enum WeatherCondition {
             case EXTREME_WINDY:
                 value = "Windy (extreme)";
                 break;
-            case EXTREME_HAIL:
+            case EXTREME_HAIL: //P
                 value = "Hail (extreme)";
                 break;
             default:
