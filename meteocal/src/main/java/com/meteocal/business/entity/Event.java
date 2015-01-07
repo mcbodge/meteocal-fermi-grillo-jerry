@@ -202,6 +202,7 @@ public class Event implements Serializable {
     
     /**
      * 
+     * @return 
      * @deprecated 
      */
     public boolean getPersonal() {

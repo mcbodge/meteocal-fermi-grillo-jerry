@@ -41,6 +41,7 @@ public class EventManager {
         return instance;
     }
 
+    
     //TODO added TODOs
     /**
      * Creates a new invitation.
@@ -224,22 +225,38 @@ public class EventManager {
 
     }
 
-    //TODO (Manuel)
-    private boolean canBeDone(WeatherCondition wc, Integer constraint) {
 
+    private boolean canBeDone(WeatherCondition wc, Integer constraint){
+        boolean out=true;
+        
         switch (constraint) {
-            case 1: //Requires sun
+            case 1: //Requires clear sky
                 break;
             case 2: //Requires no precipitation
+                switch (wc) {
+                    case DRIZZLE: //P
+                    case THUNDERSTORM: //P
+                    case SNOW: //P
+                    case STORM:
+                    case HURRICANE:
+                    case TORNADO:
+                    case TROPICAL_STORM:
+                    case EXTREME_HAIL: //P
+                        break;
+                    default:
+                        out = wc.isRain();
+                }
                 break;
             case 3: //Requires snow
+                out = wc.equals(WeatherCondition.SNOW);
                 break;
             case 4: //No extreme conditions
+                out = wc.isExtreme();
                 break;
-
+            default:            
         }
 
-        return false;
+        return out;
     }
 
     //for-each (or functional similar) of newInvitation()

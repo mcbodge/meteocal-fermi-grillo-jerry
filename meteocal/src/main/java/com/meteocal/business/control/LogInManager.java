@@ -41,9 +41,9 @@ public class LogInManager{
      * @return false if the structure of the input is wrong
      */
     public boolean checkLogInFields(String u, String p){
-        if(p == null || p.length() < 8 || p.length() > 255 || u == null || u.length() < 4 || u.length() > 15  )
-            return false;
-        return true;
+
+        return !(p == null || p.length() < 8 || u == null || u.length() < 4 || u.length() > 15);
+
     }
     
     /**
