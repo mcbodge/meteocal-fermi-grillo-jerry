@@ -67,6 +67,7 @@ public class EventCreationManager {
     public Event newEvent(User creator, String name, Date start, Date end, String location, List<User> invited, boolean p, Integer constraint, String description, int numOverlappingEvents){
         Event event_result = null;
         Logger.getLogger(EventCreationManager.class.getName()).log(Level.INFO, "---START newEvent in EventCreationManager---");
+        
         if(name!= null && ev_m.verifyConsistency(creator, start, end, numOverlappingEvents)){
             //consistency ok
             event_result = new Event(creator, name, location, start, end, p);
@@ -83,7 +84,8 @@ public class EventCreationManager {
             }
             
         }
-        boolean param = event_result != null;
+        
+        boolean param = (event_result != null);
         Logger.getLogger(EventCreationManager.class.getName()).log(Level.INFO, "---END newEvent in EventCreationManager Result: {0}", param);
         return event_result;
     }

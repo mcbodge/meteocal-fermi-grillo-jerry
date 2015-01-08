@@ -28,7 +28,7 @@ public class EventManager {
      * @param e the involved event.
      */
     public void newInvitation(User u, Event e) {
-        Logger.getLogger(EventManager.class.getName()).log(Level.INFO, "- START invitation (email )");
+        Logger.getLogger(EventManager.class.getName()).log(Level.INFO, "- START invitation");
         //check user has not been already invited
         if (e.getMaybeGoing() != null && e.getMaybeGoing().contains(u)) { //TODO *** use the new method w/ List<User> (don't use the collections***).
             //if(e.getMaybeGoing().contains(u)){
@@ -36,36 +36,33 @@ public class EventManager {
             Logger.getLogger(EventManager.class.getName()).log(Level.INFO, "--user has been already invited");
         } else {
             //check user not already answered
-            boolean hasAnswered = false;
-            for (Answer ans : e.getAnswerCollection()) {
-                if (ans.getUser().equals(u)) {
-                    hasAnswered = true;
+            if(e.getAttendee().contains(u) || e.getDeclined().contains(u)){
+                    //user has already answered -> do nothing
+                    Logger.getLogger(EventManager.class.getName()).log(Level.INFO, "-- user has already answered");
+                }else{
+                    //OK, create new invitation
+                    Logger.getLogger(EventManager.class.getName()).log(Level.INFO, "-- save invitation (in collection)");
+
+                    //saveInvitation(u, e);
+                    e.getInvitedUserCollection().add(u);
+                    u.getEventInvitationCollection().add(e);
+
+                    Logger.getLogger(EventManager.class.getName()).log(Level.INFO, "-- Load email parts");
+                    //send email notification
+                    String email = u.getEmail();
+                    String subject = "METEOCAL: new invitation";
+                    String body = "Dear " + u.getFirstName() + " " + u.getLastName() + ",\nYou have been invited to the event: " + e.getName() + ".\nCheck your invitation request on Meteocal.\n\nPLEASE DO NOT REPLY TO THIS EMAIL";
+                    EmailManager.getInstance().sendEmail(email, subject, body);
+                    Logger.getLogger(EventManager.class.getName()).log(Level.INFO, "-- invitation email sent");
                 }
-            }
+            
+            
             /*
             Answer ans = (Answer) em.createNativeQuery("SELECT a FROM Answer a WHERE a.answerPK.userId = :userId AND a.answerPK.eventId = :eventId")
                     .setParameter("userId", u.getUserId())
                     .setParameter("eventId", e.getEventId())
                     .getSingleResult();
             */
-            if (hasAnswered) {
-                //user has already answered -> do nothing
-                Logger.getLogger(EventManager.class.getName()).log(Level.INFO, "-- user has already answered");
-            } else {
-                //OK, create new invitation
-                Logger.getLogger(EventManager.class.getName()).log(Level.INFO, "-- save invitation (in collection)");
-                
-                //saveInvitation(u, e);
-                e.getInvitedUserCollection().add(u);
-                u.getEventInvitationCollection().add(e);
-                
-                
-                Logger.getLogger(EventManager.class.getName()).log(Level.INFO, "-- Load email parts");
-                //send email notification
-                String subject = "METEOCAL: new invitation";
-                String body = "Dear " + u.getFirstName() + " " + u.getLastName() + ",\nYou have been invited to the event: " + e.getName() + ".\nCheck your invitation request on Meteocal.\n\nPLEASE DO NOT REPLY TO THIS EMAIL";
-                EmailManager.getInstance().sendEmail(u.getEmail(), subject, body);
-            }
         }
         Logger.getLogger(EventManager.class.getName()).log(Level.INFO, "- END invitation ");
     }
@@ -285,20 +282,18 @@ public class EventManager {
      */
     public boolean verifyConsistency(User creator, Date start, Date end, int numOverlappingEvents) {
         boolean result = false;
-
+        Logger.getLogger(EventManager.class.getName()).log(Level.INFO, "--- START Verify consistency ");
+        
         //check if end is > then start
-        if (start != null && end != null && !end.before(start)) {
+        if (start != null && end != null && !end.before(start) && numOverlappingEvents == 0 
+                && start.after(Calendar.getInstance().getTime())) {
 
-            //query
-            if (numOverlappingEvents == 0) {
-                result = true;
-            } else {
-                //result = start.after(Date.from(Calendar.getInstance().toInstant())) && query == 0;
-                result = start.after(Calendar.getInstance().getTime()) && numOverlappingEvents == 0;
-            }
+            result = true;
+            
         }
+        
         Logger.getLogger(EventManager.class.getName()).log(Level.INFO, "- result: {0}", result);
-        Logger.getLogger(EventManager.class.getName()).log(Level.INFO, "--- END Verify consistency ---");
+        Logger.getLogger(EventManager.class.getName()).log(Level.INFO, "--- END Verify consistency ");
         return result;
     }
 
