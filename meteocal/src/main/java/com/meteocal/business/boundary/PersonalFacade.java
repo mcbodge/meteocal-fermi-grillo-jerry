@@ -67,18 +67,16 @@ public class PersonalFacade {
     public boolean createEvent(String name, String location, Date dateTime, double duration, String invited_users, boolean event_private, String constraint, String description) {
         boolean result = false;
         Logger.getLogger(PersonalFacade.class.getName()).log(Level.INFO, "---START createEvent PersonalFacade---");
+        
         //verify mandatory fields (name, dateTime, duration)
-        if (name != null && dateTime != null && duration > 0.5 && duration < 24) {
-
+        if (name != null && dateTime != null) {
+            Logger.getLogger(PersonalFacade.class.getName()).log(Level.INFO, "---PersonalFacade, name={0} datetime={1}", new Object[]{name, dateTime.toString()});
             //calculate date end
             Date end_date = ev_cm.calcDateEnd(dateTime, duration);
 
             //check constraint
-            Integer constr = null;
-            if (!constraint.equals("")) {
-                constr = Integer.parseInt(constraint);
-            }
-
+            Integer constr = Integer.parseInt(constraint);
+            
             //generate invited users list
             List<User> invited_users_list = null;
             if (invited_users != null) {
@@ -94,13 +92,17 @@ public class PersonalFacade {
             }
             
             //save event if it have been created
-            Event event = ev_cm.newEvent(getUser(getLoggedUser()), name, dateTime, end_date, location, invited_users_list, event_private, constr, description, getNumOverlappingEvents(getUser(getLoggedUser()),dateTime, end_date));
+            Event event = new Event();
+            event = ev_cm.newEvent(getUser(getLoggedUser()), name, dateTime, end_date, location, invited_users_list, event_private, constr, description, getNumOverlappingEvents(getUser(getLoggedUser()),dateTime, end_date));
 
             if (event != null) {
                 //save in db
                 em.persist(event);
-
+                //em.merge(event);
+                Logger.getLogger(PersonalFacade.class.getName()).log(Level.INFO, "---event saved in db. : {0}",event.getEventId());
                 //no weather condition is given
+                Logger.getLogger(PersonalFacade.class.getName()).log(Level.INFO, "---weather cond. : {0}",constraint);
+                
                 //send invitations
                 if (invited_users_list != null && !invited_users_list.isEmpty()) {
                     Logger.getLogger(PersonalFacade.class.getName()).log(Level.INFO, "---START send invitations---");

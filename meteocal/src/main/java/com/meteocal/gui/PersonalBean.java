@@ -99,9 +99,6 @@ public class PersonalBean implements Serializable{
     }
 
     public void createEvent() {
-        if (constraint == null) {
-            constraint = "";
-        }
         pf.createEvent(eventName, eventLocation, dateTime, eventDuration, people, !event_private, constraint, descr);
     }
     
