@@ -298,15 +298,15 @@ public class Event implements Serializable {
     }
 
     // <editor-fold desc="Entity properties (Event)">
-    //TODO get the constraint code for this event from the Weather table. Null if it doesn't exist
-    public Integer getConstraints() {
-        return null;
+    //get the constraint code for this event from the Weather table. Null if it doesn't exist
+    public Integer getConstraint() {
+        return this.weather.getConstraint();
 
     }
 
-    //TODO get the weather code for this event from the Weather table
+    //get the weather code for this event from the Weather table
     public Integer getForecast() {
-        return null;
+        return this.weather.getForecast();
 
     }
 
@@ -356,6 +356,12 @@ public class Event implements Serializable {
             }
         }
         return list;
+    }
+    
+    public void addInvitation(User u){
+        this.invitedUserCollection.add(u);
+        
+                    //u.getEventInvitationCollection().add(e);
     }
 
     // </editor-fold>

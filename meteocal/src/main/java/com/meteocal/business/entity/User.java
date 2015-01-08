@@ -10,6 +10,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
@@ -285,15 +286,22 @@ public class User implements Serializable {
     
     // <editor-fold desc="Entity properties (User)">
     
-    //TODO see nested TODO :)
+    //
     /**
      * Returns all the events that the user is attending, including the ones created by him
      * @return 
      */
     public List<Event> getEvents(){
+        
         List<Event> list = new ArrayList<>(eventCreatedCollection);
-        Collection<Event> yep=null; //TODO list of all the event that has the enswer at 1 in answersCollection
-        list.addAll(yep);
+        
+        for (Iterator<Answer> it = this.answerCollection.iterator(); it.hasNext();) {
+            Answer ans = it.next();
+            if (ans.getUser().equals(this) && ans.getValue()) {
+                list.add(ans.getEvent());
+            }
+        }
+        
         return list;
         
     }
@@ -304,7 +312,7 @@ public class User implements Serializable {
      * @return 
      */
     public List<Event> getInvitations(){
-        List<Event> list = new ArrayList<>(eventInvitationCollection);
+        List<Event> list = new ArrayList<>(this.eventInvitationCollection);
         return list;
     }
     
@@ -314,12 +322,23 @@ public class User implements Serializable {
      * @return 
      */
     public List<Information> getInformations(){
-        List<Information> list = new ArrayList<>(informationCollection);
+        List<Information> list = new ArrayList<>(this.informationCollection);
         return list;
     }
     
-    //TODO other gets, to use Lists instead of collections in controls or boudaries -- if needed.
     
+    public List <Event> getCreatedEvents(){
+        List<Event> list = new ArrayList<>(this.eventCreatedCollection);
+        return list;
+    }
+    
+    
+    //+ other gets, to use Lists instead of collections in controls or boudaries -- if needed.
+    
+    
+    void addEventInvitation(Event e){
+        this.eventInvitationCollection.add(e);
+    }
     // </editor-fold>
     
 }

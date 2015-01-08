@@ -16,18 +16,18 @@
                 <p:commandButton id="searchgo" value="Search" action="secure/personal_page.xhtml"/>
                 <!--<p:growl id="messages" showDetail="true" /> -->
                 <p:outputLabel value="#{personalBean.getLoggedUser()}" />
-                <p:toolbar>
-                    <f:facet name="left">
-                        <p:commandButton type="button" value="New" icon="ui-icon-document" />
+                <h:form>
+    <p:growl id="messages" showDetail="true"/>
+ 
+    <p:menuButton value="Options">
+        <p:menuitem value="Save" actionListener="#{menuView.save}" update="messages" icon="ui-icon-disk"/>
+        <p:menuitem value="Update" actionListener="#{menuView.update}" update="messages" icon="ui-icon-arrowrefresh-1-w"/>
+        <p:menuitem value="Delete" actionListener="#{menuView.delete}" ajax="false" icon="ui-icon-close"/>
+        <p:separator />
+        <p:menuitem value="Homepage" url="http://www.primefaces.org" icon="ui-icon-extlink"/>
+    </p:menuButton>
+</h:form>
 
-                        <p:commandButton type="button" value="Open" icon="ui-icon-folder-open" />
-
-                        <p:commandButton type="button" title="Save" icon="ui-icon-disk" />
-                        <p:commandButton type="button" title="Delete" icon="ui-icon-trash" />
-                        <p:commandButton type="button" title="Print" icon="ui-icon-print" />
-                    </f:facet>
-
-                </p:toolbar>
             </h:panelGrid>
         </h:form>
         <hr style=" background-color: #3366ff; height: 5px" />
@@ -81,6 +81,7 @@
         </div>
 
 
+        <!-- 
         <h:form>
         </h:form>
 
@@ -99,6 +100,7 @@
             </h:panelGrid> 
 
         </div> 
+        -->
 
 
 

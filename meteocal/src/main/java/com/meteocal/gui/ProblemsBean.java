@@ -10,24 +10,17 @@ import java.io.Serializable;
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.bean.ManagedBean;
-import javax.enterprise.context.RequestScoped;
-import javax.inject.Named;
-//>>>>>>> .r94
+
 
 /**
  *
  * @author Jude
  */
-//<<<<<<< .mine
 
 @ManagedBean
 @SessionScoped
 public class ProblemsBean implements Serializable{
-//=======
-//@Named
-//@RequestScoped
-//public class ProblemsBean {
-//>>>>>>> .r94
+
 
     private String email;
 
@@ -47,7 +40,6 @@ public class ProblemsBean implements Serializable{
         this.email = email;
     }
     
-//<<<<<<< .mine
     public String getLoginProblem(){
         return loginProblem;
     }
@@ -55,8 +47,6 @@ public class ProblemsBean implements Serializable{
         this.loginProblem = loginProblem;
     }
     
-    
-//=======
     public String forgotMyPassword() {
         pf.forgotPassword(email);
         return "home?faces-redirect=true";
@@ -66,7 +56,6 @@ public class ProblemsBean implements Serializable{
         return "home?faces-redirect=true";
     }
 
-//>>>>>>> .r94
 }
 
 //<editor-fold defaultstate="collapsed" desc="comment">
