@@ -7,17 +7,22 @@ package com.meteocal.gui;
 
 import com.meteocal.business.boundary.PersonalFacade;
 import java.io.Serializable;
+import java.util.ArrayList;
 import javax.ejb.EJB;
 import java.util.Date;
+import java.util.List;
+import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
+import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
 
 /**
  *
  * @author Manuel
  */
 @ManagedBean
-@RequestScoped
+@ViewScoped
 public class PersonalBean implements Serializable{
 
     @EJB
@@ -28,6 +33,108 @@ public class PersonalBean implements Serializable{
     private String constraint;
     private double eventDuration = 0.5;
     private boolean event_private;
+    
+    private String country; 
+    private String city;  
+    private String province;
+    
+    private String location;
+    private Integer geoname = null;
+
+    private List<String> countries;
+    private List<String> cities;
+    private List<String> provinces;
+    
+    private String text="";
+    
+    
+    @PostConstruct
+    public void init() {
+        
+        countries = pf.getCountries();
+
+    }
+    
+    public String getCountry() {
+        return country;
+    }
+ 
+    public void setCountry(String country) {
+        this.country = country;
+    }
+    
+    public String getProvince() {
+        return province;
+    }
+
+    public void setProvince(String province) {
+        this.province = province;
+    }
+ 
+    public String getCity() {
+        return city;
+    }
+ 
+    public void setCity(String city) {
+        this.city = city;
+    }
+ 
+    public List<String> getCountries() {
+
+        return countries;
+    }
+    
+    public List<String> getProvinces() {
+        
+        return provinces ;
+    }
+ 
+    public List<String> getCities() {
+        
+        return cities;
+    }
+ 
+    public void onCountryChange(){
+        if(country !=null && !country.equals("")){
+            provinces = pf.getProvinces(country);
+        }
+        else{
+            provinces = new ArrayList<>();
+        }
+        cities = new ArrayList<>();
+    }
+    
+    public void onProvinceChange() {
+        if(province !=null && !province.equals("")){
+            cities = pf.getCities(country, province);
+        }
+        else{
+            cities = new ArrayList<>();
+        }
+    }
+    
+    public void onCityChange(){
+        if(city !=null && !city.equals("")){
+            location = city + " (" + province + ") - " + country;
+            text = location;
+            geoname=pf.getGeoname(country, province, city);
+
+        }
+        else{
+            text="";
+        }
+    }
+    
+    public void displayLocation() {
+        FacesMessage msg;
+        if(city != null && country != null)
+            msg = new FacesMessage("Selected", city + " of " + country);
+        else
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Invalid", "City is not selected."); 
+             
+        FacesContext.getCurrentInstance().addMessage(null, msg);  
+    }
+  
 
     //there's some stuff in the personal page that uses the EventBean instead of the PersonalBean -- we need to fix it.
     public PersonalBean() {
@@ -99,12 +206,53 @@ public class PersonalBean implements Serializable{
     }
 
     public void createEvent() {
-        pf.createEvent(eventName, eventLocation, dateTime, eventDuration, people, !event_private, constraint, descr);
+        if(geoname==null){
+            pf.createEvent(eventName, eventLocation, dateTime, eventDuration, people, !event_private, constraint, descr);
+        } else {
+            //TODO Event w/ Integer geoname
+        }
+        //TODO refresh page
+    }
+    
+        public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public Integer getGeoname() {
+        return geoname;
+    }
+
+    public void setGeoname(Integer geocode) {
+        this.geoname = geocode;
     }
     
     public String getLoggedUser(){
         return pf.getLoggedUser();
     }
+ 
+    public String getText() {
+        return text;
+    }
+    
+    public void setText(String text) {
+        if(text==null)
+            this.text = "";
+        if(text!=null && !text.trim().isEmpty()){
+            this.text = text.trim();
+            location = text.trim();
+            geoname = null;
+        }
+    }
+    
+    public void handleKeyEvent() {
+        if(!"".equals(text.trim()))
+            text = "(" + text.trim() + ")";
+    }
+
     /*
     public void addMessage() {
         String summary = event_private ? "You have choosen to make the event Private" : "The event will no longer be Private";
