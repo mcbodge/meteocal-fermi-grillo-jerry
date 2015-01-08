@@ -55,7 +55,7 @@ public class UserCalendarManager {
             writer = new FileWriter(dir + filename);
             writer.write(u.getUserName());
             //get all personal public events
-            for (Event e : u.getEventCreatedCollection()) {
+            for (Event e : u.getCreatedEvents()) {
                 if (e.isPersonal() && e.isPublicEvent()) {
                     //write in file  eventid   name    location    start   end   descr   constraint
                     writer.write("\n" + e.getEventId().toString() + "\t" + e.getName() + "\t" + e.getLocation() + "\t" + e.getStart().toString() + "\t" + e.getEnd().toString() + "\t" + e.getDescription() + "\t" + e.getWeather().getConstraint().toString());
@@ -191,6 +191,6 @@ public class UserCalendarManager {
      * @param u the User we want to modify.
      */
     public void togglePrivacy(User u) {
-        u.setPublicCalendar(!u.getPublicCalendar());
+        u.setPublicCalendar(!u.isPublicCalendar());
     }
 }

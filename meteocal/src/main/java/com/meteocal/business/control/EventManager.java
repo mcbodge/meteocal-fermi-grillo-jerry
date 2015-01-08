@@ -20,9 +20,9 @@ import java.util.logging.Logger;
  */
 public class EventManager {
 
-    //TODO added TODOs
+    //*** use the new method w/ List<User> (don't use the collections***).
     /**
-     * Creates a new invitation.
+     * Creates a new invitation. 
      *
      * @param u the receiver.
      * @param e the involved event.
@@ -30,7 +30,7 @@ public class EventManager {
     public void newInvitation(User u, Event e) {
         Logger.getLogger(EventManager.class.getName()).log(Level.INFO, "- START invitation");
         //check user has not been already invited
-        if (e.getMaybeGoing() != null && e.getMaybeGoing().contains(u)) { //TODO *** use the new method w/ List<User> (don't use the collections***).
+        if (e.getMaybeGoing() != null && e.getMaybeGoing().contains(u)) {
             //if(e.getMaybeGoing().contains(u)){
             //user has been already invited
             Logger.getLogger(EventManager.class.getName()).log(Level.INFO, "--user has been already invited");
@@ -44,8 +44,10 @@ public class EventManager {
                     Logger.getLogger(EventManager.class.getName()).log(Level.INFO, "-- save invitation (in collection)");
 
                     //saveInvitation(u, e);
-                    e.getInvitedUserCollection().add(u);
-                    u.getEventInvitationCollection().add(e);
+                    //e.getInvitedUserCollection().add(u);
+                    //u.getEventInvitationCollection().add(e);
+                    
+                    e.addInvitation(u);
 
                     Logger.getLogger(EventManager.class.getName()).log(Level.INFO, "-- Load email parts");
                     //send email notification
@@ -55,7 +57,6 @@ public class EventManager {
                     EmailManager.getInstance().sendEmail(email, subject, body);
                     Logger.getLogger(EventManager.class.getName()).log(Level.INFO, "-- invitation email sent");
                 }
-            
             
             /*
             Answer ans = (Answer) em.createNativeQuery("SELECT a FROM Answer a WHERE a.answerPK.userId = :userId AND a.answerPK.eventId = :eventId")
@@ -106,7 +107,7 @@ public class EventManager {
         return new Information(e, u, message);
     }
 
-    //TODO added TODOs
+
     /**
      * Remove a previously created invitation.
      *
@@ -199,7 +200,7 @@ public class EventManager {
     }
     */
     
-    //TODO *any other condition*
+    //*any other condition*
     /**
      * Given an event it says if it has adverse weather conditions. If there are
      * adverse weather conditions, it returns false. In any other condition it
@@ -210,13 +211,7 @@ public class EventManager {
      */
     public boolean checkWeather(Event e) {
 
-        boolean out = false;
-
-        if (e.getConstraints() == null || canBeDone(OpenWeatherMapController.getValueFromCode(e.getForecast()), e.getConstraints())) {
-            out = true;
-        }
-
-        return out;
+        return e.getConstraint() == null || canBeDone(OpenWeatherMapController.getValueFromCode(e.getForecast()), e.getConstraint());
 
     }
 

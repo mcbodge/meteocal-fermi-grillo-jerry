@@ -39,8 +39,8 @@ public class EmailManager {
        }
        return instance;
     }
-    //TODO java.net.ConnectException
-    //TODO It would be better to get these infos from an encrypted txt file (after decrypting it in the code). Only if everything else is completed.
+    //TODO We need to manage java.net.ConnectException
+    //TODO (later) It would be better to get these infos from an encrypted txt file (after decrypting it in the code). Only if everything else is completed.
     private final int PORT = 587;
     private final String HOST = "smtp.aol.com";
     private final String FROM = "meteocal@aol.com";

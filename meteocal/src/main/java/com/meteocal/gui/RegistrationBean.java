@@ -62,7 +62,7 @@ public class RegistrationBean implements Serializable{
         this.password = password;
     }
     
-    public String createAccount() {    //Jude - TODO needs to check the provided data and create account
+    public String createAccount() {    //Jude - needs to check the provided data and create account
         //check email and create user
         if(this.email.trim().equals(this.emailagain.trim()) && rf.registerUser(firstname, lastname, username, email, password))
                 return "/home?faces-redirect=true";

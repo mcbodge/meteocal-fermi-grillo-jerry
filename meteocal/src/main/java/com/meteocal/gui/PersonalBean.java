@@ -29,11 +29,11 @@ public class PersonalBean implements Serializable{
     private double eventDuration = 0.5;
     private boolean event_private;
 
-    //TODO there's some stuff in the personal page that uses the EventBean instead of the PersonalBean we need to fix it.
+    //there's some stuff in the personal page that uses the EventBean instead of the PersonalBean -- we need to fix it.
     public PersonalBean() {
     }
     
-    //TODO it's better to use the String here and the StringTokenizer in the PersonalFacade
+    //it's better to use the String here and the StringTokenizer in the PersonalFacade
     public String getPeople() {
         return people;
     }
