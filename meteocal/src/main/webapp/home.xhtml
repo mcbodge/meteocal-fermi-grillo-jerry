@@ -14,12 +14,13 @@
 
             <h1>MeteoCal</h1>
             <h:form id="loginform" >
-                <h:panelGrid columns="2" style="text-align: right">
-                    <p:outputLabel for="username" value="User name"/>
-                    <p:inputText id="username" value="#{homeBean.userName}" required="true" requiredMessage="Username is required"/>
-                    <p:outputLabel for="pass" value="Password"/>
+                <h:panelGrid columns="1" style="text-align: right">
+                    <!--<p:outputLabel for="username" value="User name"/>-->
+                    <p:inputText id="username" value="#{homeBean.userName}" required="true" requiredMessage="User name is required"/>
+                    <p:watermark for="username" value="user name" id="watermarkun" />
+                    <!--<p:outputLabel for="pass" value="Password"/>-->
                     <p:password id="pass" value="#{homeBean.password}" required="true" requiredMessage="Password is required"/>
-                    <br></br>
+                    <p:watermark for="pass" value="password" id="watermarkp" />
                     <p:commandButton id="submit" action="#{homeBean.submitLogIn()}" value="Login" ajax="true" update="@all"/>
                 </h:panelGrid>
                 <h:messages  style="color: red"/>
