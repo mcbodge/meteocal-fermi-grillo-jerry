@@ -252,6 +252,16 @@ public class PersonalBean implements Serializable{
         if(!"".equals(text.trim()))
             text = "(" + text.trim() + ")";
     }
+    
+    public List<String> completeText(String query) {
+        List<String> results = new ArrayList<String>();
+        for(int i = 0; i < 10; i++) {
+            results.add(query + i);
+        }
+         
+        return results;
+    }
+
 
     /*
     public void addMessage() {
