@@ -119,12 +119,7 @@ public class Event implements Serializable {
 
     public Event() {
     }
-
-    /* should be removed (autoincrement ID)
-     public Event(Integer eventId) {
-     this.eventId = eventId;
-     }
-     */
+    
     public Event(User creator, String name, String location, Date start, Date end, boolean publicEvent) {
         this.name = name;
         this.location = location;

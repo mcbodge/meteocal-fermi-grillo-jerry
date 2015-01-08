@@ -92,13 +92,15 @@ public class PersonalFacade {
             }
             
             //save event if it have been created
-            Event event = new Event();
-            event = ev_cm.newEvent(getUser(getLoggedUser()), name, dateTime, end_date, location, invited_users_list, event_private, constr, description, getNumOverlappingEvents(getUser(getLoggedUser()),dateTime, end_date));
-
+            User creator = getUser(getLoggedUser());
+            Event event = ev_cm.newEvent(creator , name, dateTime, end_date, location, invited_users_list, event_private, constr, description, getNumOverlappingEvents(creator,dateTime, end_date));
+            
             if (event != null) {
+                Logger.getLogger(PersonalFacade.class.getName()).log(Level.INFO, "--- EVENT runtime = {0} {1} {2} {3}", 
+                    new Object[]{event.getName(), event.getStart(), event.getEnd(), event.getLocation()});
                 //save in db
-                em.persist(event);
-                //em.merge(event);
+                event = em.merge(event);
+                em.flush();
                 Logger.getLogger(PersonalFacade.class.getName()).log(Level.INFO, "---event saved in db. : {0}",event.getEventId());
                 //no weather condition is given
                 Logger.getLogger(PersonalFacade.class.getName()).log(Level.INFO, "---weather cond. : {0}",constraint);
@@ -107,10 +109,12 @@ public class PersonalFacade {
                 if (invited_users_list != null && !invited_users_list.isEmpty()) {
                     Logger.getLogger(PersonalFacade.class.getName()).log(Level.INFO, "---START send invitations---");
                     ev_m.sendInvitations(invited_users_list, event);
-                    Logger.getLogger(PersonalFacade.class.getName()).log(Level.INFO, "---save invitations---");
-                    em.merge(event);
+                    Logger.getLogger(PersonalFacade.class.getName()).log(Level.INFO, "---save invitations--- event:{0}",event.getEventId() );
+                    //em.merge(event);
                     for (User u : invited_users_list){
+                        em.flush();
                         em.merge(u);
+                        Logger.getLogger(PersonalFacade.class.getName()).log(Level.INFO, "---user invitation saved---");
                     }
                     Logger.getLogger(PersonalFacade.class.getName()).log(Level.INFO, "---STOP send invitations---");
                 }

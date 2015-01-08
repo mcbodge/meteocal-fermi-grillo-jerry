@@ -72,7 +72,7 @@ public class EventCreationManager {
             //consistency ok
             event_result = new Event(creator, name, location, start, end, p);
            
-            if(!description.isEmpty()){
+            if(description != null && !description.isEmpty()){
                 event_result.setDescription(description);
             }
             
