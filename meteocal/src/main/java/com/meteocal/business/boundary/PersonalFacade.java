@@ -148,5 +148,21 @@ public class PersonalFacade {
         }
         return count;
     }
+    
+    public List<String> getCountries(){
+        return em.createNativeQuery("SELECT DISTINCT country FROM locations").getResultList();
+    }
+    
+    public List<String> getProvinces(String c){
+        return em.createNativeQuery("SELECT DISTINCT admin2 FROM locations l WHERE l.country = ? ORDER BY admin2").setParameter(1, c).getResultList();
+    }
+    
+    public List<String> getCities(String c, String p){
+        return em.createNativeQuery("SELECT name FROM locations l WHERE l.country = ? AND l.admin2 = ? ORDER BY name").setParameter(1, c).setParameter(2,p).getResultList();
+    }
+    
+    public Integer getGeoname(String c, String p, String n){
+        return (Integer) em.createNativeQuery("SELECT geonameid FROM locations l WHERE l.country = ? AND l.admin2 = ? AND l.name = ?").setParameter(1, c).setParameter(2, p).setParameter(3, n).getSingleResult();
+    }
 
 }
