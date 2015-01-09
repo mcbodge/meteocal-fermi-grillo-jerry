@@ -16,10 +16,10 @@
 
     </h:head>
     <h:body style="color: #3366ff; font-family: sans-serif">
-
+        
         <h:form>
             <h:panelGrid id="grid2" columns="8"  cellpadding="3">
-                <h:outputLabel value="MeteoCal" style="font-size: large; font-weight: bold"/>
+                <h:commandLink value="MeteoCal" style="font-size: large; font-weight: bold" action="personal.xhtml?faces-redirect=true"/>
                 <h:outputLabel value="beta" style="font-size: x-small"/>
                 <p:outputLabel for="search" />
                 <p:inputText id="search" value="Search for people" size="30"/>
@@ -29,7 +29,7 @@
 
                 <p:menuButton id="opts" value="Options" >
                     <p:menuitem value="#{personalBean.calendarPrivacy}" action="#{personalBean.toggleCalendarPrivacy()}" update="opts"  />
-                    <p:menuitem value="Import Calendar" />
+                    <p:menuitem value="Import Calendar" action="upload.xhtml?faces-redirect=true"/>
                     <p:menuitem value="Export Calendar" action="#{personalBean.getCalendar()}"/>
                     <p:menuitem value="Sign Out" action="#{personalBean.logout()}" icon=" ui-icon-person"/>
                 </p:menuButton>
@@ -49,9 +49,7 @@
 
                         <p:separator />
 
-                        <p:growl id="msgs" showDetail="true" />
-                        
-                        <h:panelGrid columns="2" cellpadding="5">
+                        <h:panelGrid id="all_locations" columns="2" cellpadding="5">
                             <h:outputLabel for="out" value="Location: * " />
                             <h:outputText id="out" value="#{personalBean.text}"/>
                             <p:outputLabel for="country" value="Country: " />
@@ -70,7 +68,7 @@
 
                             <p:outputLabel for="city" value="City: " />
                             <p:selectOneMenu id="city" value="#{personalBean.city}" style="width:150px">
-                                <p:ajax listener="#{personalBean.onCityChange}" update="out" />
+                                <p:ajax listener="#{personalBean.onCityChange}" update="out confirm" />
                                 <f:selectItem itemLabel="Select City" itemValue="" noSelectionOption="true" />
                                 <f:selectItems value="#{personalBean.cities}" />
                             </p:selectOneMenu>
@@ -82,7 +80,7 @@
                         <h:panelGrid columns="3">
                             <h:outputText value="Personalized: " />
                             <p:inputText id="counter" value="#{personalBean.text}">
-                                <p:ajax event="keyup" update="out" listener="#{personalBean.handleKeyEvent}" />
+                                <p:ajax event="keyup" update="out confirm" listener="#{personalBean.handleKeyEvent}" />
                             </p:inputText>
                            
                         </h:panelGrid>
@@ -116,10 +114,12 @@
                         <h:outputText value=" Mark as private" />
                     </h:panelGrid>
 
-                    <p:commandButton value="Submit" action="#{personalBean.createEvent()}" icon="ui-icon-check"/>
+                    <p:commandButton id="confirm" value="Submit" action="#{personalBean.createEvent()}" icon="ui-icon-check" disabled="#{personalBean.cannotCreate()}"/>
                     <p:commandButton value="Cancel" update="eventpanel" process="@this" style="margin-right:20px;" >
-                        <p:resetInput target="eventpanel" />
+                        <p:resetInput target="@all" />
                     </p:commandButton> 
+                    
+                    
 
                 </p:panel>
             </h:form>
@@ -136,6 +136,7 @@
         <style type="text/css">
             .value {
                 width: 1000px;
+                
             }
         </style>
         

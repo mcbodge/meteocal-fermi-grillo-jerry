@@ -1,12 +1,47 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html">
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
     <h:head>
         <title>MeteoCal</title>
     </h:head>
-    <h:body>
-        Hello from Facelets
+    
+    
+    
+    <h:body style="color: #3366ff; font-family: sans-serif">
+
+        <h:form>
+            <h:panelGrid id="grid2" columns="8"  cellpadding="3">
+                <h:commandLink value="MeteoCal" style="font-size: large; font-weight: bold" action="personal.xhtml?faces-redirect=true"/>
+                <h:outputLabel value="beta" style="font-size: x-small"/>
+                <p:outputLabel for="search" />
+                <p:inputText id="search" value="Search for people" size="30"/>
+                <p:commandButton id="searchgo" icon="ui-icon-search"  action="secure/personal_page.xhtml"/>
+                <p:outputLabel value="#{personalBean.getLoggedUser()}" />
+                <p:spacer width="300" height="10" />
+
+                <p:menuButton id="opts" value="Options" >
+                    <p:menuitem value="#{personalBean.calendarPrivacy}" action="#{personalBean.toggleCalendarPrivacy()}" update="opts"  />
+                    <p:menuitem value="Export Calendar" action="#{personalBean.getCalendar()}"/>
+                    <p:menuitem value="Sign Out" action="#{personalBean.logout()}" icon=" ui-icon-person"/>
+                </p:menuButton>
+            </h:panelGrid>
+        </h:form>
+        
+        <hr style=" background-color: #3366ff; height: 5px" />
+            
+        <h2>Upload the calendar</h2>
+        <br></br>
+        <h:outputLabel value="Only personal (w/o invited people) events will be imported"/>
+            
+        <h:form enctype="multipart/form-data">
+            <p:fileUpload mode="advanced"
+                          fileUploadListener="#{uploadBean.upload}"
+                          allowTypes="/(\.|\/)(gif|jpg|jpeg|gif|png|PNG|GIF|JPG|JPEG)$/"
+                          auto="false" />
+        </h:form>
+
     </h:body>
 </html>
 

@@ -328,5 +328,12 @@ public class PersonalBean implements Serializable {
     public String getCalendar() {
         return pf.startDownload();
     }
+    
+    public String cannotCreate(){
+        String out="true";
+        if(((location != null && location.length()>3) || geoname != null) && dateTime != null)
+            out="false";
+        return out;
+    }
 
 }

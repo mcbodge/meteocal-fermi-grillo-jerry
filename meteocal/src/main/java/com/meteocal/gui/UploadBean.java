@@ -8,10 +8,16 @@ package com.meteocal.gui;
 import com.meteocal.business.boundary.UploadFacade;
 import javax.ejb.EJB;
 
+import javax.faces.bean.ManagedBean;
+import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.UploadedFile;
+
 /**
  *
  * @author Manuel
  */
+
+@ManagedBean
 public class UploadBean {
     
     @EJB
@@ -19,6 +25,28 @@ public class UploadBean {
 
     public UploadBean() {
     }
+    
+
+ 
+
+     
+    private UploadedFile file;
+ 
+    public UploadedFile getFile() {
+        return file;
+    }
+ 
+    public void setFile(UploadedFile file) {
+        this.file = file;
+    }
+     
+    public void upload(FileUploadEvent f) {
+        //if(file != null) {
+            uf.upload(f.getFile());
+        //}
+    }
+
+
     
     
 }
