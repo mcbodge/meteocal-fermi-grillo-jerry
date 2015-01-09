@@ -5,17 +5,23 @@
  */
 package com.meteocal.gui;
 
+import com.meteocal.business.boundary.HomeFacade;
 import com.meteocal.business.boundary.PersonalFacade;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.Serializable;
 import java.util.ArrayList;
 import javax.ejb.EJB;
 import java.util.Date;
+
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  *
@@ -23,10 +29,12 @@ import javax.faces.context.FacesContext;
  */
 @ManagedBean
 @ViewScoped
-public class PersonalBean implements Serializable{
+public class PersonalBean implements Serializable {
 
     @EJB
     PersonalFacade pf;
+    @EJB
+    HomeFacade hf;
 
     private Date dateTime = new Date();
     private String eventName, eventLocation, people, descr;
@@ -139,7 +147,7 @@ public class PersonalBean implements Serializable{
     //there's some stuff in the personal page that uses the EventBean instead of the PersonalBean -- we need to fix it.
     public PersonalBean() {
     }
-    
+
     //it's better to use the String here and the StringTokenizer in the PersonalFacade
     public String getPeople() {
         return people;
@@ -229,8 +237,8 @@ public class PersonalBean implements Serializable{
     public void setGeoname(Integer geocode) {
         this.geoname = geocode;
     }
-    
-    public String getLoggedUser(){
+
+    public String getLoggedUser() {
         return pf.getLoggedUser();
     }
  
@@ -263,21 +271,42 @@ public class PersonalBean implements Serializable{
     }
 
 
+
+    public String logout() {
+        hf.logOut();
+        return "/home?faces-redirect=true";
+    }
     /*
-    public void addMessage() {
-        String summary = event_private ? "You have choosen to make the event Private" : "The event will no longer be Private";
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(summary));
+     public void addMessage() {
+     String summary = event_private ? "You have choosen to make the event Private" : "The event will no longer be Private";
+     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(summary));
+     }
+
+     public void addMessage2() {
+     String summary2 = event_private ? "Private" : "Public";
+     FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(summary2));
+     }
+
+     public void currentDate() {
+     DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+     Date date = new Date();
+     System.out.println(dateFormat.format(date));
+     }
+     */
+
+    public void printHello() {
+        try {
+            ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+            HttpServletResponse response = (HttpServletResponse) externalContext.getResponse();
+            PrintWriter pw = response.getWriter();
+            pw.write("Hello");
+            FacesContext.getCurrentInstance().responseComplete();
+        } catch (IOException e) {
+            FacesContext.getCurrentInstance().addMessage(
+                    "helloWorldButtonId",
+                    new FacesMessage("Error:" + e.getMessage())
+            );
+        }
     }
 
-    public void addMessage2() {
-        String summary2 = event_private ? "Private" : "Public";
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(summary2));
-    }
-
-    public void currentDate() {
-        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-        Date date = new Date();
-        System.out.println(dateFormat.format(date));
-    }
-    */
 }
