@@ -59,14 +59,29 @@ public class PersonalBean implements Serializable {
     
     private String text="";
     
+
+    private String calendarPrivacy;
+
+
+
     private ScheduleModel lazyEventModel;
-     private ScheduleEvent sched_event = new DefaultScheduleEvent();
-    
+    private ScheduleEvent sched_event = new DefaultScheduleEvent();
+     
+     
     @PostConstruct
     public void init() {
         
         countries = pf.getCountries();
+        calendarPrivacy=pf.getCalendarString();
 
+    }
+    
+    public String getCalendarPrivacy() {
+        return calendarPrivacy;
+    }
+
+    public void setCalendarPrivacy(String calendarPrivacy) {
+        this.calendarPrivacy = calendarPrivacy;
     }
     
     public String getCountry() {
@@ -267,17 +282,6 @@ public class PersonalBean implements Serializable {
             text = "(" + text.trim() + ")";
     }
     
-    public List<String> completeText(String query) {
-        List<String> results = new ArrayList<String>();
-        for(int i = 0; i < 10; i++) {
-            results.add(query + i);
-        }
-         
-        return results;
-    }
-
-
-
     public String logout() {
         hf.logOut();
         return "/home?faces-redirect=true";
@@ -313,6 +317,19 @@ public class PersonalBean implements Serializable {
                     new FacesMessage("Error:" + e.getMessage())
             );
         }
+    }
+    
+    public String getCalendarString(){
+        return pf.getCalendarString();
+    }
+    
+    public void toggleCalendarPrivacy(){
+        pf.togglePrivacy();
+        calendarPrivacy=pf.getCalendarString();
+    }
+    
+    public String getCalendar(){
+        return pf.startDownload();
     }
 
 }

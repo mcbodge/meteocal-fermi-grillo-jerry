@@ -184,13 +184,5 @@ public class UserCalendarManager {
 
     }
 
-    /**
-     * It changes the privacy setting of the given user (from public to private
-     * or vice versa).
-     *
-     * @param u the User we want to modify.
-     */
-    public void togglePrivacy(User u) {
-        u.setPublicCalendar(!u.isPublicCalendar());
-    }
+
 }

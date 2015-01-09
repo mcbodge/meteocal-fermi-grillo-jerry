@@ -6,18 +6,18 @@
     <h:head>
         <title>Sign in to your MeteoCal account</title>
     </h:head>
-    <h:body style="color: #3366ff">
+    <h:body style="color: #3366ff; font-family: sans-serif">
         <!-- username min 4chars max 15 -->
         <!-- pass min 8chars max 255 -->
         <div align="center" >
 
 
-            <h1>MeteoCal</h1>
+            <h1>MeteoCal<h:outputLabel value="beta" style="font-size: x-small"/></h1>
             <h:form id="loginform" >
                 <h:panelGrid columns="1" style="text-align: right">
                     <!--<p:outputLabel for="username" value="User name"/>-->
                     <p:inputText id="username" value="#{homeBean.userName}" required="true" requiredMessage="User name is required"/>
-                    <p:watermark for="username" value="user name" id="watermarkun" />
+                    <p:watermark for="username" value="user name" id="watermarkun"/>
                     <!--<p:outputLabel for="pass" value="Password"/>-->
                     <p:password id="pass" value="#{homeBean.password}" required="true" requiredMessage="Password is required"/>
                     <p:watermark for="pass" value="password" id="watermarkp" />
