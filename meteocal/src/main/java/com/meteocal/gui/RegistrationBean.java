@@ -65,7 +65,7 @@ public class RegistrationBean implements Serializable {
     }
 
     public String getPassword() {
-        return password;
+            return password;
     }
 
     public void setPassword(String password) {
@@ -83,7 +83,7 @@ public class RegistrationBean implements Serializable {
      */
     public String createAccount() {
         //check email and create user
-        if ( //email.trim().equals( emailagain.trim()) && 
+        if (password!=null &&//email.trim().equals( emailagain.trim()) && 
                 rf.registerUser(firstname, lastname, username, email, password)) {
             return "/home?faces-redirect=true";
         }
