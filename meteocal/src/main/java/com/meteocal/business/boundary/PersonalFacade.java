@@ -150,7 +150,7 @@ public class PersonalFacade {
         int count = 0;
         try {
             Long l = (Long) em.createNativeQuery("SELECT COUNT(*) FROM events e INNER JOIN answers a ON e.event_id = a.event_id "
-                    + "WHERE ((e.creator = ?) OR ( a.value = 1 AND a.user_id = ?)) AND (e.start_date <= '?' AND e.end_date >= '?')")
+                    + "WHERE ((e.creator = ?) OR ( a.answer_value = 1 AND a.user_id = ?)) AND (e.start_date <= '?' AND e.end_date >= '?')")
                     .setParameter(1, creator.getUserId())
                     .setParameter(2, creator.getUserId())
                     .setParameter(3, formatter.format(start))
