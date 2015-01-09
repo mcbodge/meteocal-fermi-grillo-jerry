@@ -23,7 +23,8 @@ public class RegistrationBean implements Serializable {
     RegistrationFacade rf;
 
     private String firstname, lastname, username, email, password, emailagain;
-    
+
+    //<editor-fold defaultstate="state" desc="GETTERS AND SETTERS">
     public String getEmailagain() {
         return emailagain;
     }
@@ -71,20 +72,21 @@ public class RegistrationBean implements Serializable {
     public void setPassword(String password) {
         this.password = password;
     }
+    //</editor-fold>
 
     public RegistrationBean() {
 
     }
-    
+
     //TODO jdoc
     /**
-     * 
-     * @return 
+     *
+     * @return
      */
     public String createAccount() {
         //check email and create user
-        if (password!=null &&//email.trim().equals( emailagain.trim()) && 
-                rf.registerUser(firstname, lastname, username, email, password)) {
+
+        if (password!=null && rf.registerUser(firstname, lastname, username, email, password)) {
             return "/home?faces-redirect=true";
         }
 
