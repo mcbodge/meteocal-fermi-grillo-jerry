@@ -7,44 +7,59 @@
    <h:head>
         <title>Sign Up</title>
     </h:head>
-     <h:body style="color: #3366ff">
+     <h:body style="color: #3366ff; font-family: sans-serif">
         <div align="left" >
             <h1>Create an account</h1>
             <h:form>
-                <h:panelGrid id="grid" columns="3" cellpadding="5">
-                    <h:outputLabel for="firstname" value="First Name:" />
-                    <p:inputText id="firstname" value="#{registrationBean.firstName}" label="FirstName" required="true" validatorMessage="this field is required" />
+                <h:panelGrid id="grid" columns="2" cellpadding="5">
+                    
+                    <h:outputLabel for="firstname" value="Name" />
+                    <br></br>
+                    
+                    <p:inputText id="firstname" value="#{registrationBean.firstName}" required="true" requiredMessage="First name required" />
                     <p:message for="firstname" />
                     
-                    <h:outputLabel for="lastname" value="Last Name:" />
-                    <p:inputText id="lastname" value="#{registrationBean.lastName}" required="true" label="LastName" validatorMessage="this field is required" />
+                    <p:inputText id="lastname" value="#{registrationBean.lastName}" required="true" requiredMessage="Last name required" />
                     <p:message for="lastname" />
                     
-                    <h:outputLabel for="username" value="User Name:" />                    
-                    <p:inputText id="username" value="#{registrationBean.username}" required="true" label="UserName" validatorMessage="this field is required" />
+                    <h:outputLabel value="User Name" />
+                    <br></br>
+                    
+                    <p:inputText id="username" value="#{registrationBean.username}" required="true" requiredMessage="this field is required" />
                     <p:message for="username" />
                     
-                    <h:outputLabel for="email" value="Personal email:" />                    
-                    <p:inputText id="email" value="#{registrationBean.email}" validatorMessage="An e-mail address is required" >
+                    <h:outputLabel value="Personal email" />     
+                    <br></br>
+                    
+                    <p:inputText id="email" value="#{registrationBean.email}" required="true" requiredMessage="A valid email is required" >
                         <f:validateRegex pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$"/>
                     </p:inputText>
                     <p:message for="email" />
                                                          
-                    <h:outputLabel for="emailagain" value="Reenter email:" />
-                    <p:inputText type="email" id="emailagain" value="#{registrationBean.emailagain}" required="true" validatorMessage="Value does not match email pattern." />
+                    <h:outputLabel value="Re-enter email" />
+                    <br></br>
+                    
+                    <p:inputText type="email" id="emailagain" value="#{registrationBean.emailagain}" required="true" requiredMessage="The emails must match" />
                     <p:message for="emailagain" />
                                                             
-                    <h:outputLabel for="newpassword" value="Create password (8-characters minimun)" />
-                    <p:password id="newpassword" value="#{registrationBean.password}" required="true" match="newpasswordagain" validatorMessage="Password mis-match" />
+                    <h:outputLabel value="Create password (8-characters minimum)" />
+                    <br></br>
+                    
+                    <p:password id="newpassword" value="#{registrationBean.password}" required="true" match="newpasswordagain" requiredMessage="Password mismatch" />
                     <p:message for="newpassword" />
                     
-                    <h:outputLabel for="newpasswordagain" value="re-enter password:" />
-                    <p:password id="newpasswordagain" required="true" validatorMessage="Password mis-match" />
+                    <h:outputLabel value="Re-enter password" />
+                    <br></br>
+                    
+                    
+                    <p:password id="newpasswordagain" required="true" requiredMessage="Password mismatch" />
                     <p:message for="newpasswordagain" />
                     
                     <p:commandButton value="Create Account" id="createaccount" action="#{registrationBean.createAccount()}" update="grid" validateClient="true" style="margin-right:10px" />
-                    
                     <p:button outcome="home" value="Cancel" />
+                    
+                    <p:watermark for="firstname" value="first" id="wfirst"/>
+                    <p:watermark for="lastname" value="last" id="wlast"/>
                                                           
                 </h:panelGrid>
 
