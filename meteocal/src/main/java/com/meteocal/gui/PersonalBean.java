@@ -22,6 +22,9 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletResponse;
+import org.primefaces.model.DefaultScheduleEvent;
+import org.primefaces.model.ScheduleEvent;
+import org.primefaces.model.ScheduleModel;
 
 
 /**
@@ -56,6 +59,8 @@ public class PersonalBean implements Serializable {
     
     private String text="";
     
+    private ScheduleModel lazyEventModel;
+     private ScheduleEvent sched_event = new DefaultScheduleEvent();
     
     @PostConstruct
     public void init() {

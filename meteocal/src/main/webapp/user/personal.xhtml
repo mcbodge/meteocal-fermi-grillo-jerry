@@ -138,16 +138,21 @@
                 </p:panel>
             </h:form>
         </div>
-        
+
         <h:form>
             <p:growl id="messages" showDetail="true" />
-
             <h:panelGrid columnClasses="value">
-                <p:schedule value="#{scheduleView.lazyEventModel}" />
+                <p:schedule value="#{scheduleView.lazyEventModel}" >
+                    <p:ajax event="dateSelect" listener="#{scheduleView.onDateSelect}" update="eventDetails" oncomplete="PF('eventDialog').show();" />
+                </p:schedule>
             </h:panelGrid>
-
+            <p:dialog widgetVar="eventDialog" header="Event Details" showEffect="clip" hideEffect="clip">
+                <h:panelGrid id="eventDetails" columns="2">
+                    <h:outputLabel for="title" value="Title:" />
+                </h:panelGrid>
+            </p:dialog>
         </h:form>
-        
+
         <style type="text/css">
             .value {
                 width: 1000px;
