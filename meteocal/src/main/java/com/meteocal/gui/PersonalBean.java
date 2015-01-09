@@ -7,25 +7,17 @@ package com.meteocal.gui;
 
 import com.meteocal.business.boundary.HomeFacade;
 import com.meteocal.business.boundary.PersonalFacade;
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.io.Serializable;
 import java.util.ArrayList;
 import javax.ejb.EJB;
 import java.util.Date;
-
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
-import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
-import javax.servlet.http.HttpServletResponse;
-import org.primefaces.model.DefaultScheduleEvent;
-import org.primefaces.model.ScheduleEvent;
 import org.primefaces.model.ScheduleModel;
-
 
 /**
  *
@@ -45,131 +37,25 @@ public class PersonalBean implements Serializable {
     private String constraint;
     private double eventDuration = 0.5;
     private boolean event_private;
-    
-    private String country; 
-    private String city;  
+
+    private String country;
+    private String city;
     private String province;
-    
+
     private String location;
     private Integer geoname = null;
 
     private List<String> countries;
     private List<String> cities;
     private List<String> provinces;
-    
-    private String text="";
-    
+
+    private String text = "";
 
     private String calendarPrivacy;
 
-
-
     private ScheduleModel lazyEventModel;
-    private ScheduleEvent sched_event = new DefaultScheduleEvent();
-     
-     
-    @PostConstruct
-    public void init() {
-        
-        countries = pf.getCountries();
-        calendarPrivacy=pf.getCalendarString();
 
-    }
-    
-    public String getCalendarPrivacy() {
-        return calendarPrivacy;
-    }
-
-    public void setCalendarPrivacy(String calendarPrivacy) {
-        this.calendarPrivacy = calendarPrivacy;
-    }
-    
-    public String getCountry() {
-        return country;
-    }
- 
-    public void setCountry(String country) {
-        this.country = country;
-    }
-    
-    public String getProvince() {
-        return province;
-    }
-
-    public void setProvince(String province) {
-        this.province = province;
-    }
- 
-    public String getCity() {
-        return city;
-    }
- 
-    public void setCity(String city) {
-        this.city = city;
-    }
- 
-    public List<String> getCountries() {
-
-        return countries;
-    }
-    
-    public List<String> getProvinces() {
-        
-        return provinces ;
-    }
- 
-    public List<String> getCities() {
-        
-        return cities;
-    }
- 
-    public void onCountryChange(){
-        if(country !=null && !country.equals("")){
-            provinces = pf.getProvinces(country);
-        }
-        else{
-            provinces = new ArrayList<>();
-        }
-        cities = new ArrayList<>();
-    }
-    
-    public void onProvinceChange() {
-        if(province !=null && !province.equals("")){
-            cities = pf.getCities(country, province);
-        }
-        else{
-            cities = new ArrayList<>();
-        }
-    }
-    
-    public void onCityChange(){
-        if(city !=null && !city.equals("")){
-            location = city + " (" + province + ") - " + country;
-            text = location;
-            geoname=pf.getGeoname(country, province, city);
-
-        }
-        else{
-            text="";
-        }
-    }
-    
-    public void displayLocation() {
-        FacesMessage msg;
-        if(city != null && country != null)
-            msg = new FacesMessage("Selected", city + " of " + country);
-        else
-            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Invalid", "City is not selected."); 
-             
-        FacesContext.getCurrentInstance().addMessage(null, msg);  
-    }
-  
-
-    //there's some stuff in the personal page that uses the EventBean instead of the PersonalBean -- we need to fix it.
-    public PersonalBean() {
-    }
-
-    //it's better to use the String here and the StringTokenizer in the PersonalFacade
+    //<editor-fold defaultstate="state" desc="GETTERS AND SETTERS">
     public String getPeople() {
         return people;
     }
@@ -233,17 +119,62 @@ public class PersonalBean implements Serializable {
     public void setEvent_private(boolean event_private) {
         this.event_private = event_private;
     }
-
-    public void createEvent() {
-        if(geoname==null){
-            pf.createEvent(eventName, eventLocation, dateTime, eventDuration, people, !event_private, constraint, descr);
-        } else {
-            //TODO Event w/ Integer geoname
-        }
-        //TODO refresh page
-    }
     
-        public String getLocation() {
+    public ScheduleModel getLazyEventModel() {
+        return lazyEventModel;
+    }
+
+    public void setLazyEventModel(ScheduleModel lazyEventModel) {
+        this.lazyEventModel = lazyEventModel;
+    }
+
+    public String getCalendarPrivacy() {
+        return calendarPrivacy;
+    }
+
+    public void setCalendarPrivacy(String calendarPrivacy) {
+        this.calendarPrivacy = calendarPrivacy;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public String getProvince() {
+        return province;
+    }
+
+    public void setProvince(String province) {
+        this.province = province;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public List<String> getCountries() {
+
+        return countries;
+    }
+
+    public List<String> getProvinces() {
+
+        return provinces;
+    }
+
+    public List<String> getCities() {
+
+        return cities;
+    }
+    public String getLocation() {
         return location;
     }
 
@@ -258,30 +189,95 @@ public class PersonalBean implements Serializable {
     public void setGeoname(Integer geocode) {
         this.geoname = geocode;
     }
-
-    public String getLoggedUser() {
-        return pf.getLoggedUser();
-    }
- 
+    
     public String getText() {
         return text;
     }
     
+    //</editor-fold>
+
+    public PersonalBean() {
+    }
+    
+    @PostConstruct
+    public void init() {
+
+        countries = pf.getCountries();
+        calendarPrivacy = pf.getCalendarString();
+        
+        //get all events
+        lazyEventModel = pf.getAllEvents();       
+    }
+    
+    public void onCountryChange() {
+        if (country != null && !country.equals("")) {
+            provinces = pf.getProvinces(country);
+        } else {
+            provinces = new ArrayList<>();
+        }
+        cities = new ArrayList<>();
+    }
+
+    public void onProvinceChange() {
+        if (province != null && !province.equals("")) {
+            cities = pf.getCities(country, province);
+        } else {
+            cities = new ArrayList<>();
+        }
+    }
+
+    public void onCityChange() {
+        if (city != null && !city.equals("")) {
+            location = city + " (" + province + ") - " + country;
+            text = location;
+            geoname = pf.getGeoname(country, province, city);
+
+        } else {
+            text = "";
+        }
+    }
+
+    public void displayLocation() {
+        FacesMessage msg;
+        if (city != null && country != null) {
+            msg = new FacesMessage("Selected", city + " of " + country);
+        } else {
+            msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Invalid", "City is not selected.");
+        }
+
+        FacesContext.getCurrentInstance().addMessage(null, msg);
+    }
+
+    public String getLoggedUser() {
+        return pf.getLoggedUser();
+    }
+    
+    public void createEvent() {
+        if (geoname == null) {
+            pf.createEvent(eventName, eventLocation, dateTime, eventDuration, people, !event_private, constraint, descr);
+        } else {
+            //TODO Event w/ Integer geoname
+        }
+        //TODO refresh page
+    }
+
     public void setText(String text) {
-        if(text==null)
+        if (text == null) {
             this.text = "";
-        if(text!=null && !text.trim().isEmpty()){
+        }
+        if (text != null && !text.trim().isEmpty()) {
             this.text = text.trim();
             location = text.trim();
             geoname = null;
         }
     }
-    
+
     public void handleKeyEvent() {
-        if(!"".equals(text.trim()))
+        if (!"".equals(text.trim())) {
             text = "(" + text.trim() + ")";
+        }
     }
-    
+
     public String logout() {
         hf.logOut();
         return "/home?faces-redirect=true";
@@ -302,7 +298,7 @@ public class PersonalBean implements Serializable {
      Date date = new Date();
      System.out.println(dateFormat.format(date));
      }
-     */
+     
 
     public void printHello() {
         try {
@@ -318,17 +314,18 @@ public class PersonalBean implements Serializable {
             );
         }
     }
+    */
     
-    public String getCalendarString(){
+    public String getCalendarString() {
         return pf.getCalendarString();
     }
-    
-    public void toggleCalendarPrivacy(){
+
+    public void toggleCalendarPrivacy() {
         pf.togglePrivacy();
-        calendarPrivacy=pf.getCalendarString();
+        calendarPrivacy = pf.getCalendarString();
     }
-    
-    public String getCalendar(){
+
+    public String getCalendar() {
         return pf.startDownload();
     }
 

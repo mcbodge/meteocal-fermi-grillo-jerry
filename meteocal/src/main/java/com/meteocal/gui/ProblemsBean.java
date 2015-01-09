@@ -11,27 +11,20 @@ import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.bean.ManagedBean;
 
-
 /**
  *
  * @author Jude
  */
-
 @ManagedBean
 @SessionScoped
-public class ProblemsBean implements Serializable{
-
-
-    private String email;
+public class ProblemsBean implements Serializable {
 
     @EJB
     ProblemsFacade pf;
-    
-    private String loginProblem;
 
-    public ProblemsBean() {
-    }
+    private String email, loginProblem;
 
+    //<editor-fold defaultstate="collapsed" desc="GETTERS AND SETTERS">
     public String getEmail() {
         return email;
     }
@@ -39,18 +32,34 @@ public class ProblemsBean implements Serializable{
     public void setEmail(String email) {
         this.email = email;
     }
-    
-    public String getLoginProblem(){
+
+    public String getLoginProblem() {
         return loginProblem;
     }
-    public void setLoginProblem(String loginProblem){
+
+    public void setLoginProblem(String loginProblem) {
         this.loginProblem = loginProblem;
     }
-    
+    //</editor-fold>
+
+    public ProblemsBean() {
+    }
+
+    //TODO jDoc
+    /**
+     * 
+     * @return 
+     */
     public String forgotMyPassword() {
         pf.forgotPassword(email);
         return "home?faces-redirect=true";
     }
+
+    //TODO jDoc
+    /**
+     * 
+     * @return 
+     */
     public String forgotMyUserName() {
         pf.forgotUsername(email);
         return "home?faces-redirect=true";
@@ -60,44 +69,44 @@ public class ProblemsBean implements Serializable{
 
 //<editor-fold defaultstate="collapsed" desc="comment">
 /*
-package boundaries;
+ package boundaries;
 
-import java.io.Serializable;
-import javax.enterprise.context.SessionScoped;
-import javax.faces.bean.ManagedBean;
+ import java.io.Serializable;
+ import javax.enterprise.context.SessionScoped;
+ import javax.faces.bean.ManagedBean;
 
-/**
-*
-* @author Jude
-*//*
-@ManagedBean
-@SessionScoped
-public class ProblemBean implements Serializable{
+ /**
+ *
+ * @author Jude
+ *//*
+ @ManagedBean
+ @SessionScoped
+ public class ProblemBean implements Serializable{
 
-private String loginProblem;
-private String email;
+ private String loginProblem;
+ private String email;
 
-public String getLoginProblem(){
-return loginProblem;
-}
-public void setLoginProblem(String loginProblem){
-this.loginProblem = loginProblem;
-}
+ public String getLoginProblem(){
+ return loginProblem;
+ }
+ public void setLoginProblem(String loginProblem){
+ this.loginProblem = loginProblem;
+ }
 
-public String getEmail(){
-return email;
-}
-public void setEmail(String email){
-this.email = email;
-}
+ public String getEmail(){
+ return email;
+ }
+ public void setEmail(String email){
+ this.email = email;
+ }
 
-public String submitProblem(){
-return "/ProblemSolved.xhtml";
-}
+ public String submitProblem(){
+ return "/ProblemSolved.xhtml";
+ }
 
-public String goToLogin(){
-return "index.xhtml";
-}
+ public String goToLogin(){
+ return "index.xhtml";
+ }
 
-}*/
+ }*/
 //</editor-fold>

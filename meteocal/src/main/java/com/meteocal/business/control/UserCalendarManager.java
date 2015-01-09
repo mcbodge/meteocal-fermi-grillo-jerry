@@ -18,8 +18,6 @@ import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.faces.context.FacesContext;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 
 /**
  * FROM/TO - B:PersonalPage, B:UploadPage
@@ -142,7 +140,7 @@ public class UserCalendarManager {
                 e_descr = token.nextToken();
                 e_constraint = token.nextToken();
 
-                //<editor-fold defaultstate="state" desc="JDoc Date.toString()">
+                //<editor-fold defaultstate="collapsed" desc="JDoc Date.toString()">
                 /**
                  * Converts this Date object to a String of the form: dow mon dd
                  * hh:mm:ss zzz yyyy where: dow is the day of the week (Sun,
@@ -160,7 +158,8 @@ public class UserCalendarManager {
                  * year, as four decimal digits.
                  *
                  */
-                //</editor-fold>               
+                //</editor-fold> 
+                
                 DateFormat df = new SimpleDateFormat("dow mon dd hh:mm:ss zzz yyyy");
                 Date e_start = df.parse(e_str_start);
                 Date e_end = df.parse(e_str_end);

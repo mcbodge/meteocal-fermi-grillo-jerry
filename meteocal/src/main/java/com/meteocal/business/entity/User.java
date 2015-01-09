@@ -5,6 +5,7 @@
  */
 package com.meteocal.business.entity;
 
+import com.meteocal.business.boundary.PersonalFacade;
 import com.meteocal.business.control.LogInManager;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -12,6 +13,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -292,18 +295,25 @@ public class User implements Serializable {
      * @return 
      */
     public List<Event> getEvents(){
+        Logger.getLogger(User.class.getName()).log(Level.INFO, "---- START User.getEvents() -----------");
         
-        List<Event> list = new ArrayList<>(eventCreatedCollection);
-        
+        List<Event> list = new ArrayList<>();
+        for (Iterator<Event> it = this.eventCreatedCollection.iterator(); it.hasNext();) {
+            Event e = it.next();
+            list.add(e);
+        }
+        Logger.getLogger(User.class.getName()).log(Level.INFO, "----| list = {0}", list.toString());
         for (Iterator<Answer> it = this.answerCollection.iterator(); it.hasNext();) {
             Answer ans = it.next();
+            Logger.getLogger(User.class.getName()).log(Level.INFO, "----| Answer : event_id={0} user_id={1} value={0}}", new Object[]{ans.getEvent().getEventId().toString(), ans.getUser().getUserName(), ans.getValue()});
             if (ans.getUser().equals(this) && ans.getValue()) {
+                Logger.getLogger(User.class.getName()).log(Level.INFO, "----| Answer added");
                 list.add(ans.getEvent());
             }
+            Logger.getLogger(User.class.getName()).log(Level.INFO, "----| Answer NOT added");
         }
-        
+        Logger.getLogger(User.class.getName()).log(Level.INFO, "---- STOP User.getEvents() -----------");
         return list;
-        
     }
     
 
@@ -312,7 +322,11 @@ public class User implements Serializable {
      * @return 
      */
     public List<Event> getInvitations(){
-        List<Event> list = new ArrayList<>(this.eventInvitationCollection);
+        List<Event> list = new ArrayList<>();
+        for (Iterator<Event> it = this.eventInvitationCollection.iterator(); it.hasNext();) {
+            Event e = it.next();
+            list.add(e);
+        }
         return list;
     }
     
@@ -322,13 +336,19 @@ public class User implements Serializable {
      * @return 
      */
     public List<Information> getInformations(){
-        List<Information> list = new ArrayList<>(this.informationCollection);
+        List<Information> list = new ArrayList<>();
+        for(Information inf : this.informationCollection){
+            list.add(inf);
+        }
         return list;
     }
     
     
     public List <Event> getCreatedEvents(){
-        List<Event> list = new ArrayList<>(this.eventCreatedCollection);
+        List<Event> list = new ArrayList<>();
+        for(Event e : this.eventCreatedCollection){
+            list.add(e);
+        }
         return list;
     }
     

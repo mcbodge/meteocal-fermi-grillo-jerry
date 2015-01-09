@@ -215,6 +215,13 @@ public class EventManager {
 
     }
 
+    //TODO jDocs
+    /**
+     * 
+     * @param wc
+     * @param constraint
+     * @return 
+     */
     private boolean canBeDone(WeatherCondition wc, Integer constraint) {
         boolean out = true;
 

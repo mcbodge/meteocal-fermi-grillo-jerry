@@ -11,60 +11,58 @@ import java.io.Serializable;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 
-
 /**
  *
  * @author Jude
  */
-
-
 @ManagedBean
 @RequestScoped
-public class HomeBean implements Serializable{
-    
+public class HomeBean implements Serializable {
+
     @EJB
     HomeFacade hf;
 
-    private String username;
-    private String password;
+    private String username, password;
     private boolean remainlogged;
-    
-    
-    
-    public String getUserName(){
+
+    //<editor-fold defaultstate="collapsed" desc="GETTERS AND SETTERS">
+    public String getUserName() {
         return username;
     }
-    
-    public void setUserName(String username){
+
+    public void setUserName(String username) {
         this.username = username;
     }
-    
-    public String getPassword(){
+
+    public String getPassword() {
         return password;
     }
-    
-    public void setPassword(String password){
+
+    public void setPassword(String password) {
         this.password = password;
     }
-    
-    public boolean getRemainLogged(){
+
+    public boolean getRemainLogged() {
         return remainlogged;
     }
-    
-    public void setRemainLogged(boolean remainlogged){
+
+    public void setRemainLogged(boolean remainlogged) {
         this.remainlogged = remainlogged;
     }
-    
+    //</editor-fold>
+
+    //TODO jDoc
+    /**
+     * 
+     * @return 
+     */
     public String submitLogIn() {
-        if(hf.submitLogIn(username, password)){
+        if (hf.submitLogIn(username, password)) {
             //goto personal page
             return "/user/personal?faces-redirect=true";
         }
         //stay in home
         return "/home?faces-redirect=true";
-    }        
+    }
 
 }
-    
-    
-

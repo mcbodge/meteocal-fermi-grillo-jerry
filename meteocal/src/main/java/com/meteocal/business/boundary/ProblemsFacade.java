@@ -28,6 +28,8 @@ public class ProblemsFacade {
     @PersistenceContext
     EntityManager em;
 
+    //TODO jDocs
+    
     /**
      * Returns the User if the email is a valid email of an user of the system.
      * Null otherwise.
