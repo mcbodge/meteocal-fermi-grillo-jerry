@@ -8,6 +8,7 @@ package com.meteocal.business.boundary;
 import com.meteocal.business.control.EventCreationManager;
 import com.meteocal.business.control.EventManager;
 import com.meteocal.business.control.LogInManager;
+import com.meteocal.business.control.UserCalendarManager;
 import com.meteocal.business.entity.Event;
 import com.meteocal.business.entity.User;
 import java.text.SimpleDateFormat;
@@ -41,6 +42,9 @@ public class PersonalFacade {
 
     @Inject
     EventManager ev_m;
+    
+    @Inject
+    UserCalendarManager ucm;
 
     /**
      *
@@ -163,6 +167,28 @@ public class PersonalFacade {
     
     public Integer getGeoname(String c, String p, String n){
         return (Integer) em.createNativeQuery("SELECT geonameid FROM locations l WHERE l.country = ? AND l.admin2 = ? AND l.name = ?").setParameter(1, c).setParameter(2, p).setParameter(3, n).getSingleResult();
+    }
+    
+    public String getCalendarString(){
+        String out="Set calendar as public";
+        if(getUser(getLoggedUser()).isPublicCalendar())
+            out="Set calendar as private";
+        return out;
+    }
+    
+        /**
+     * It changes the privacy setting of the given user (from public to private
+     * or vice versa).
+     *
+     * @param u the User we want to modify.
+     */
+    public void togglePrivacy() {
+        User u = getUser(getLoggedUser());
+        u.setPublicCalendar(!u.isPublicCalendar());
+    }
+    
+    public String startDownload(){
+        return ucm.startDownload(getUser(getLoggedUser()));
     }
 
 }

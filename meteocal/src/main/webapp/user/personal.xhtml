@@ -5,7 +5,7 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
     <h:head>
-        <title>Personal page</title>
+        <title>MeteoCal</title>
 
         <style type="text/css">
             /* Grid CSS */.ui-grid{clear:both;padding:3px;margin:0px;}.ui-grid:before,.ui-grid:after{content:"";display:table;}.ui-grid:after{clear:both;}.ui-grid .ui-grid-row{display:-webkit-box;display:-moz-box;display:-ms-flexbox;display:-webkit-flex;display:flex;clear:both;}.ui-grid-row:after{clear:both;content:"";display:table;}.ui-grid-col-1,.ui-grid-col-2,.ui-grid-col-3,.ui-grid-col-4,.ui-grid-col-5,.ui-grid-col-6,.ui-grid-col-7,.ui-grid-col-8,.ui-grid-col-9,.ui-grid-col-10,.ui-grid-col-11,.ui-grid-col-12{float:left;box-sizing:border-box;}.ui-grid-col-1{width:8.33333%;}.ui-grid-col-2{width:16.66666%;}.ui-grid-col-3{width:25%;}.ui-grid-col-4{width:33.33333%;}.ui-grid-col-5{width:41.66666%;}.ui-grid-col-6{width:50%;}.ui-grid-col-7{width:58.33333%;}.ui-grid-col-8{width:66.66666%;}.ui-grid-col-9{width:75%;}.ui-grid-col-10{width:83.33333%;}.ui-grid-col-11{width:91.66666%;}.ui-grid-col-12{width:100%;}@media (min-width:480px){.ui-grid-fixed{width:480px;}}@media (min-width:768px){.ui-grid-fixed{width:768px;}}@media (min-width:960px){.ui-grid-fixed{width:960px;}}@media (min-width:1024px){.ui-grid-fixed{width:1024px;}}/* Responsive */@media (max-width:35em){.ui-grid-responsive .ui-grid-row{display:block;}.ui-grid-responsive .ui-grid-col-1,.ui-grid-responsive .ui-grid-col-2,.ui-grid-responsive .ui-grid-col-3,.ui-grid-responsive .ui-grid-col-4,.ui-grid-responsive .ui-grid-col-5,.ui-grid-responsive .ui-grid-col-6,.ui-grid-responsive .ui-grid-col-7,.ui-grid-responsive .ui-grid-col-8,.ui-grid-responsive .ui-grid-col-9,.ui-grid-responsive .ui-grid-col-10,.ui-grid-responsive .ui-grid-col-11,.ui-grid-responsive .ui-grid-col-12{width:100%;float:none;}}
@@ -15,22 +15,23 @@
         </style>
 
     </h:head>
-    <h:body>
+    <h:body style="color: #3366ff; font-family: sans-serif">
 
         <h:form>
-            <h:panelGrid id="grid2" columns="7"  cellpadding="3">
-                <p:outputLabel value="MeteoCal" />
+            <h:panelGrid id="grid2" columns="8"  cellpadding="3">
+                <h:outputLabel value="MeteoCal" style="font-size: large; font-weight: bold"/>
+                <h:outputLabel value="beta" style="font-size: x-small"/>
                 <p:outputLabel for="search" />
-                <p:inputText id="search" value=" " size="30"/>
+                <p:inputText id="search" value="Search for people" size="30"/>
                 <p:commandButton id="searchgo" icon="ui-icon-search"  action="secure/personal_page.xhtml"/>
                 <p:outputLabel value="#{personalBean.getLoggedUser()}" />
                 <p:spacer width="300" height="10" />
 
-                <p:menuButton value="Options">
-                    <p:menuitem value="Change Calendar Privacy" />
+                <p:menuButton id="opts" value="Options" >
+                    <p:menuitem value="#{personalBean.calendarPrivacy}" action="#{personalBean.toggleCalendarPrivacy()}" update="opts"  />
                     <p:menuitem value="Import Calendar" />
-                    <p:menuitem value="Export Calendar" />
-                    <p:menuitem value="Sign Out" action="#{personalBean.logout()}" icon=" ui-icon-person" />
+                    <p:menuitem value="Export Calendar" action="#{personalBean.getCalendar()}"/>
+                    <p:menuitem value="Sign Out" action="#{personalBean.logout()}" icon=" ui-icon-person"/>
                 </p:menuButton>
             </h:panelGrid>
         </h:form>
@@ -72,7 +73,7 @@
 
                             <p:outputLabel for="province" value="Province: " />
                             <p:selectOneMenu id="province" value="#{personalBean.province}" style="width:150px">
-                                <p:ajax listener="#{personalBean.onProvinceChange()}" update="city" />
+                                <p:ajax listener="#{personalBean.onProvinceChange}" update="city" />
                                 <f:selectItem itemLabel="Select Province" itemValue="" noSelectionOption="true" />
                                 <f:selectItems value="#{personalBean.provinces}" />
                             </p:selectOneMenu>
