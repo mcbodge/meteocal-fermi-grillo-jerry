@@ -11,13 +11,19 @@ import org.primefaces.json.JSONObject;
  * @author Manuel
  */
 public class OpenWeatherMapController {
-    
-    public static WeatherCondition getValueFromCode(Integer code){
-    WeatherCondition out;
-    
-        if(code == null){
+
+    //TODO jDoc
+    /**
+     *
+     * @param code
+     * @return
+     */
+    public static WeatherCondition getValueFromCode(Integer code) {
+        WeatherCondition out;
+
+        if (code == null) {
             out = WeatherCondition.NA;
-        }else if (199 < code && code < 233) {
+        } else if (199 < code && code < 233) {
             out = WeatherCondition.THUNDERSTORM;
         } else if (299 < code && code < 322) {
             out = WeatherCondition.DRIZZLE;
@@ -98,17 +104,22 @@ public class OpenWeatherMapController {
         }
         return out;
     }
-    
-    
+
+    //TODO jDoc
+    /**
+     *
+     * @param json
+     * @return
+     * @throws JSONException
+     */
     public static Integer parseForecastId(String json) throws JSONException {
 
-        Integer result_id=null;
+        Integer result_id = null;
 
+        if (json != null && json.startsWith("{") && json.endsWith("}")) {
 
-    if (json!=null && json.startsWith("{") && json.endsWith("}")) {
-            
             JSONObject jsonObject = new JSONObject(json);
-        
+
             JSONArray JSONArray_weather = jsonObject.getJSONArray("weather");
 
             if (JSONArray_weather.length() > 0) {
@@ -116,17 +127,21 @@ public class OpenWeatherMapController {
                 result_id = JSONObject_weather.getInt("id");
             }
 
-            
-            
         }
-        
+
         return result_id;
-    
+
     }
-    
-    
-    public String sayForecast(Integer geoid) throws JSONException{
-        return  getValueFromCode(parseForecastId(OpenWeatherMapInterface.getMessage(geoid))).toString();
+
+    //TODO jDoc
+    /**
+     *
+     * @param geoid
+     * @return
+     * @throws JSONException
+     */
+    public String sayForecast(Integer geoid) throws JSONException {
+        return getValueFromCode(parseForecastId(OpenWeatherMapInterface.getMessage(geoid))).toString();
     }
-      
+
 }

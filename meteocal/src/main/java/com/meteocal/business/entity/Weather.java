@@ -35,17 +35,18 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Weather.findByConstraint", query = "SELECT w FROM Weather w WHERE w.constraint = :constraint"),
     @NamedQuery(name = "Weather.findByForecast", query = "SELECT w FROM Weather w WHERE w.forecast = :forecast"),
     @NamedQuery(name = "Weather.findByLastUpdate", query = "SELECT w FROM Weather w WHERE w.lastUpdate = :lastUpdate"),
-    @NamedQuery(name = "Weather.findByLocationCode", query = "SELECT w FROM Weather w WHERE w.locationCode = :locationCode")})
+    @NamedQuery(name = "Weather.findByLocationCode", query = "SELECT w FROM Weather w WHERE w.locationCode = :locationCode")
+})
 public class Weather implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
     @NotNull
-    @Column(name = "event_id", nullable = false)
+    @Column(name = "event_id", nullable = false, length = 11)
     private Integer eventId;
-    @Column(name = "constraint")
+    @Column(name = "weather_constraint", length = 11)
     private Integer constraint;
-    @Column(name = "forecast")
+    @Column(name = "forecast", length = 11)
     private Integer forecast;
     @Column(name = "last_update")
     @Temporal(TemporalType.TIMESTAMP)
@@ -62,6 +63,15 @@ public class Weather implements Serializable {
     public Weather() {
     }
 
+    public Weather(Integer eventId, Integer constraint, Integer forecast, Date lastUpdate, String locationCode, Event event) {
+        this.eventId = eventId;
+        this.constraint = constraint;
+        this.forecast = forecast;
+        this.lastUpdate = lastUpdate;
+        this.locationCode = locationCode;
+        this.event = event;
+    }
+
     public Weather(Integer eventId, String locationCode) {
         this.eventId = eventId;
         this.locationCode = locationCode;
@@ -71,7 +81,7 @@ public class Weather implements Serializable {
         this.eventId = eventId;
         this.locationCode = locationCode.toString();
     }
-
+    
     public Integer getEventId() {
         return eventId;
     }
@@ -159,10 +169,10 @@ public class Weather implements Serializable {
     
 
     /**
-     * true <- w/o constraints
-     * true <- w/constrainsts && constraints are ok wrt the forecast
-     * false <- otherwise
-     * @return 
+     * true  - w/o constraints
+     * true  - w/constrainsts && constraints are ok wrt the forecast
+     * false - otherwise
+     * 
      */
     /*public boolean check(){
         if (this.constraint == null || this.constraint == this.forecast) //MANUEL pls fix the second condition

@@ -5,7 +5,6 @@
  */
 package com.meteocal.business.control;
 
-import com.meteocal.business.boundary.PersonalFacade;
 import com.meteocal.business.entity.Event;
 import com.meteocal.business.entity.User;
 import java.util.Calendar;

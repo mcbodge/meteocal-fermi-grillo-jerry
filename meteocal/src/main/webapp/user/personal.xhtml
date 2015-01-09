@@ -47,20 +47,10 @@
                         <p:outputLabel for="event" value="Event:" />
                         <p:inputText id="event" value="#{personalBean.eventName}" required="true" size="34" />
 
-                        <!--<p:outputLabel for="location" value="Location:" />
-                        <p:inputText id="location" value="#{personalBean.eventLocation}" required="true" size="34" />-->
-
-                        <!--<h:form>
-                            <p:growl id="msgs" showDetail="true" />
-
-                            <p:panel header="Select a Location" style="margin-bottom:10px;">-->
-
                         <p:separator />
 
                         <p:growl id="msgs" showDetail="true" />
-
-
-
+                        
                         <h:panelGrid columns="2" cellpadding="5">
                             <h:outputLabel for="out" value="Location: * " />
                             <h:outputText id="out" value="#{personalBean.text}"/>
@@ -94,16 +84,11 @@
                             <p:inputText id="counter" value="#{personalBean.text}">
                                 <p:ajax event="keyup" update="out" listener="#{personalBean.handleKeyEvent}" />
                             </p:inputText>
-                            <!--<h:outputText id="out" value="#{personalBean.text}" />-->
-
+                           
                         </h:panelGrid>
 
                         <p:separator />
-
-                        <!--</p:panel>
-                    </h:form>-->
-
-
+                        
                         <p:outputLabel for="people" value="Invite people:" />
                         <p:inputText id="people" value="#{personalBean.people}" required="f" size="34" />
 
@@ -143,22 +128,16 @@
         <h:form>
             <p:growl id="messages" showDetail="true" />
             <h:panelGrid columnClasses="value">
-                <p:schedule value="#{scheduleView.lazyEventModel}" >
-                    <p:ajax event="dateSelect" listener="#{scheduleView.onDateSelect}" update="eventDetails" oncomplete="PF('eventDialog').show();" />
-                </p:schedule>
+                <p:schedule draggable="false" resizable="false" value="#{personalBean.lazyEventModel}" />
             </h:panelGrid>
-            <p:dialog widgetVar="eventDialog" header="Event Details" showEffect="clip" hideEffect="clip">
-                <h:panelGrid id="eventDetails" columns="2">
-                    <h:outputLabel for="title" value="Title:" />
-                </h:panelGrid>
-            </p:dialog>
         </h:form>
-
+        
+        <!-- wide calendar -->
         <style type="text/css">
             .value {
                 width: 1000px;
             }
         </style>
-
+        
     </h:body>
 </html>

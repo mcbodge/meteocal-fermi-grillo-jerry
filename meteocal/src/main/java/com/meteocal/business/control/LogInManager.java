@@ -35,12 +35,11 @@ public class LogInManager{
      * @return false if the structure of the input is wrong
      */
     public boolean checkLogInFields(String u, String p){
-
         return !(p == null || p.length() < 8 || u == null || u.length() < 4 || u.length() > 15);
-
     }
     
     /**
+     * Gets the username of the current user
      * 
      * @return the username of the current user logged in.
      */

@@ -31,7 +31,7 @@ public class UserTestSessionBean {
     @Inject
     LogInManager lm;
             
-    //readFron db
+    //readFrom db
     public List<User> findAll(){
         TypedQuery<User> query;
         query = em.createNamedQuery("User.findAll",User.class);

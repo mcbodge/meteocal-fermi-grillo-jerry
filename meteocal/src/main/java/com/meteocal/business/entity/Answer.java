@@ -36,7 +36,7 @@ public class Answer implements Serializable {
     protected AnswerPK answerPK;
     @Basic(optional = false)
     @NotNull
-    @Column(name = "value", nullable = false)
+    @Column(name = "answer_value", nullable = false)
     private boolean value;
     @JoinColumn(name = "event_id", referencedColumnName = "event_id", nullable = false, insertable = false, updatable = false)
     @ManyToOne(optional = false)
@@ -47,16 +47,7 @@ public class Answer implements Serializable {
 
     public Answer() {
     }
-    /*
-    public Answer(AnswerPK answerPK) {
-        this.answerPK = answerPK;
-    }
     
-    public Answer(AnswerPK answerPK, boolean value) {
-        this.answerPK = answerPK;
-        this.value = value;
-    }
-    */
     public Answer(int eventId, int userId, boolean value) {
         this.answerPK = new AnswerPK(eventId, userId);
         this.value = value;

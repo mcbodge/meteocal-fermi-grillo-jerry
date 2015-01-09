@@ -5,7 +5,6 @@
  */
 package com.meteocal.business.boundary;
 
-import java.net.ConnectException;
 import java.util.Date;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -15,7 +14,6 @@ import javax.mail.Authenticator;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.PasswordAuthentication;
-import javax.mail.SendFailedException;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
@@ -49,6 +47,7 @@ public class EmailManager {
     private final String PASSWORD = "D235X2uu";    
     private  boolean debug = true;
 
+    //TODO jDocs
     public void sendEmail(String to, String subject, String body) {
         Properties props = new Properties();
         props.put("mail.smtp.host", HOST);
@@ -80,7 +79,7 @@ public class EmailManager {
             message.setSentDate(new Date());
             message.setText(body);  
             
-            //<editor-fold defaultstate="state" desc="snippet fot html messages">
+            //<editor-fold defaultstate="collapsed" desc="snippet for html messages">
                 
                 /* snippet fot html messages */
             

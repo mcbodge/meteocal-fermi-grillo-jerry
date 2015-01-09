@@ -2,9 +2,6 @@ package com.meteocal.business.control;
 
 import com.meteocal.business.boundary.EmailManager;
 import com.meteocal.business.entity.User;
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import javax.persistence.PersistenceContext;
 import org.apache.commons.lang3.RandomStringUtils;
 
 
@@ -17,7 +14,6 @@ import org.apache.commons.lang3.RandomStringUtils;
 public class IssuesDataManager{
     
     public IssuesDataManager(){ 
-        //constructor
     }
 
     /**

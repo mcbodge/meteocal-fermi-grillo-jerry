@@ -24,7 +24,7 @@ public class RegistrationBean implements Serializable {
 
     private String firstname, lastname, username, email, password, emailagain;
 
-    //<editor-fold defaultstate="state" desc="GETTERS AND SETTERS">
+    //<editor-fold defaultstate="collapsed" desc="GETTERS AND SETTERS">
     public String getEmailagain() {
         return emailagain;
     }
@@ -75,7 +75,6 @@ public class RegistrationBean implements Serializable {
     //</editor-fold>
 
     public RegistrationBean() {
-
     }
 
     //TODO jdoc
