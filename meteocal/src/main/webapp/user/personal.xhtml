@@ -6,30 +6,41 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core">
     <h:head>
         <title>Personal page</title>
+
+        <style type="text/css">
+            /* Grid CSS */.ui-grid{clear:both;padding:3px;margin:0px;}.ui-grid:before,.ui-grid:after{content:"";display:table;}.ui-grid:after{clear:both;}.ui-grid .ui-grid-row{display:-webkit-box;display:-moz-box;display:-ms-flexbox;display:-webkit-flex;display:flex;clear:both;}.ui-grid-row:after{clear:both;content:"";display:table;}.ui-grid-col-1,.ui-grid-col-2,.ui-grid-col-3,.ui-grid-col-4,.ui-grid-col-5,.ui-grid-col-6,.ui-grid-col-7,.ui-grid-col-8,.ui-grid-col-9,.ui-grid-col-10,.ui-grid-col-11,.ui-grid-col-12{float:left;box-sizing:border-box;}.ui-grid-col-1{width:8.33333%;}.ui-grid-col-2{width:16.66666%;}.ui-grid-col-3{width:25%;}.ui-grid-col-4{width:33.33333%;}.ui-grid-col-5{width:41.66666%;}.ui-grid-col-6{width:50%;}.ui-grid-col-7{width:58.33333%;}.ui-grid-col-8{width:66.66666%;}.ui-grid-col-9{width:75%;}.ui-grid-col-10{width:83.33333%;}.ui-grid-col-11{width:91.66666%;}.ui-grid-col-12{width:100%;}@media (min-width:480px){.ui-grid-fixed{width:480px;}}@media (min-width:768px){.ui-grid-fixed{width:768px;}}@media (min-width:960px){.ui-grid-fixed{width:960px;}}@media (min-width:1024px){.ui-grid-fixed{width:1024px;}}/* Responsive */@media (max-width:35em){.ui-grid-responsive .ui-grid-row{display:block;}.ui-grid-responsive .ui-grid-col-1,.ui-grid-responsive .ui-grid-col-2,.ui-grid-responsive .ui-grid-col-3,.ui-grid-responsive .ui-grid-col-4,.ui-grid-responsive .ui-grid-col-5,.ui-grid-responsive .ui-grid-col-6,.ui-grid-responsive .ui-grid-col-7,.ui-grid-responsive .ui-grid-col-8,.ui-grid-responsive .ui-grid-col-9,.ui-grid-responsive .ui-grid-col-10,.ui-grid-responsive .ui-grid-col-11,.ui-grid-responsive .ui-grid-col-12{width:100%;float:none;}}
+
+            /* Allow Font Awesome Icons in lieu of jQuery UI and only apply when using a FA icon */
+            .ui-icon[class*=" icon-"] {/* Remove the jQuery UI Icon */ background: none repeat scroll 0 0 transparent; /* Remove the jQuery UI Text Indent */ text-indent: 0; /* Bump it up - jQuery UI is -8px */ margin-top: -0.5em; } .ui-button-icon-only .ui-icon[class*=" icon-"] {/* Bump it - jQuery UI is -8px */ margin-left: -7px; } /* Allow use of icon-large to be properly aligned */ .ui-icon.icon-large {margin-top: -0.75em; }
+        </style>
+
     </h:head>
     <h:body>
+
         <h:form>
-            <h:panelGrid id="grid2" columns="5"  cellpadding="3">
-
-                <p:outputLabel for="search" value="Search MeteoCal:" />
-                <p:inputText id="search" value="" size="50"/>
-                <p:commandButton id="searchgo" value="Search" action="secure/personal_page.xhtml"/>
-                <!--<p:growl id="messages" showDetail="true" /> -->
+            <h:panelGrid id="grid2" columns="7"  cellpadding="3">
+                <p:outputLabel value="MeteoCal" />
+                <p:outputLabel for="search" />
+                <p:inputText id="search" value=" " size="30"/>
+                <p:commandButton id="searchgo" icon="ui-icon-search"  action="secure/personal_page.xhtml"/>
                 <p:outputLabel value="#{personalBean.getLoggedUser()}" />
-                <h:form>
-    <p:growl id="messages" showDetail="true"/>
- 
-    
-</h:form>
+                <p:spacer width="300" height="10" />
 
+                <p:menuButton value="Options">
+                    <p:menuitem value="Change Calendar Privacy" />
+                    <p:menuitem value="Import Calendar" />
+                    <p:menuitem value="Export Calendar" />
+                    <p:menuitem value="Sign Out" action="#{personalBean.logout()}" icon=" ui-icon-person" />
+                </p:menuButton>
             </h:panelGrid>
         </h:form>
+
         <hr style=" background-color: #3366ff; height: 5px" />
 
         <div style="float: left; border-right: 5px; height: 100%; width: 450px" >
             <h:form>
                 <p:panel id="eventpanel" header="New event" style="margin-bottom:5px;">
-                    
+
                     <h:panelGrid id="grid3" columns="1" cellpadding="1">
 
                         <p:outputLabel for="event" value="Event:" />
@@ -37,64 +48,64 @@
 
                         <!--<p:outputLabel for="location" value="Location:" />
                         <p:inputText id="location" value="#{personalBean.eventLocation}" required="true" size="34" />-->
-                        
+
                         <!--<h:form>
                             <p:growl id="msgs" showDetail="true" />
 
                             <p:panel header="Select a Location" style="margin-bottom:10px;">-->
-                        
-                         <p:separator />
 
-                                <p:growl id="msgs" showDetail="true" />
-                                
-                               
-                                
-                                <h:panelGrid columns="2" cellpadding="5">
-                                    <h:outputLabel for="out" value="Location: * " />
-                                    <h:outputText id="out" value="#{personalBean.text}"/>
-                                    <p:outputLabel for="country" value="Country: " />
-                                    <p:selectOneMenu id="country" value="#{personalBean.country}" style="width:150px">
-                                        <p:ajax listener="#{personalBean.onCountryChange}" update="province"/> 
-                                        <f:selectItem itemLabel="Select Country" itemValue="" noSelectionOption="true" />
-                                        <f:selectItems value="#{personalBean.countries}" />
-                                    </p:selectOneMenu>
-                                    
-                                    <p:outputLabel for="province" value="Province: " />
-                                    <p:selectOneMenu id="province" value="#{personalBean.province}" style="width:150px">
-                                        <p:ajax listener="#{personalBean.onProvinceChange()}" update="city" />
-                                        <f:selectItem itemLabel="Select Province" itemValue="" noSelectionOption="true" />
-                                        <f:selectItems value="#{personalBean.provinces}" />
-                                    </p:selectOneMenu>
+                        <p:separator />
 
-                                    <p:outputLabel for="city" value="City: " />
-                                    <p:selectOneMenu id="city" value="#{personalBean.city}" style="width:150px">
-                                        <p:ajax listener="#{personalBean.onCityChange}" update="out" />
-                                        <f:selectItem itemLabel="Select City" itemValue="" noSelectionOption="true" />
-                                        <f:selectItems value="#{personalBean.cities}" />
-                                    </p:selectOneMenu>
-                                </h:panelGrid>
+                        <p:growl id="msgs" showDetail="true" />
 
 
-                                    <p:messages id="messages" />
- 
-                                    <h:panelGrid columns="3">
-                                        <h:outputText value="Personalized: " />
-                                    <p:inputText id="counter" value="#{personalBean.text}">
-                                        <p:ajax event="keyup" update="out" listener="#{personalBean.handleKeyEvent}" />
-                                    </p:inputText>
-                                    <!--<h:outputText id="out" value="#{personalBean.text}" />-->
-                                    
-                                </h:panelGrid>
-                                    
-                                <p:separator />
 
-                                <!--</p:panel>
-                            </h:form>-->
+                        <h:panelGrid columns="2" cellpadding="5">
+                            <h:outputLabel for="out" value="Location: * " />
+                            <h:outputText id="out" value="#{personalBean.text}"/>
+                            <p:outputLabel for="country" value="Country: " />
+                            <p:selectOneMenu id="country" value="#{personalBean.country}" style="width:150px">
+                                <p:ajax listener="#{personalBean.onCountryChange}" update="province"/> 
+                                <f:selectItem itemLabel="Select Country" itemValue="" noSelectionOption="true" />
+                                <f:selectItems value="#{personalBean.countries}" />
+                            </p:selectOneMenu>
+
+                            <p:outputLabel for="province" value="Province: " />
+                            <p:selectOneMenu id="province" value="#{personalBean.province}" style="width:150px">
+                                <p:ajax listener="#{personalBean.onProvinceChange()}" update="city" />
+                                <f:selectItem itemLabel="Select Province" itemValue="" noSelectionOption="true" />
+                                <f:selectItems value="#{personalBean.provinces}" />
+                            </p:selectOneMenu>
+
+                            <p:outputLabel for="city" value="City: " />
+                            <p:selectOneMenu id="city" value="#{personalBean.city}" style="width:150px">
+                                <p:ajax listener="#{personalBean.onCityChange}" update="out" />
+                                <f:selectItem itemLabel="Select City" itemValue="" noSelectionOption="true" />
+                                <f:selectItems value="#{personalBean.cities}" />
+                            </p:selectOneMenu>
+                        </h:panelGrid>
+
+
+                        <p:messages id="messages" />
+
+                        <h:panelGrid columns="3">
+                            <h:outputText value="Personalized: " />
+                            <p:inputText id="counter" value="#{personalBean.text}">
+                                <p:ajax event="keyup" update="out" listener="#{personalBean.handleKeyEvent}" />
+                            </p:inputText>
+                            <!--<h:outputText id="out" value="#{personalBean.text}" />-->
+
+                        </h:panelGrid>
+
+                        <p:separator />
+
+                        <!--</p:panel>
+                    </h:form>-->
 
 
                         <p:outputLabel for="people" value="Invite people:" />
                         <p:inputText id="people" value="#{personalBean.people}" required="f" size="34" />
-                        
+
                         <p:outputLabel for="startdate" value="Start:" />
                         <p:calendar id="startdate" value="#{personalBean.dateTime}" pattern="yyyy/MM/dd HH:mm:ss" />
 
@@ -113,7 +124,7 @@
                         <p:outputLabel for="eventdescription" value="Description:" />
                         <p:inputTextarea id="eventdescription" value="#{personalBean.descr}" cols="38" autoResize="false"/>
                     </h:panelGrid>
-                    
+
                     <h:panelGrid id="grid4" columns="2" cellpadding="1">
                         <p:selectBooleanCheckbox value="#{personalBean.event_private}" />
                         <h:outputText value=" Mark as private" />
@@ -123,10 +134,33 @@
                     <p:commandButton value="Cancel" update="eventpanel" process="@this" style="margin-right:20px;" >
                         <p:resetInput target="eventpanel" />
                     </p:commandButton> 
-                    
+
                 </p:panel>
             </h:form>
         </div>
-
+        <!--
+        <p:panelGrid style="margin-top:20px">
+            <f:facet name="header">
+                <p:row>
+                    <p:column colspan="3">Monday</p:column>
+                    <p:column colspan="3">Tuesday</p:column>
+                    <p:column colspan="3">Wednesday</p:column>
+                    <p:column colspan="3">Thursday</p:column>
+                    <p:column colspan="3">Friday</p:column>
+                    <p:column colspan="3">Saturday</p:column>
+                    <p:column colspan="3">Sunday</p:column>
+                </p:row>                
+            </f:facet>
+            <p:row>
+                <p:column colspan="3">aa</p:column>
+                <p:column colspan="3"></p:column>
+                <p:column colspan="3"></p:column>
+                <p:column colspan="3"></p:column>
+                <p:column colspan="3"></p:column>
+                <p:column colspan="3"></p:column>
+                <p:column colspan="3"></p:column>
+            </p:row>
+        </p:panelGrid>
+        -->
     </h:body>
 </html>
