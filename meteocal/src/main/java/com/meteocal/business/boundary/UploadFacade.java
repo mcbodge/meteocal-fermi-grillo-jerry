@@ -39,20 +39,20 @@ public class UploadFacade {
     @Inject
     LogInManager lim;
 
-    //TODO jDoc
+
     /**
-     * 
-     * @param f 
+     * Import a calendar
+     * @param f the uploaded file
      */
     private void setCalendar(File f) {
         ucm.startUpload(getUser(lim.getLoggedUserName()), f);
     }
 
-    //TODO jDoc
+
     /**
-     * 
-     * @param username
-     * @return 
+     * Returns the current User
+     * @param username username, saved in the current session
+     * @return the user entity
      */
     private User getUser(String username) {
         try {
@@ -62,10 +62,10 @@ public class UploadFacade {
         }
     }
 
-    //TODO jDoc
+
     /**
-     * 
-     * @param up 
+     * Upload a new file (calendar)
+     * @param up the UploadedFile in the cache
      */
     public void upload(UploadedFile up) {
         // Do what you want with the file
@@ -76,11 +76,11 @@ public class UploadFacade {
 
     }
     
-    //TODO jDoc
+
     /**
-     * 
-     * @param hash
-     * @param in 
+     * Transfer the file in the files/ directory, in memory.
+     * @param hash name of the file to be saved
+     * @param in initialized input stream
      */
     public void copyFile(String hash, InputStream in) {
         try {

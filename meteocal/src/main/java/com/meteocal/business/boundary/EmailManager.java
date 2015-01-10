@@ -47,7 +47,12 @@ public class EmailManager {
     private final String PASSWORD = "D235X2uu";    
     private  boolean debug = true;
 
-    //TODO jDocs
+    /**
+     * Sends a new email
+     * @param to the receiver email address
+     * @param subject the subject of the message
+     * @param body the plaintext of the message
+     */
     public void sendEmail(String to, String subject, String body) {
         Properties props = new Properties();
         props.put("mail.smtp.host", HOST);

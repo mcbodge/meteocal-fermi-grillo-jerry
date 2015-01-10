@@ -49,6 +49,7 @@ public class PersonalFacade {
     @Inject
     UserCalendarManager ucm;
 
+    
     /**
      *
      * @return the username of the current user logged in.
@@ -57,6 +58,7 @@ public class PersonalFacade {
         return lm.getLoggedUserName();
     }
 
+    
     /**
      * NEW EVENT Creates a new event, given the required parameters and returns
      * true if the event is created. Requires valid name, start and end.
@@ -130,6 +132,7 @@ public class PersonalFacade {
         Logger.getLogger(PersonalFacade.class.getName()).log(Level.INFO, "---STOP createEvent PersonalFacade---");
         return result;
     }
+    
 
     /**
      *
@@ -143,6 +146,7 @@ public class PersonalFacade {
             return null;
         }
     }
+    
 
     //TODO fix the query 
     private int getNumOverlappingEvents(User creator, Date start, Date end) {
@@ -163,46 +167,53 @@ public class PersonalFacade {
         return count;
     }
 
-    //TODO jDocs
+    
+
     /**
-     * 
-     * @return 
+     * Returns a list of all the possible countries
+     * @return a lost of strings of distinct available countries
      */
     public List<String> getCountries() {
         return em.createNativeQuery("SELECT DISTINCT country FROM locations").getResultList();
     }
+    
 
-    //TODO jDocs
     /**
-     * 
-     * @return 
+     * Returns a list of all the capable provinces
+     * @param c the country to be filtered
+     * @return a list of provinces that are in the given country
      */
     public List<String> getProvinces(String c) {
         return em.createNativeQuery("SELECT DISTINCT admin2 FROM locations l WHERE l.country = ? ORDER BY admin2").setParameter(1, c).getResultList();
     }
+    
 
-    //TODO jDocs
     /**
-     * 
-     * @return 
+     * Returns a list of all the capable cities
+     * @param c the country to filter the province
+     * @param p the province to be filtered
+     * @return a list of cities that are in the given province
      */
     public List<String> getCities(String c, String p) {
         return em.createNativeQuery("SELECT name FROM locations l WHERE l.country = ? AND l.admin2 = ? ORDER BY name").setParameter(1, c).setParameter(2, p).getResultList();
     }
 
-    //TODO jDocs
+    
     /**
-     * 
-     * @return 
+     * Returns the location id
+     * @param c the country
+     * @param p the province
+     * @param n the city
+     * @return location id (geonameid)
      */
     public Integer getGeoname(String c, String p, String n) {
         return (Integer) em.createNativeQuery("SELECT geonameid FROM locations l WHERE l.country = ? AND l.admin2 = ? AND l.name = ?").setParameter(1, c).setParameter(2, p).setParameter(3, n).getSingleResult();
     }
 
-    //TODO jDocs
+    
     /**
-     * 
-     * @return 
+     * Says how we can change the calendar status
+     * @return "Set calendar as public" id the calendar is private -- "Set calendar as private" otherwise
      */
     public String getCalendarString() {
         String out = "Set calendar as public";
@@ -212,6 +223,7 @@ public class PersonalFacade {
         return out;
     }
 
+    
     /**
      * It changes the privacy setting of the given user (from public to private
      * or vice versa).
@@ -222,16 +234,17 @@ public class PersonalFacade {
         User u = getUser(getLoggedUser());
         u.setPublicCalendar(!u.isPublicCalendar());
     }
+    
 
-    //TODO jDocs
     /**
-     * 
-     * @return 
+     * Start the download of the user's calendar
+     * @return a link to the file to be downloaded
      */
     public String startDownload() {
         return ucm.startDownload(getUser(getLoggedUser()));
     }
 
+    
     /**
      * Gets all the events the user is/was attending;
      * 

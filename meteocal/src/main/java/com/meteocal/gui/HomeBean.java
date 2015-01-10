@@ -51,11 +51,7 @@ public class HomeBean implements Serializable {
     }
     //</editor-fold>
 
-    //TODO jDoc
-    /**
-     * 
-     * @return 
-     */
+
     public String submitLogIn() {
         if (hf.submitLogIn(username, password)) {
             //goto personal page

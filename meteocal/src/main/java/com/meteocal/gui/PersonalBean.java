@@ -258,7 +258,6 @@ public class PersonalBean implements Serializable {
         } else {
             //TODO Event w/ Integer geoname
         }
-        //TODO refresh page
     }
 
     public void setText(String text) {

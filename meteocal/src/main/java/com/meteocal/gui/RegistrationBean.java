@@ -77,14 +77,14 @@ public class RegistrationBean implements Serializable {
     public RegistrationBean() {
     }
 
-    //TODO jdoc
+
     /**
-     *
-     * @return
+     * 
+     * @return "/home?faces-redirect=true" if the user is correctly registered, "/registration?faces-redirect=true" if the submitted data aren't valid 
      */
     public String createAccount() {
+        
         //check email and create user
-
         if (password!=null && rf.registerUser(firstname, lastname, username, email, password)) {
             return "/home?faces-redirect=true";
         }
