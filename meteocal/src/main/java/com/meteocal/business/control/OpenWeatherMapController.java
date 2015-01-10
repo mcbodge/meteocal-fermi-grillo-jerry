@@ -106,12 +106,6 @@ public class OpenWeatherMapController {
     }
 
     //TODO jDoc
-    /**
-     *
-     * @param json
-     * @return
-     * @throws JSONException
-     */
     public static Integer parseForecastId(String json) throws JSONException {
 
         Integer result_id = null;
@@ -134,12 +128,6 @@ public class OpenWeatherMapController {
     }
 
     //TODO jDoc
-    /**
-     *
-     * @param geoid
-     * @return
-     * @throws JSONException
-     */
     public String sayForecast(Integer geoid) throws JSONException {
         return getValueFromCode(parseForecastId(OpenWeatherMapInterface.getMessage(geoid))).toString();
     }

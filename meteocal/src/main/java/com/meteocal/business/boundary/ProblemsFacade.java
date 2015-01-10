@@ -28,7 +28,6 @@ public class ProblemsFacade {
     @PersistenceContext
     EntityManager em;
 
-    //TODO jDocs
     
     /**
      * Returns the User if the email is a valid email of an user of the system.
@@ -47,6 +46,7 @@ public class ProblemsFacade {
         return user;
     }
     
+    
     /**
      * 
      * @param email the email of the user that request support
@@ -57,6 +57,7 @@ public class ProblemsFacade {
             idm.sendUserName(user);
         }
     }
+    
 
     /**
      * 
