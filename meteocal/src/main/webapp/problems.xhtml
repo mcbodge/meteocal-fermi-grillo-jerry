@@ -101,8 +101,11 @@
 
                     </h:panelGrid>
                 </p:outputPanel>
-
+                
+                
                 <p:commandButton value="Submit" update="display" icon="ui-icon-check" action="#{problemsBean.submitProblem()}" oncomplete="PF('dlg').show()"/>
+                <p:commandButton value="Cancel" action="home"/>
+                
 
                 <p:dialog modal="true" resizable="false" widgetVar="dlg" header="Done :)" showEffect="clip">
                     <h:panelGrid columns="1" id="display" columnClasses="label,value" style="text-align: center">

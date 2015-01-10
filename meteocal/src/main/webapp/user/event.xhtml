@@ -4,9 +4,28 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:p="http://primefaces.org/ui">
     <h:head>
-        <title>Facelet Title</title>
+        <title>MeteoCal</title>
     </h:head>
-    <h:body>
+    <h:body style="color: #3366ff; font-family: sans-serif">
+
+        <h:form>
+            <h:panelGrid id="grid2" columns="8"  cellpadding="3">
+                <h:commandLink value="MeteoCal" style="font-size: large; font-weight: bold" action="personal.xhtml?faces-redirect=true"/>
+                <h:outputLabel value="beta" style="font-size: x-small"/>
+                <p:outputLabel for="search" />
+                <p:inputText id="search" value="Search for people" size="30"/>
+                <p:commandButton id="searchgo" icon="ui-icon-search"  action="secure/personal_page.xhtml"/>
+                <p:outputLabel value="#{personalBean.getLoggedUser()}" />
+                <p:spacer width="300" height="10" />
+
+                <p:menuButton id="opts" value="Options" >
+                    <p:menuitem value="#{personalBean.calendarPrivacy}" action="#{personalBean.toggleCalendarPrivacy()}" update="opts"  />
+                    <p:menuitem value="Import Calendar" action="upload.xhtml?faces-redirect=true"/>
+                    <p:menuitem value="Export Calendar" action="#{personalBean.getCalendar()}"/>
+                    <p:menuitem value="Sign Out" action="#{personalBean.logout()}" icon=" ui-icon-person"/>
+                </p:menuButton>
+            </h:panelGrid>
+        </h:form>
         EVENT DATE = <h:outputLabel value="#{personalBean.event}" />
     </h:body>
 </html>

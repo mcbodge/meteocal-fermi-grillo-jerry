@@ -38,6 +38,7 @@
 
         <hr style=" background-color: #3366ff; height: 5px" />
 
+
         <div style="float: left; border-right: 5px; height: 100%; width: 450px" >
             <h:form>
                 <p:panel id="eventpanel" header="New event" style="margin-bottom:5px;">
@@ -68,8 +69,8 @@
 
                             <p:outputLabel for="city" value="City: " />
                             <p:selectOneMenu id="city" value="#{personalBean.city}" style="width:150px">
-                                <p:ajax listener="#{personalBean.onCityChange}" update="out confirm" />
-                                <f:selectItem itemLabel="Select City" itemValue="" noSelectionOption="true" />
+                                <p:ajax listener="#{personalBean.onCityChange}" update="out confirm" resetValues=""/>
+                                <f:selectItem itemLabel="Select City"  itemValue="" noSelectionOption="true" />
                                 <f:selectItems value="#{personalBean.cities}" />
                             </p:selectOneMenu>
                         </h:panelGrid>
@@ -115,7 +116,7 @@
                     </h:panelGrid>
 
                     <p:commandButton id="confirm" value="Submit" action="#{personalBean.createEvent()}" icon="ui-icon-check" disabled="#{personalBean.cannotCreate()}" update=":formSchedule:schedule" />
-                    <p:commandButton value="Cancel" action="#{personalBean.resetVars()}" update="eventpanel" process="@this" style="margin-right:20px;"  >
+                    <p:commandButton value="Cancel" type="reset" update="eventpanel" process="@this" style="margin-right:20px;"  >
                         <p:resetInput target="@all" />
                     </p:commandButton> 
 
@@ -124,15 +125,22 @@
                 </p:panel>
             </h:form>
         </div>
+        
 
         <h:form id="formSchedule">
+
             <p:growl id="messages" showDetail="true" />
+
             <h:panelGrid columnClasses="value">
+
                 <p:schedule id="schedule" rendered="true" draggable="false" resizable="false"  value="#{personalBean.lazyEventModel}" rightHeaderTemplate="month, agendaDay" timeFormat="HH:mm{ - HH:mm} \n" ignoreTimezone="false" > 
                     <p:ajax event="eventSelect"  listener="#{personalBean.onEventSelect}" />
                 </p:schedule>
+
             </h:panelGrid>
+
         </h:form>
+        
 
         <!-- wide calendar -->
         <style type="text/css">
