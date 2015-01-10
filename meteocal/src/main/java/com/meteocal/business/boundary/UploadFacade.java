@@ -29,20 +29,31 @@ import org.primefaces.model.UploadedFile;
  */
 @Stateless
 public class UploadFacade {
-    
+
     @PersistenceContext(unitName = "meteocal_PU")
     EntityManager em;
-    
+
     @Inject
     UserCalendarManager ucm;
-    
+
     @Inject
     LogInManager lim;
-    
-    private void setCalendar(File f){
+
+    //TODO jDoc
+    /**
+     * 
+     * @param f 
+     */
+    private void setCalendar(File f) {
         ucm.startUpload(getUser(lim.getLoggedUserName()), f);
     }
-    
+
+    //TODO jDoc
+    /**
+     * 
+     * @param username
+     * @return 
+     */
     private User getUser(String username) {
         try {
             return em.createNamedQuery("User.findByUserName", User.class).setParameter("userName", username).getSingleResult();
@@ -51,7 +62,11 @@ public class UploadFacade {
         }
     }
 
-
+    //TODO jDoc
+    /**
+     * 
+     * @param up 
+     */
     public void upload(UploadedFile up) {
         // Do what you want with the file
         try {
@@ -60,20 +75,26 @@ public class UploadFacade {
         }
 
     }
-
+    
+    //TODO jDoc
+    /**
+     * 
+     * @param hash
+     * @param in 
+     */
     public void copyFile(String hash, InputStream in) {
         try {
 
             try ( // write the inputStream to a FileOutputStream
                     OutputStream out = new FileOutputStream(new File(FacesContext.getCurrentInstance().getExternalContext().getRealPath("files/") + File.separatorChar
-                            + hash))) {
+                                    + hash))) {
                 int read;// = 0;
                 byte[] bytes = new byte[4096];
-                
+
                 while ((read = in.read(bytes)) != -1) {
                     out.write(bytes, 0, read);
                 }
-                
+
                 in.close();
                 out.flush();
             }
@@ -83,6 +104,4 @@ public class UploadFacade {
         }
     }
 
-    
-    
 }

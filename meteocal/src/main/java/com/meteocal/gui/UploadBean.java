@@ -26,20 +26,31 @@ public class UploadBean {
     public UploadBean() {
     }
     
-
- 
-
-     
     private UploadedFile file;
  
+    //TODO jDoc
+    /**
+     * 
+     * @return 
+     */
     public UploadedFile getFile() {
         return file;
     }
  
+    //TODO jDoc
+    /**
+     * 
+     * @param file 
+     */
     public void setFile(UploadedFile file) {
         this.file = file;
     }
      
+    //TODO jDoc
+    /**
+     * 
+     * @param f 
+     */
     public void upload(FileUploadEvent f) {
         //if(file != null) {
             uf.upload(f.getFile());
