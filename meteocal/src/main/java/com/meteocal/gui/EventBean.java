@@ -1,15 +1,9 @@
 package boundaries;
 
 import java.io.Serializable;
-import java.text.DateFormat;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.bean.ManagedBean;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
-import org.primefaces.context.RequestContext;
-import org.primefaces.event.SelectEvent;
+
 
 
 
@@ -20,102 +14,10 @@ import org.primefaces.event.SelectEvent;
 @ManagedBean
 @SessionScoped
 public class EventBean implements Serializable{
-    
-    private Date startDate;
-    private Date startTime;
-    private String eventName;
-    private String eventLocation;
-    private String people;
-    private String duration;
-    private boolean privateEvent;
-    private String description;
+
     
     
-    public void onDateSelect(SelectEvent event) {
-        FacesContext facesContext = FacesContext.getCurrentInstance();
-        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-        facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Date Selected", format.format(event.getObject())));
-    }
-     
-    public void click() {
-        RequestContext requestContext = RequestContext.getCurrentInstance();
-         
-        requestContext.update("form:display");
-        requestContext.execute("PF('dlg').show()");
-    }
-    
-    public String getEventName(){
-        return eventName;
-    }
-    public void setEventName(String eventName){
-        this.eventName = eventName;
-    }
-    
-    public String getEventLocation(){
-        return eventLocation;
-    }
-    public void setEventLocation(String eventLocation){
-        this.eventLocation = eventLocation;
-    }
-    
-    public String getPeople(){
-        return people;
-    }
-    public void setPeople(String people){
-        this.people = people;
-    }
-    
-    
-    public Date getStartDate(){
-        return startDate;
-    }
-    public void setStartdate(Date startDate){
-      this.startDate = startDate;
-    
-    }
-    
-    public Date getStartTime(){
-        return startTime;
-    }
-    public void setStartTime(Date startTime){
-        this.startTime = startTime;
-    }
-    
-    public boolean getPrivateEvent(){
-        return privateEvent;
-    }
-    public void setprivateEvent(boolean privateEvent){
-        this.privateEvent = privateEvent;
-    }
-   public void addMessage() {
-        String summary = privateEvent ? "You have choosen to make the event Private" : "The event will no longer be Private";
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(summary));
-    }
-    public void addMessage2() {
-        String summary2 = privateEvent ? "Private" : "Public";
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(summary2));
-    }
-   
-   public String getDescription(){
-       return description;
-   }
-   public void setDescription(String description){
-       this.description = description;
-   }
-   
-   public void displayContent(){
-       
-   }
-   
-   public void createEvent(){
-       
-   }
-   
-   public void currentDate(){
-    DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-    Date date = new Date();
-    System.out.println(dateFormat.format(date));
-   }
+
 
 }
 
