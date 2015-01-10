@@ -57,12 +57,6 @@ public class EventManager {
                 Logger.getLogger(EventManager.class.getName()).log(Level.INFO, "-- invitation email sent");
             }
 
-            /*
-             Answer ans = (Answer) em.createNativeQuery("SELECT a FROM Answer a WHERE a.answerPK.userId = :userId AND a.answerPK.eventId = :eventId")
-             .setParameter("userId", u.getUserId())
-             .setParameter("eventId", e.getEventId())
-             .getSingleResult();
-             */
         }
         Logger.getLogger(EventManager.class.getName()).log(Level.INFO, "- END invitation ");
     }

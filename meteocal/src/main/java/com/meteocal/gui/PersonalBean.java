@@ -5,21 +5,24 @@
  */
 package com.meteocal.gui;
 
+import boundaries.EventBean;
 import com.meteocal.business.boundary.HomeFacade;
 import com.meteocal.business.boundary.PersonalFacade;
-import com.meteocal.business.control.EventCreationManager;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import javax.ejb.EJB;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
+import javax.enterprise.context.Conversation;
+import javax.enterprise.context.ConversationScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import org.primefaces.event.SelectEvent;
@@ -28,6 +31,7 @@ import org.primefaces.model.ScheduleEvent;
 import org.primefaces.model.LazyScheduleModel;
 import org.primefaces.model.ScheduleModel;
 import javax.faces.event.ActionEvent;
+import javax.inject.Inject;
 import org.primefaces.event.ScheduleEntryMoveEvent;
 import org.primefaces.event.ScheduleEntryResizeEvent;
 
@@ -43,6 +47,8 @@ public class PersonalBean implements Serializable {
     PersonalFacade pf;
     @EJB
     HomeFacade hf;
+      
+    private static final long serialVersionUID = 1L;
 
     private Date dateTime = new Date();
     private String eventName, eventLocation, people, descr, constraint;
@@ -60,6 +66,8 @@ public class PersonalBean implements Serializable {
     private ScheduleModel lazyEventModel;
 
     private ScheduleEvent event;
+
+    
 
     @PostConstruct
     public void init() {
@@ -232,7 +240,6 @@ public class PersonalBean implements Serializable {
     }
 
     //</editor-fold>
-    
     public PersonalBean() {
     }
 
@@ -366,7 +373,15 @@ public class PersonalBean implements Serializable {
 
     public void onEventSelect(SelectEvent selectEvent) {
         event = (ScheduleEvent) selectEvent.getObject();
+        
+        Logger.getLogger(PersonalBean.class.getName()).log(Level.INFO, "event clicked , {0}",event.getStartDate().toString());
+        try {
+            FacesContext.getCurrentInstance().getExternalContext().redirect("event.xhtml");
+        } catch (IOException ex) {
+            Logger.getLogger(PersonalBean.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
+  
 
     public Date getInitialDate() {
         Calendar calendar = Calendar.getInstance();
