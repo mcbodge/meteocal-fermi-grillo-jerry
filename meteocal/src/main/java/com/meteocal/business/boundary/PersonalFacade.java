@@ -14,6 +14,7 @@ import com.meteocal.business.entity.User;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
@@ -75,17 +76,18 @@ public class PersonalFacade {
      */
     public boolean createEvent(String name, String location, Date dateTime, double duration, String invited_users, boolean event_private, String constraint, String description) {
         boolean result = false;
-        Logger.getLogger(PersonalFacade.class.getName()).log(Level.INFO, "---START createEvent PersonalFacade---");
+        Logger.getLogger(PersonalFacade.class.getName()).log(Level.INFO, "START createEvent PersonalFacade ---------------");
 
         //verify mandatory fields (name, dateTime, duration)
         if (name != null && dateTime != null) {
-            Logger.getLogger(PersonalFacade.class.getName()).log(Level.INFO, "---PersonalFacade, name={0} datetime={1}", new Object[]{name, dateTime.toString()});
+            
             //calculate date end
             Date end_date = ev_cm.calcDateEnd(dateTime, duration);
 
             //check constraint
             Integer constr = Integer.parseInt(constraint);
-
+            Logger.getLogger(PersonalFacade.class.getName()).log(Level.INFO, "-- Event name={0} starts={1} ends={2} constr={3} location={4}", new Object[]{name, dateTime.toString(),end_date.toString(), constr.toString(), location});
+            
             //generate invited users list
             List<User> invited_users_list = null;
             if (invited_users != null) {
@@ -96,6 +98,7 @@ public class PersonalFacade {
                     u = getUser(people.nextToken().trim());
                     if (u != null) {
                         invited_users_list.add(u);
+                        Logger.getLogger(PersonalFacade.class.getName()).log(Level.INFO, "-- User {0} added to invited_user_list", u.getUserName());
                     }
                 }
             }
@@ -103,33 +106,34 @@ public class PersonalFacade {
             //save event if it have been created
             User creator = getUser(getLoggedUser());
             Event event = ev_cm.newEvent(creator, name, dateTime, end_date, location, invited_users_list, event_private, constr, description, getNumOverlappingEvents(creator, dateTime, end_date));
-
+            
             if (event != null) {
-                Logger.getLogger(PersonalFacade.class.getName()).log(Level.INFO, "--- EVENT runtime = {0} {1} {2} {3}",
+                Logger.getLogger(PersonalFacade.class.getName()).log(Level.INFO, "-- runtime event created: event_name = {0} start = {1} end = {2} location = {3}",
                         new Object[]{event.getName(), event.getStart(), event.getEnd(), event.getLocation()});
                 //save in db
                 event = em.merge(event);
                 em.flush();
-                Logger.getLogger(PersonalFacade.class.getName()).log(Level.INFO, "---event saved in db. : {0}", event.getEventId());
+                Logger.getLogger(PersonalFacade.class.getName()).log(Level.INFO, "-- runtime event saved into the DB : event_id = {0}", event.getEventId());
+                
                 //no weather condition is given
-                Logger.getLogger(PersonalFacade.class.getName()).log(Level.INFO, "---weather cond. : {0}", constraint);
+                Logger.getLogger(PersonalFacade.class.getName()).log(Level.INFO, "-- weather conditions : {0}", constraint);
 
                 //send invitations
                 if (invited_users_list != null && !invited_users_list.isEmpty()) {
-                    Logger.getLogger(PersonalFacade.class.getName()).log(Level.INFO, "---START send invitations---");
+                    Logger.getLogger(PersonalFacade.class.getName()).log(Level.INFO, "-- call sendInvitations(..) ");
                     ev_m.sendInvitations(invited_users_list, event);
-                    Logger.getLogger(PersonalFacade.class.getName()).log(Level.INFO, "---save invitations--- event:{0}", event.getEventId());
+                    Logger.getLogger(PersonalFacade.class.getName()).log(Level.INFO, "-- try to save invitations for the event");
                     //em.merge(event);
                     for (User u : invited_users_list) {
                         em.flush();
                         em.merge(u);
-                        Logger.getLogger(PersonalFacade.class.getName()).log(Level.INFO, "---user invitation saved---");
+                        Logger.getLogger(PersonalFacade.class.getName()).log(Level.INFO, "-- invitation to {0} stored", u.getUserName());
                     }
-                    Logger.getLogger(PersonalFacade.class.getName()).log(Level.INFO, "---STOP send invitations---");
+                    Logger.getLogger(PersonalFacade.class.getName()).log(Level.INFO, "-- all invitations have been stored");
                 }
             }
         }
-        Logger.getLogger(PersonalFacade.class.getName()).log(Level.INFO, "---STOP createEvent PersonalFacade---");
+        Logger.getLogger(PersonalFacade.class.getName()).log(Level.INFO, "STOP createEvent PersonalFacade ---------------");
         return result;
     }
     
@@ -228,7 +232,6 @@ public class PersonalFacade {
      * It changes the privacy setting of the given user (from public to private
      * or vice versa).
      *
-     * @param u the User we want to modify.
      */
     public void togglePrivacy() {
         User u = getUser(getLoggedUser());
@@ -252,7 +255,6 @@ public class PersonalFacade {
      */
     public ScheduleModel getAllEvents() {
         Logger.getLogger(PersonalFacade.class.getName()).log(Level.INFO, "START getAllEvents() -------------------");
-        
         ScheduleModel eventModel = new DefaultScheduleModel();
         User user = getUser(getLoggedUser());
         Logger.getLogger(PersonalFacade.class.getName()).log(Level.INFO, "-- user = {0}",user.getUserName());
@@ -261,11 +263,13 @@ public class PersonalFacade {
         List<Event> list_events = user.getEvents();
         Logger.getLogger(PersonalFacade.class.getName()).log(Level.INFO, "-- list_events = {0}",list_events.toString());
         Logger.getLogger(PersonalFacade.class.getName()).log(Level.INFO, "-- populate eventModel");
-        for (Event ev : list_events) {
+        
+        for (Iterator<Event> it = list_events.iterator(); it.hasNext();) {
+             Event ev = it.next();
             if (ev.isPublicEvent()) {
                 eventModel.addEvent(new DefaultScheduleEvent(ev.getName(), ev.getStart(), ev.getEnd()));
             } else {
-                eventModel.addEvent(new DefaultScheduleEvent("? " + ev.getName(), ev.getStart(), ev.getEnd()));
+                eventModel.addEvent(new DefaultScheduleEvent(Character.toString((char)254) + ev.getName(), ev.getStart(), ev.getEnd()));
             }
         }
         Logger.getLogger(PersonalFacade.class.getName()).log(Level.INFO, "-- eventModel ready");

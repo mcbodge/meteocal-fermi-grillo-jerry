@@ -22,7 +22,7 @@ public class EventManager {
 
     //*** use the new method w/ List<User> (don't use the collections***).
     /**
-     * Creates a new invitation. 
+     * Creates a new invitation.
      *
      * @param u the receiver.
      * @param e the involved event.
@@ -36,34 +36,33 @@ public class EventManager {
             Logger.getLogger(EventManager.class.getName()).log(Level.INFO, "--user has been already invited");
         } else {
             //check user not already answered
-            if(e.getAttendee().contains(u) || e.getDeclined().contains(u)){
-                    //user has already answered -> do nothing
-                    Logger.getLogger(EventManager.class.getName()).log(Level.INFO, "-- user has already answered");
-                }else{
-                    //OK, create new invitation
-                    Logger.getLogger(EventManager.class.getName()).log(Level.INFO, "-- save invitation (in collection)");
+            if (e.getAttendee().contains(u) || e.getDeclined().contains(u)) {
+                //user has already answered -> do nothing
+                Logger.getLogger(EventManager.class.getName()).log(Level.INFO, "-- user has already answered");
+            } else {
+                //OK, create new invitation
+                Logger.getLogger(EventManager.class.getName()).log(Level.INFO, "-- save invitation (in collection)");
 
-                    //saveInvitation(u, e);
-                    //e.getInvitedUserCollection().add(u);
-                    //u.getEventInvitationCollection().add(e);
-                    
-                    e.addInvitation(u);
+                //saveInvitation(u, e);
+                //e.getInvitedUserCollection().add(u);
+                //u.getEventInvitationCollection().add(e);
+                e.addInvitation(u);
 
-                    Logger.getLogger(EventManager.class.getName()).log(Level.INFO, "-- Load email parts");
-                    //send email notification
-                    String email = u.getEmail();
-                    String subject = "METEOCAL: new invitation";
-                    String body = "Dear " + u.getFirstName() + " " + u.getLastName() + ",\nYou have been invited to the event: " + e.getName() + ".\nCheck your invitation request on Meteocal.\n\nPLEASE DO NOT REPLY TO THIS EMAIL";
-                    EmailManager.getInstance().sendEmail(email, subject, body);
-                    Logger.getLogger(EventManager.class.getName()).log(Level.INFO, "-- invitation email sent");
-                }
-            
+                Logger.getLogger(EventManager.class.getName()).log(Level.INFO, "-- Load email parts");
+                //send email notification
+                String email = u.getEmail();
+                String subject = "METEOCAL: new invitation";
+                String body = "Dear " + u.getFirstName() + " " + u.getLastName() + ",\nYou have been invited to the event: " + e.getName() + ".\nCheck your invitation request on Meteocal.\n\nPLEASE DO NOT REPLY TO THIS EMAIL";
+                EmailManager.getInstance().sendEmail(email, subject, body);
+                Logger.getLogger(EventManager.class.getName()).log(Level.INFO, "-- invitation email sent");
+            }
+
             /*
-            Answer ans = (Answer) em.createNativeQuery("SELECT a FROM Answer a WHERE a.answerPK.userId = :userId AND a.answerPK.eventId = :eventId")
-                    .setParameter("userId", u.getUserId())
-                    .setParameter("eventId", e.getEventId())
-                    .getSingleResult();
-            */
+             Answer ans = (Answer) em.createNativeQuery("SELECT a FROM Answer a WHERE a.answerPK.userId = :userId AND a.answerPK.eventId = :eventId")
+             .setParameter("userId", u.getUserId())
+             .setParameter("eventId", e.getEventId())
+             .getSingleResult();
+             */
         }
         Logger.getLogger(EventManager.class.getName()).log(Level.INFO, "- END invitation ");
     }
@@ -75,17 +74,16 @@ public class EventManager {
      * @param e the involved event.
      */
     /*
-    private void saveInvitation(User u, Event e) {
-        Logger.getLogger(EventManager.class.getName()).log(Level.INFO, "enter in save invitation");
-        e.getInvitedUserCollection().add(u);
-        u.getEventInvitationCollection().add(e);
-        Logger.getLogger(EventManager.class.getName()).log(Level.INFO, "ready to merge");
-        em.merge(e);
-        em.merge(u);
-        Logger.getLogger(EventManager.class.getName()).log(Level.INFO, "merge done");
-    }
-    */
-    
+     private void saveInvitation(User u, Event e) {
+     Logger.getLogger(EventManager.class.getName()).log(Level.INFO, "enter in save invitation");
+     e.getInvitedUserCollection().add(u);
+     u.getEventInvitationCollection().add(e);
+     Logger.getLogger(EventManager.class.getName()).log(Level.INFO, "ready to merge");
+     em.merge(e);
+     em.merge(u);
+     Logger.getLogger(EventManager.class.getName()).log(Level.INFO, "merge done");
+     }
+     */
     /**
      * Creates a new Information, not necessarily related to an event.
      *
@@ -107,7 +105,6 @@ public class EventManager {
         return new Information(e, u, message);
     }
 
-
     /**
      * Remove a previously created invitation.
      *
@@ -115,33 +112,32 @@ public class EventManager {
      * @param e the former-related-event.
      */
     /*
-    public void revokeInvitation(User u, Event e) {
-        //revoke invitation
-        if (e.getInvitedUserCollection().contains(u)) { //TODO ***
-            //revoke invitaiton
-            e.getInvitedUserCollection().remove(u);     //TODO (later)
-            u.getEventInvitationCollection().remove(e);
-            em.merge(e);
-            em.merge(u);
-        } else {
-            //if user have already accepted,  
-            Collection<Answer> ans = e.getAnswerCollection(); //TODO ***
-            for (Answer next : ans) {
-                if (next.getAnswerPK().getUserId() == u.getUserId() && next.getValue()) {
-                    //remove from the event
-                    e.getAnswerCollection().remove(next); //TODO (later)
-                    u.getAnswerCollection().remove(next);
-                    em.merge(e);
-                    em.merge(u);
-                    //and send him an info
-                    newInformation(u, "You have been removed from the event: " + e.getName() + ".");
-                }
-            }
-            //if user declined or he is not in the invited list do nothing.
-        }
-    }
-    */
-
+     public void revokeInvitation(User u, Event e) {
+     //revoke invitation
+     if (e.getInvitedUserCollection().contains(u)) { //TODO ***
+     //revoke invitaiton
+     e.getInvitedUserCollection().remove(u);     //TODO (later)
+     u.getEventInvitationCollection().remove(e);
+     em.merge(e);
+     em.merge(u);
+     } else {
+     //if user have already accepted,  
+     Collection<Answer> ans = e.getAnswerCollection(); //TODO ***
+     for (Answer next : ans) {
+     if (next.getAnswerPK().getUserId() == u.getUserId() && next.getValue()) {
+     //remove from the event
+     e.getAnswerCollection().remove(next); //TODO (later)
+     u.getAnswerCollection().remove(next);
+     em.merge(e);
+     em.merge(u);
+     //and send him an info
+     newInformation(u, "You have been removed from the event: " + e.getName() + ".");
+     }
+     }
+     //if user declined or he is not in the invited list do nothing.
+     }
+     }
+     */
     //TODO added TODOs
     /**
      * Accept a received invitation.
@@ -150,36 +146,35 @@ public class EventManager {
      * @param e the event.
      */
     /*
-    public void acceptInvitation(User u, Event e) {
-        if (e.getInvitedUserCollection().contains(u)) { //TODO ***
-            //Check overlap 
+     public void acceptInvitation(User u, Event e) {
+     if (e.getInvitedUserCollection().contains(u)) { //TODO ***
+     //Check overlap 
 
-            if (verifyConsistency(u, e.getStart(), e.getEnd())) {
-                //no overlap
-                //delete invitation
-                u.getEventInvitationCollection().remove(e); //TODO (later)
-                e.getInvitedUserCollection().remove(u);
-                em.merge(e);
-                em.merge(u);
-                //add answer
-                Answer answer = new Answer(e.getEventId(), u.getUserId(), true);
-                em.persist(answer);
-                //create info for the creator
-                newInformation(e.getCreator(), u.getUserName() + " is attending the event: " + e.getName() + ".", e);
-                //send email notification for the creator
-                String subject = "METEOCAL: " + e.getName() + ", new attender";
-                String body = "Dear " + e.getCreator().getFirstName() + " " + e.getCreator().getLastName() + ",\n" + u.getUserName() + " is attending the event: " + e.getName() + ".\n\nPLEASE DO NOT REPLY TO THIS EMAIL";
-                EmailManager.getInstance().sendEmail(u.getEmail(), subject, body);
-            } else {
-                //overlap
-                declineInvitation(u, e);
-                newInformation(u, "The event: " + e.getName() + " overlaps your other events.", e);
-            }
-        }
-        //if the user have not been invited 
-    }
-    */
-    
+     if (verifyConsistency(u, e.getStart(), e.getEnd())) {
+     //no overlap
+     //delete invitation
+     u.getEventInvitationCollection().remove(e); //TODO (later)
+     e.getInvitedUserCollection().remove(u);
+     em.merge(e);
+     em.merge(u);
+     //add answer
+     Answer answer = new Answer(e.getEventId(), u.getUserId(), true);
+     em.persist(answer);
+     //create info for the creator
+     newInformation(e.getCreator(), u.getUserName() + " is attending the event: " + e.getName() + ".", e);
+     //send email notification for the creator
+     String subject = "METEOCAL: " + e.getName() + ", new attender";
+     String body = "Dear " + e.getCreator().getFirstName() + " " + e.getCreator().getLastName() + ",\n" + u.getUserName() + " is attending the event: " + e.getName() + ".\n\nPLEASE DO NOT REPLY TO THIS EMAIL";
+     EmailManager.getInstance().sendEmail(u.getEmail(), subject, body);
+     } else {
+     //overlap
+     declineInvitation(u, e);
+     newInformation(u, "The event: " + e.getName() + " overlaps your other events.", e);
+     }
+     }
+     //if the user have not been invited 
+     }
+     */
     //TODO added TODOs
     /**
      * Decline a received invitation.
@@ -188,18 +183,17 @@ public class EventManager {
      * @param e
      */
     /*
-    public void declineInvitation(User u, Event e) {
-        if (e.getInvitedUserCollection().contains(u)) { //TODO ***
-            u.getEventInvitationCollection().remove(e); //TODO (later)
-            e.getInvitedUserCollection().remove(u);
-            em.merge(e);
-            em.merge(u);
-            Answer answer = new Answer(e.getEventId(), u.getUserId(), false);
-            em.persist(answer);
-        }
-    }
-    */
-    
+     public void declineInvitation(User u, Event e) {
+     if (e.getInvitedUserCollection().contains(u)) { //TODO ***
+     u.getEventInvitationCollection().remove(e); //TODO (later)
+     e.getInvitedUserCollection().remove(u);
+     em.merge(e);
+     em.merge(u);
+     Answer answer = new Answer(e.getEventId(), u.getUserId(), false);
+     em.persist(answer);
+     }
+     }
+     */
     //*any other condition*
     /**
      * Given an event it says if it has adverse weather conditions. If there are
@@ -217,10 +211,10 @@ public class EventManager {
 
     //TODO jDocs
     /**
-     * 
+     *
      * @param wc
      * @param constraint
-     * @return 
+     * @return
      */
     private boolean canBeDone(WeatherCondition wc, Integer constraint) {
         boolean out = true;
@@ -264,7 +258,7 @@ public class EventManager {
      */
     public void sendInvitations(List<User> ul, Event event) {
         //richiamato anche quando modifichi...quindi prima check se sono già stati invitati.
-               
+
         for (User user : ul) {
             newInvitation(user, event);
         }
@@ -284,18 +278,15 @@ public class EventManager {
      */
     public boolean verifyConsistency(User creator, Date start, Date end, int numOverlappingEvents) {
         boolean result = false;
-        Logger.getLogger(EventManager.class.getName()).log(Level.INFO, "--- START Verify consistency ");
-        
-        //check if end is > then start
-        if (start != null && end != null && !end.before(start) && numOverlappingEvents == 0 
-                && start.after(Calendar.getInstance().getTime())) {
+        Logger.getLogger(EventManager.class.getName()).log(Level.INFO, "------ START Verify consistency in EventManager ---------- ");
 
+        //check if end is > then start
+        if (start != null && end != null && !end.before(start) && numOverlappingEvents == 0 && start.after(Calendar.getInstance().getTime())) {
             result = true;
-            
         }
-        
-        Logger.getLogger(EventManager.class.getName()).log(Level.INFO, "- result: {0}", result);
-        Logger.getLogger(EventManager.class.getName()).log(Level.INFO, "--- END Verify consistency ");
+
+        Logger.getLogger(EventManager.class.getName()).log(Level.INFO, "-------- result: {0}", result);
+        Logger.getLogger(EventManager.class.getName()).log(Level.INFO, "------ END Verify consistency in EventManager ---------- ");
         return result;
     }
 

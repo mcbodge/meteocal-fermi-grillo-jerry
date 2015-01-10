@@ -45,30 +45,22 @@ public class PersonalBean implements Serializable {
     HomeFacade hf;
 
     private Date dateTime = new Date();
-    private String eventName, eventLocation, people, descr;
-    private String constraint;
+    private String eventName, eventLocation, people, descr, constraint;
     private double eventDuration = 0.5;
     private boolean event_private;
 
-    private String country;
-    private String city;
-    private String province;
-
-    private String location;
+    private String country, city, province, location;
     private Integer geoname = null;
 
-    private List<String> countries;
-    private List<String> cities;
-    private List<String> provinces;
-
+    private List<String> countries, cities, provinces;
     private String text = "";
 
     private String calendarPrivacy;
 
     private ScheduleModel lazyEventModel;
-    
+
     private ScheduleEvent event;
- 
+
     @PostConstruct
     public void init() {
 
@@ -77,13 +69,12 @@ public class PersonalBean implements Serializable {
 
         //get all events
         //lazyEventModel = pf.getAllEvents();
-                lazyEventModel = new LazyScheduleModel() {
-             
+        lazyEventModel = new LazyScheduleModel() {
+
             @Override
             public void loadEvents(Date start, Date end) {
                 lazyEventModel = pf.getEvents(start, end);
             }
-           
 
             //private Date getRandomDate(Date start) {
             //    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -91,18 +82,16 @@ public class PersonalBean implements Serializable {
         };
 
     }
-    
+
     public Date getRandomDate(Date base) {
         Calendar date = Calendar.getInstance();
         date.setTime(base);
-        date.add(Calendar.DATE, ((int) (Math.random()*30)) + 1);    //set random day of month
-         
+        date.add(Calendar.DATE, ((int) (Math.random() * 30)) + 1);    //set random day of month
+
         return date.getTime();
     }
-     
 
-
-    //<editor-fold defaultstate="state" desc="GETTERS AND SETTERS">
+    //<editor-fold defaultstate="collapsed" desc="GETTERS AND SETTERS">
     public String getPeople() {
         return people;
     }
@@ -166,7 +155,7 @@ public class PersonalBean implements Serializable {
     public void setEvent_private(boolean event_private) {
         this.event_private = event_private;
     }
-    
+
     public ScheduleModel getLazyEventModel() {
         return lazyEventModel;
     }
@@ -221,6 +210,7 @@ public class PersonalBean implements Serializable {
 
         return cities;
     }
+
     public String getLocation() {
         return location;
     }
@@ -236,18 +226,16 @@ public class PersonalBean implements Serializable {
     public void setGeoname(Integer geocode) {
         this.geoname = geocode;
     }
-    
+
     public String getText() {
         return text;
     }
-    
-    //</editor-fold>
 
+    //</editor-fold>
+    
     public PersonalBean() {
     }
-    
 
-    
     public void onCountryChange() {
         if (country != null && !country.equals("")) {
             provinces = pf.getProvinces(country);
@@ -290,13 +278,14 @@ public class PersonalBean implements Serializable {
     public String getLoggedUser() {
         return pf.getLoggedUser();
     }
-    
+
     public void createEvent() {
         if (geoname == null) {
-            pf.createEvent(eventName, eventLocation, dateTime, eventDuration, people, !event_private, constraint, descr);
+            pf.createEvent(eventName, text.trim(), dateTime, eventDuration, people, !event_private, constraint, descr);
         } else {
             //TODO Event w/ Integer geoname
         }
+        init();
     }
 
     public void setText(String text) {
@@ -338,22 +327,22 @@ public class PersonalBean implements Serializable {
      }
      
 
-    public void printHello() {
-        try {
-            ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-            HttpServletResponse response = (HttpServletResponse) externalContext.getResponse();
-            PrintWriter pw = response.getWriter();
-            pw.write("Hello");
-            FacesContext.getCurrentInstance().responseComplete();
-        } catch (IOException e) {
-            FacesContext.getCurrentInstance().addMessage(
-                    "helloWorldButtonId",
-                    new FacesMessage("Error:" + e.getMessage())
-            );
-        }
-    }
-    */
-    
+     public void printHello() {
+     try {
+     ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+     HttpServletResponse response = (HttpServletResponse) externalContext.getResponse();
+     PrintWriter pw = response.getWriter();
+     pw.write("Hello");
+     FacesContext.getCurrentInstance().responseComplete();
+     } catch (IOException e) {
+     FacesContext.getCurrentInstance().addMessage(
+     "helloWorldButtonId",
+     new FacesMessage("Error:" + e.getMessage())
+     );
+     }
+     }
+     */
+
     public String getCalendarString() {
         return pf.getCalendarString();
     }
@@ -366,168 +355,139 @@ public class PersonalBean implements Serializable {
     public String getCalendar() {
         return pf.startDownload();
     }
-    
-    public String cannotCreate(){
-        String out="true";
-        if(((location != null && location.length()>3) || geoname != null) && dateTime != null)
-            out="false";
+
+    public String cannotCreate() {
+        String out = "true";
+        if (((location != null && location.length() > 3) || geoname != null) && dateTime != null) {
+            out = "false";
+        }
         return out;
     }
-    
+
     public void onEventSelect(SelectEvent selectEvent) {
         event = (ScheduleEvent) selectEvent.getObject();
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-         
+
     public Date getInitialDate() {
         Calendar calendar = Calendar.getInstance();
         calendar.set(calendar.get(Calendar.YEAR), Calendar.FEBRUARY, calendar.get(Calendar.DATE), 0, 0, 0);
-         
+
         return calendar.getTime();
     }
-     
- 
+
     private Calendar today() {
         Calendar calendar = Calendar.getInstance();
         calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DATE), 0, 0, 0);
- 
+
         return calendar;
     }
-     
+
     private Date previousDay8Pm() {
         Calendar t = (Calendar) today().clone();
         t.set(Calendar.AM_PM, Calendar.PM);
         t.set(Calendar.DATE, t.get(Calendar.DATE) - 1);
         t.set(Calendar.HOUR, 8);
-         
+
         return t.getTime();
     }
-     
+
     private Date previousDay11Pm() {
         Calendar t = (Calendar) today().clone();
         t.set(Calendar.AM_PM, Calendar.PM);
         t.set(Calendar.DATE, t.get(Calendar.DATE) - 1);
         t.set(Calendar.HOUR, 11);
-         
+
         return t.getTime();
     }
-     
+
     private Date today1Pm() {
         Calendar t = (Calendar) today().clone();
         t.set(Calendar.AM_PM, Calendar.PM);
         t.set(Calendar.HOUR, 1);
-         
+
         return t.getTime();
     }
-     
+
     private Date theDayAfter3Pm() {
         Calendar t = (Calendar) today().clone();
-        t.set(Calendar.DATE, t.get(Calendar.DATE) + 2);     
+        t.set(Calendar.DATE, t.get(Calendar.DATE) + 2);
         t.set(Calendar.AM_PM, Calendar.PM);
         t.set(Calendar.HOUR, 3);
-         
+
         return t.getTime();
     }
- 
+
     private Date today6Pm() {
-        Calendar t = (Calendar) today().clone(); 
+        Calendar t = (Calendar) today().clone();
         t.set(Calendar.AM_PM, Calendar.PM);
         t.set(Calendar.HOUR, 6);
-         
+
         return t.getTime();
     }
-     
+
     private Date nextDay9Am() {
         Calendar t = (Calendar) today().clone();
         t.set(Calendar.AM_PM, Calendar.AM);
         t.set(Calendar.DATE, t.get(Calendar.DATE) + 1);
         t.set(Calendar.HOUR, 9);
-         
+
         return t.getTime();
     }
-     
+
     private Date nextDay11Am() {
         Calendar t = (Calendar) today().clone();
         t.set(Calendar.AM_PM, Calendar.AM);
         t.set(Calendar.DATE, t.get(Calendar.DATE) + 1);
         t.set(Calendar.HOUR, 11);
-         
+
         return t.getTime();
     }
-     
+
     private Date fourDaysLater3pm() {
-        Calendar t = (Calendar) today().clone(); 
+        Calendar t = (Calendar) today().clone();
         t.set(Calendar.AM_PM, Calendar.PM);
         t.set(Calendar.DATE, t.get(Calendar.DATE) + 4);
         t.set(Calendar.HOUR, 3);
-         
+
         return t.getTime();
     }
-     
+
     public ScheduleEvent getEvent() {
         return event;
     }
- 
+
     public void setEvent(ScheduleEvent event) {
         this.event = event;
     }
-     
+
     public void addEvent(ActionEvent actionEvent) {
-        if(event.getId() == null)
+        if (event.getId() == null) {
             lazyEventModel.addEvent(event);
-        else
+        } else {
             lazyEventModel.updateEvent(event);
-         
+        }
+
         event = new DefaultScheduleEvent();
     }
-     
-     
+
     public void onDateSelect(SelectEvent selectEvent) {
         event = new DefaultScheduleEvent("", (Date) selectEvent.getObject(), (Date) selectEvent.getObject());
     }
-     
+
     public void onEventMove(ScheduleEntryMoveEvent event) {
         FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Event moved", "Day delta:" + event.getDayDelta() + ", Minute delta:" + event.getMinuteDelta());
-         
+
         addMessage(message);
     }
-     
+
     public void onEventResize(ScheduleEntryResizeEvent event) {
         FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Event resized", "Day delta:" + event.getDayDelta() + ", Minute delta:" + event.getMinuteDelta());
-         
+
         addMessage(message);
     }
-     
+
     private void addMessage(FacesMessage message) {
         FacesContext.getCurrentInstance().addMessage(null, message);
     }
-
-    
-   
-
-
 
 }
