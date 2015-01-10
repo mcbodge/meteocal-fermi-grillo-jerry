@@ -272,5 +272,28 @@ public class PersonalFacade {
         Logger.getLogger(PersonalFacade.class.getName()).log(Level.INFO, "STOP getAllEvents() -------------------");
         return eventModel;
     }
+    
+    public ScheduleModel getEvents(Date from, Date to){
+        Logger.getLogger(PersonalFacade.class.getName()).log(Level.INFO, "START getAllEvents() -------------------");
+        
+        ScheduleModel eventModel = new DefaultScheduleModel();
+        User user = getUser(getLoggedUser());
+        Logger.getLogger(PersonalFacade.class.getName()).log(Level.INFO, "-- user = {0}",user.getUserName());
+        
+        Logger.getLogger(PersonalFacade.class.getName()).log(Level.INFO, "-- call User.getEvents");
+        List<Event> list_events = user.getEvents(from, to);
+        Logger.getLogger(PersonalFacade.class.getName()).log(Level.INFO, "-- list_events = {0}",list_events.toString());
+        Logger.getLogger(PersonalFacade.class.getName()).log(Level.INFO, "-- populate eventModel");
+        for (Event ev : list_events) {
+            if (ev.isPublicEvent()) {
+                eventModel.addEvent(new DefaultScheduleEvent(ev.getName(), ev.getStart(), ev.getEnd()));
+            } else {
+                eventModel.addEvent(new DefaultScheduleEvent("? " + ev.getName(), ev.getStart(), ev.getEnd()));
+            }
+        }
+        Logger.getLogger(PersonalFacade.class.getName()).log(Level.INFO, "-- eventModel ready");
+        Logger.getLogger(PersonalFacade.class.getName()).log(Level.INFO, "STOP getAllEvents() -------------------");
+        return eventModel;
+    }
 
 }
