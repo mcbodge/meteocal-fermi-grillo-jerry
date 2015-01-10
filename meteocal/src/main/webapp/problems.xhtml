@@ -2,41 +2,39 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"   
-      xmlns:p="http://primefaces.org/ui" >
+      xmlns:p="http://primefaces.org/ui" 
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
     <h:head>
         <title>Why are you having trouble signing in?</title>
     </h:head>
     <h:body style="color: #3366ff; font-family: sans-serif">
         <h1>Why are you having trouble signing in?</h1>
-        <br/><br/>
-        <h:form>
-            <!--
-            <h:panelGrid id="grid2" columns="2" cellpadding="5">
-                <p:messages autoUpdate="true" />
-                <h:outputLabel for="name" value="Name:" style="font-weight:bold"/>                    
-                <p:inputText id="name" value="" required="true" label="Name"/>
-                <p:message for="name" />
-                <h:outputText value="" />
 
-                <h:outputLabel for="number" value="Number:" style="font-weight:bold"/>                    
-                <p:inputText id="number" value="" label="Number">
-                    <f:validateDoubleRange minimum="5" maximum="8" />
-                </p:inputText>
-                <p:message for="number" />
-                <h:outputText value="" />
+        
+        <!--
+        
+
+         
+
+            <h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
+                <p:outputLabel for="city" value="City:" />
+                <p:selectOneRadio id="city" value="{problemsBean.city}"  layout="grid" columns="3">
+                    <f:selectItems value="{problemsBean.cities}" var="c" itemLabel="#{city}" itemValue="#{city}"/>
+                </p:selectOneRadio>
             </h:panelGrid>
-            -->
-            <h:outputLabel value="My e-mail" style="font-weight:bold; margin-right: 5em"/>   
-            <p:inputText id="name" value="#{problemsBean.email}" required="true" label="Name" size="20"/> <br/><br/>
+
             
-            <h:commandButton value="forgot username" action="#{problemsBean.forgotMyUserName()}"/>
-            <h:commandButton value="forgot password" action="#{problemsBean.forgotMyPassword()}" /> 
+            <h:outputLabel value="My e-mail" style="font-weight:bold; margin-right: 5em"/>   
+            <p:inputText id="name" value="{problemsBean.email}" required="true" label="Name" size="20"/> <br/><br/>
+            
+            <h:commandButton value="forgot username" action="{problemsBean.forgotMyUserName()}"/>
+            <h:commandButton value="forgot password" action="{problemsBean.forgotMyPassword()}" /> 
         </h:form>
     </h:body>
 </html>
 
 
-<!--
+
 
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -50,28 +48,73 @@
     <h:body style="color: #3366ff">
         
        
-        <h1>Why are you having trouble signing in?</h1>
+        <h1>Why are you having trouble signing in?</h1>-->
         
         <h:form>
                                                 
-                <h:panelGrid id="problemgrid1" columns="1" cellpadding="5">
-                    <p:selectOneRadio id="problem" value="#{problemBean.loginProblem}" layout="grid" columns="1">
-                        <f:selectItem itemLabel="I forgot my password" itemValue="password" />
-                        <f:selectItem itemLabel="I don't remember my username" itemValue="username" />
+                <!--<h:panelGrid id="problemgrid1" columns="1" cellpadding="5">
+                    <p:selectOneRadio id="problem" value="{problemsBean.loginProblem}" layout="grid" columns="1">
+                        <p:radioButton 
+                            <f:selectItem itemLabel="I forgot my password" itemValue="{problemsBean.forgotMyPassword}" />
+                            <f:selectItem itemLabel="I don't remember my username" itemValue="{problemsBean.forgotMyUserName}" />
+                        </p:radioButton>
                     </p:selectOneRadio>
                     
                     <h:outputLabel for="email" value="Please enter Personal email:" />                    
-                    <p:inputText id="email" value="#{problemBean.email}" validatorMessage="An e-mail address is required" size="35">
-                        <f:validateRegex pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+                    <p:inputText id="email" value="{problemsBean.email}" validatorMessage="An e-mail address is required" size="35">
+                        <f:validateRegex pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$"  />
                     </p:inputText>
                     <p:message for="email" />
-                    
-                    <p:commandButton id="submitProblem" value="Submit" action="#{problemBean.submitProblem()}" update="problemgrid1" />
-                </h:panelGrid>
-            
-            </h:form>
+
+                    <p:commandButton id="submitProblem" value="Submit" action="{problemsBean.submitProblem}" oncomplete="PF('dlg').show()"/>
+
+                    <p:dialog modal="true" resizable="false" widgetVar="dlg" header="Values" showEffect="clip">
+                        <p:panelGrid columns="1" id="display" columnClasses="label,value">
+                            <h:outputText value="If the provided data is correct, you will receive the requested info :)" />
+                            <h:outputText value="Provided email: {problemsBean.email}" />
+
+                        </p:panelGrid>
+                    </p:dialog>
+
+            </h:panelGrid>-->
+
+                <p:outputPanel id="customPanel" style="margin-bottom:10px">
+                    <p:selectOneRadio id="customRadio" value="#{problemsBean.loginProblem}" layout="custom">
+                        <f:selectItem itemLabel="I forgot my password." itemValue="true" />
+                        <f:selectItem itemLabel="I don't remember my user name." itemValue="false" />
+                    </p:selectOneRadio>
+
+                    <h:panelGrid columns="2" cellpadding="5">
+                        <p:radioButton id="opt1" for="customRadio" itemIndex="0" />
+                        <h:outputLabel for="opt1" value="I forgot my password." />
+
+                        <p:radioButton id="opt2" for="customRadio" itemIndex="1" />
+                        <h:outputLabel for="opt2" value="I don't remember my user name." />
+                    </h:panelGrid>
+                        
+                    <h:panelGrid columns="2" cellpadding="5">    
+                        <h:outputLabel for="email" value="Please enter your email:" />                    
+                        <p:inputText id="email" value="#{problemsBean.email}" size="35"/>
+                            <!--<f:validateRegex pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$"  />
+                        </p:inputText>-->
+                        <p:message for="email" />
+
+                    </h:panelGrid>
+                </p:outputPanel>
+
+                <p:commandButton value="Submit" update="display" icon="ui-icon-check" action="#{problemsBean.submitProblem()}" oncomplete="PF('dlg').show()"/>
+
+                <p:dialog modal="true" resizable="false" widgetVar="dlg" header="Done :)" showEffect="clip">
+                    <h:panelGrid columns="1" id="display" columnClasses="label,value" style="text-align: center">
+                        <h:outputText value="If the provided email (#{problemsBean.email}) is correct," />
+                        <h:outputText value="you will receive #{problemsBean.message}" />
+                        <p:commandButton id="backToLogin" value="Thanks" action="home" />
+                    </h:panelGrid>
+                </p:dialog>
+
+
+        </h:form>
     </h:body>
 </html>
 
 
--->
