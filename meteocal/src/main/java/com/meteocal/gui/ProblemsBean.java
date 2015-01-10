@@ -22,7 +22,15 @@ public class ProblemsBean implements Serializable {
     @EJB
     ProblemsFacade pf;
 
-    private String email, loginProblem;
+    private String email; 
+            
+    private boolean loginProblem;
+    
+    private String message="nothing ¯\\(°_o)/¯";
+
+    public String getMessage() {
+        return message;
+    }
 
     //<editor-fold defaultstate="collapsed" desc="GETTERS AND SETTERS">
     public String getEmail() {
@@ -33,37 +41,48 @@ public class ProblemsBean implements Serializable {
         this.email = email;
     }
 
-    public String getLoginProblem() {
+    public boolean getLoginProblem() {
         return loginProblem;
     }
 
-    public void setLoginProblem(String loginProblem) {
+    public void setLoginProblem(boolean loginProblem) {
         this.loginProblem = loginProblem;
     }
     //</editor-fold>
 
     public ProblemsBean() {
     }
-
-    //TODO jDoc
-    /**
-     * 
-     * @return 
-     */
-    public String forgotMyPassword() {
-        pf.forgotPassword(email);
-        return "home?faces-redirect=true";
+    
+    public String message() {
+        return this.message;
+    }
+    
+    
+    
+    public void submitProblem() {
+        if (this.loginProblem) {
+            message = "your new password.";
+            pf.forgotPassword(email);
+        } else {
+            message = "your user name.";
+            pf.forgotUsername(email);
+        }
     }
 
-    //TODO jDoc
-    /**
-     * 
-     * @return 
-     */
-    public String forgotMyUserName() {
-        pf.forgotUsername(email);
-        return "home?faces-redirect=true";
-    }
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
 }
 
