@@ -128,7 +128,9 @@
         <h:form>
             <p:growl id="messages" showDetail="true" />
             <h:panelGrid columnClasses="value">
-                <p:schedule draggable="false" resizable="false" value="#{personalBean.lazyEventModel}" />
+                <p:schedule draggable="false" resizable="false" value="#{personalBean.lazyEventModel}" rightHeaderTemplate="month, agendaDay">
+                            <p:ajax event="eventSelect" listener="#{personalBean.onEventSelect}" update="" oncomplete="event" />
+                </p:schedule>
             </h:panelGrid>
         </h:form>
         

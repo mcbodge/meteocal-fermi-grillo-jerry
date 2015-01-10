@@ -11,6 +11,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
@@ -309,6 +310,31 @@ public class User implements Serializable {
             if (ans.getUser().equals(this) && ans.getValue()) {
                 Logger.getLogger(User.class.getName()).log(Level.INFO, "----| Answer added");
                 list.add(ans.getEvent());
+            }
+            Logger.getLogger(User.class.getName()).log(Level.INFO, "----| Answer NOT added");
+        }
+        Logger.getLogger(User.class.getName()).log(Level.INFO, "---- STOP User.getEvents() -----------");
+        return list;
+    }
+    
+    public List<Event> getEvents(Date from, Date to){
+        Logger.getLogger(User.class.getName()).log(Level.INFO, "---- START User.getEvents() -----------");
+        
+        List<Event> list = new ArrayList<>();
+        for (Iterator<Event> it = this.eventCreatedCollection.iterator(); it.hasNext();) {
+            Event e = it.next();
+            if(from.before(e.getStart()) && to.after(e.getEnd())){
+                list.add(e);
+            }
+        }
+        Logger.getLogger(User.class.getName()).log(Level.INFO, "----| list = {0}", list.toString());
+        for (Iterator<Answer> it = this.answerCollection.iterator(); it.hasNext();) {
+            Answer ans = it.next();
+            Event e = ans.getEvent();
+            Logger.getLogger(User.class.getName()).log(Level.INFO, "----| Answer : event_id={0} user_id={1} value={0}}", new Object[]{ans.getEvent().getEventId().toString(), ans.getUser().getUserName(), ans.getValue()});
+            if (ans.getUser().equals(this) && ans.getValue() && from.before(e.getStart()) && to.after(e.getEnd())) {
+                Logger.getLogger(User.class.getName()).log(Level.INFO, "----| Answer added");
+                list.add(e);
             }
             Logger.getLogger(User.class.getName()).log(Level.INFO, "----| Answer NOT added");
         }
