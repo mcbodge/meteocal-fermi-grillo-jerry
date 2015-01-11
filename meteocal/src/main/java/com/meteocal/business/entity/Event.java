@@ -300,13 +300,21 @@ public class Event implements Serializable {
     // <editor-fold desc="Entity properties (Event)">
     //get the constraint code for this event from the Weather table. Null if it doesn't exist
     public Integer getConstraint() {
-        return this.weather.getConstraint();
+        
+        Integer out=null;
+        if (weather!= null)
+            out=weather.getConstraint();
+        return out;
 
     }
 
     //get the weather code for this event from the Weather table
     public Integer getForecast() {
-        return this.weather.getForecast();
+        
+        Integer out=null;
+        if (weather != null)
+            out=weather.getConstraint();
+        return out;
 
     }
 
@@ -363,6 +371,20 @@ public class Event implements Serializable {
         
                     //u.getEventInvitationCollection().add(e);
     }
+    
+    public List<User> getRelated(){
+        List<User> list = new ArrayList<>();
+        list.add(creator);
+        for (Iterator<Answer> it = this.answerCollection.iterator(); it.hasNext();) {
+            Answer ans = it.next();
+                list.add(ans.getUser());
+        }
+        for (Iterator<User> it = this.invitedUserCollection.iterator(); it.hasNext();) {
+            User u = it.next();
+            list.add(u);
+        }
+        return list;
+    }
 
     // </editor-fold>
     // <editor-fold desc="Entity properties (Invitation notification)">
@@ -373,4 +395,6 @@ public class Event implements Serializable {
     
      } */
     // </editor-fold>
+    
+    
 }

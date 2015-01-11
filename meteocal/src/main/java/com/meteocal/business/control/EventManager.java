@@ -275,5 +275,19 @@ public class EventManager {
         Logger.getLogger(EventManager.class.getName()).log(Level.INFO, "------ END Verify consistency in EventManager ---------- ");
         return result;
     }
+    
+    
+    /**
+     * The user can see the event's details
+     * @param event
+     * @param user
+     * @return 
+     */
+    public boolean showable(Event event, User user){
+        boolean out = false;
+        if(event.isPublicEvent() || event.getRelated().contains(user))
+            out = true;
+        return out;
+    }
 
 }

@@ -285,7 +285,7 @@ public class User implements Serializable {
 
     @Override
     public String toString() {
-        return "com.meteocal.business.entity.User[ userId=" + userId + " ]";
+        return firstName + " " + lastName + " (" + userName + ")";
     }
     
     // <editor-fold desc="Entity properties (User)">
