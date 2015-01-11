@@ -133,8 +133,9 @@
 
             <h:panelGrid columnClasses="value">
 
-                <p:schedule id="schedule" rendered="true" draggable="false" resizable="false"  value="#{personalBean.lazyEventModel}" rightHeaderTemplate="month, agendaDay" timeFormat="HH:mm{ - HH:mm} \n" ignoreTimezone="false" > 
-                    <p:ajax event="eventSelect"  listener="#{personalBean.onEventSelect}" />
+                <p:schedule id="schedule" rendered="true" draggable="false" resizable="false" value="#{personalBean.lazyEventModel}" rightHeaderTemplate="month, agendaDay" timeFormat="HH:mm{ - HH:mm} \n" ignoreTimezone="false" > 
+                    
+                    <p:ajax event="eventSelect" listener="#{personalBean.onEventSelect}" />
                 </p:schedule>
 
             </h:panelGrid>

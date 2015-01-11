@@ -14,7 +14,9 @@ import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import org.primefaces.model.LazyScheduleModel;
 import org.primefaces.model.ScheduleEvent;
@@ -36,6 +38,17 @@ public class PersonalBean implements Serializable {
     PersonalFacade pf;
     @EJB
     HomeFacade hf;
+    
+    /*    @ManagedProperty(value="#{eventBean}")
+    private EventBean eventBean;
+    
+    public EventBean getEventBean() {
+    return eventBean;
+    }
+    
+    public void setEventBean(EventBean eventBean) {
+    this.eventBean = eventBean;
+    }*/
       
     private static final long serialVersionUID = 1L;
 
@@ -55,6 +68,14 @@ public class PersonalBean implements Serializable {
     private ScheduleModel lazyEventModel;
 
     private ScheduleEvent event;
+
+    public ScheduleEvent getEvent() {
+        return event;
+    }
+
+    public void setEvent(ScheduleEvent event) {
+        this.event = event;
+    }
 
     @PostConstruct
     public void init() {
@@ -348,13 +369,15 @@ public class PersonalBean implements Serializable {
     
     public void onEventSelect(SelectEvent selectEvent) {
         event = (ScheduleEvent) selectEvent.getObject();
-        
-        Logger.getLogger(PersonalBean.class.getName()).log(Level.INFO, "event clicked , {0}",event.getStartDate().toString());
+        ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+        ec.getSessionMap().put("eventId", event.getStartDate().toString() + " - " + event.getTitle() + " (" + event.getId() + ") ");
+        //TODO bind the ID of the original event (maybe we should to override getId() )
         try {
-            FacesContext.getCurrentInstance().getExternalContext().redirect("event.xhtml");
+            ec.redirect("event.xhtml?faces-includeViewParams=true");
         } catch (IOException ex) {
             Logger.getLogger(PersonalBean.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
     }
   
 }
