@@ -66,6 +66,7 @@ public class PersonalFacade {
      *
      * @param name
      * @param location
+     * @param geoname
      * @param dateTime
      * @param duration
      * @param invited_users
@@ -173,67 +174,50 @@ public class PersonalFacade {
             return null;
         }
     }
+    
 
+    //TODO fix the query 
     private int getNumOverlappingEvents(User creator, Date start, Date end) {
-        em.flush();
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         int count = 0;
         try {
-            String query = "SELECT COUNT(e.event_id) FROM events e LEFT JOIN answers a ON e.event_id = a.event_id "
-                    + "WHERE (((e.creator = ?) OR ( a.answer_value = 1 AND a.user_id = ?)) "
-                        + "AND("
-                            + "(e.start_date <= ? AND e.end_date >= ? ) OR"   
-                            + "(e.start_date >= ? AND e.end_date >= ? AND e.start_date < ? ) OR"
-                            + "(e.start_date <= ? AND e.end_date <= ? AND e.end_date > ? ) OR"
-                            + "(e.start_date > ? AND e.end_date < ? ) "
-                        + ")"
-                    + ")" ;
-            Long l = (Long) em.createNativeQuery(query)
+            Long l = (Long) em.createNativeQuery("SELECT COUNT(*) FROM events e INNER JOIN answers a ON e.event_id = a.event_id "
+                    + "WHERE ((e.creator = ?) OR ( a.answer_value = 1 AND a.user_id = ?)) AND (e.start_date <= '?' AND e.end_date >= '?')")
                     .setParameter(1, creator.getUserId())
                     .setParameter(2, creator.getUserId())
                     .setParameter(3, formatter.format(start))
                     .setParameter(4, formatter.format(end))
-                    .setParameter(5, formatter.format(start))
-                    .setParameter(6, formatter.format(end))
-                    .setParameter(7, formatter.format(end))
-                    .setParameter(8, formatter.format(start))
-                    .setParameter(9, formatter.format(end))
-                    .setParameter(10, formatter.format(start))
-                    .setParameter(11, formatter.format(start))
-                    .setParameter(12, formatter.format(end))
                     .getSingleResult();
-            Logger.getLogger(PersonalFacade.class.getName()).log(Level.INFO, "-- query = {0}", query);
-            Logger.getLogger(PersonalFacade.class.getName()).log(Level.INFO, "-- (long)num overlapping events = {0}", l );
             count = l.intValue();
         } catch (NoResultException ex) {
 
         }
-        Logger.getLogger(PersonalFacade.class.getName()).log(Level.INFO, "-- num overlapping events = {0}", count );
         return count;
     }
 
+    
+
     /**
      * Returns a list of all the possible countries
-     *
      * @return a lost of strings of distinct available countries
      */
     public List<String> getCountries() {
         return em.createNativeQuery("SELECT DISTINCT country FROM locations").getResultList();
     }
+    
 
     /**
      * Returns a list of all the capable provinces
-     *
      * @param c the country to be filtered
      * @return a list of provinces that are in the given country
      */
     public List<String> getProvinces(String c) {
         return em.createNativeQuery("SELECT DISTINCT admin2 FROM locations l WHERE l.country = ? ORDER BY admin2").setParameter(1, c).getResultList();
     }
+    
 
     /**
      * Returns a list of all the capable cities
-     *
      * @param c the country to filter the province
      * @param p the province to be filtered
      * @return a list of cities that are in the given province
@@ -242,9 +226,9 @@ public class PersonalFacade {
         return em.createNativeQuery("SELECT name FROM locations l WHERE l.country = ? AND l.admin2 = ? ORDER BY name").setParameter(1, c).setParameter(2, p).getResultList();
     }
 
+    
     /**
      * Returns the location id
-     *
      * @param c the country
      * @param p the province
      * @param n the city
@@ -254,11 +238,10 @@ public class PersonalFacade {
         return (Integer) em.createNativeQuery("SELECT geonameid FROM locations l WHERE l.country = ? AND l.admin2 = ? AND l.name = ?").setParameter(1, c).setParameter(2, p).setParameter(3, n).getSingleResult();
     }
 
+    
     /**
      * Says how we can change the calendar status
-     *
-     * @return "Set calendar as public" id the calendar is private -- "Set
-     * calendar as private" otherwise
+     * @return "Set calendar as public" id the calendar is private -- "Set calendar as private" otherwise
      */
     public String getCalendarString() {
         String out = "Set calendar as public";
@@ -268,6 +251,7 @@ public class PersonalFacade {
         return out;
     }
 
+    
     /**
      * It changes the privacy setting of the given user (from public to private
      * or vice versa).
@@ -277,65 +261,57 @@ public class PersonalFacade {
         User u = getUser(getLoggedUser());
         u.setPublicCalendar(!u.isPublicCalendar());
     }
+    
 
     /**
      * Start the download of the user's calendar
-     *
      * @return a link to the file to be downloaded
      */
     public String startDownload() {
         return ucm.startDownload(getUser(getLoggedUser()));
     }
 
+    
     /**
      * Gets all the events the user is/was attending;
-     *
+     * 
      * @return ScheduleModel contains all events
      */
     public ScheduleModel getAllEvents() {
         Logger.getLogger(PersonalFacade.class.getName()).log(Level.INFO, "START getAllEvents() -------------------");
         ScheduleModel eventModel = new DefaultScheduleModel();
         User user = getUser(getLoggedUser());
-        Logger.getLogger(PersonalFacade.class.getName()).log(Level.INFO, "-- user = {0}", user.getUserName());
+        Logger.getLogger(PersonalFacade.class.getName()).log(Level.INFO, "-- user = {0}",user.getUserName());
 
-        Logger.getLogger(PersonalFacade.class.getName()).log(Level.INFO, "-- call User.getEvents");
         List<Event> list_events = user.getEvents();
-        Logger.getLogger(PersonalFacade.class.getName()).log(Level.INFO, "-- list_events = {0}", list_events.toString());
-        Logger.getLogger(PersonalFacade.class.getName()).log(Level.INFO, "-- populate eventModel");
 
-        for (Iterator<Event> it = list_events.iterator(); it.hasNext();) {
-            Event ev = it.next();
+        list_events.stream().forEach((ev) -> {
             if (ev.isPublicEvent()) {
                 eventModel.addEvent(new DefaultScheduleEvent(ev.getName(), ev.getStart(), ev.getEnd()));
             } else {
-                eventModel.addEvent(new DefaultScheduleEvent(Character.toString((char) 254) + ev.getName(), ev.getStart(), ev.getEnd()));
+                eventModel.addEvent(new DefaultScheduleEvent(Character.toString((char)254) + ev.getName(), ev.getStart(), ev.getEnd()));
             }
-        }
-        Logger.getLogger(PersonalFacade.class.getName()).log(Level.INFO, "-- eventModel ready");
+        });
         Logger.getLogger(PersonalFacade.class.getName()).log(Level.INFO, "STOP getAllEvents() -------------------");
         return eventModel;
     }
-
-    public ScheduleModel getEvents(Date from, Date to) {
-        Logger.getLogger(PersonalFacade.class.getName()).log(Level.INFO, "START getAllEvents() -------------------");
-
+    
+    
+    public ScheduleModel getEvents(Date from, Date to){
+        
         ScheduleModel eventModel = new DefaultScheduleModel();
         User user = getUser(getLoggedUser());
-        Logger.getLogger(PersonalFacade.class.getName()).log(Level.INFO, "-- user = {0}", user.getUserName());
-
-        Logger.getLogger(PersonalFacade.class.getName()).log(Level.INFO, "-- call User.getEvents");
+        
         List<Event> list_events = user.getEvents(from, to);
-        Logger.getLogger(PersonalFacade.class.getName()).log(Level.INFO, "-- list_events = {0}", list_events.toString());
-        Logger.getLogger(PersonalFacade.class.getName()).log(Level.INFO, "-- populate eventModel");
-        for (Event ev : list_events) {
+
+        list_events.stream().forEach((ev) -> {
             if (ev.isPublicEvent()) {
-                eventModel.addEvent(new DefaultScheduleEvent(ev.getName(), ev.getStart(), ev.getEnd()));
+                eventModel.addEvent(new DefaultScheduleEvent(ev.getName(), ev.getStart(), ev.getEnd(), ev.getEventId()));
             } else {
-                eventModel.addEvent(new DefaultScheduleEvent(" • "+ ev.getName(), ev.getStart(), ev.getEnd()));
+                eventModel.addEvent(new DefaultScheduleEvent("? " + ev.getName(), ev.getStart(), ev.getEnd(), ev.getEventId()));
             }
-        }
-        Logger.getLogger(PersonalFacade.class.getName()).log(Level.INFO, "-- eventModel ready");
-        Logger.getLogger(PersonalFacade.class.getName()).log(Level.INFO, "STOP getAllEvents() -------------------");
+        });
+
         return eventModel;
     }
 

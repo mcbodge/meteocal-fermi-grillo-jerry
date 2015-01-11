@@ -69,18 +69,6 @@ public class ProblemsBean implements Serializable {
         }
     }
 
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     
     
 

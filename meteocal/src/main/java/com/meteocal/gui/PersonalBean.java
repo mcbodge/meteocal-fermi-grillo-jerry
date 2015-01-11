@@ -366,7 +366,7 @@ public class PersonalBean implements Serializable {
     public void onEventSelect(SelectEvent selectEvent) {
         event = (ScheduleEvent) selectEvent.getObject();
         ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
-        ec.getSessionMap().put("eventId", event.getStartDate().toString() + " - " + event.getTitle() + " (" + event.getId() + ") ");
+        ec.getSessionMap().put("eventId", event.getData());
         //TODO bind the ID of the original event (maybe we should to override getId() )
         try {
             ec.redirect("event.xhtml?faces-includeViewParams=true");

@@ -32,7 +32,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @NamedQueries({
     @NamedQuery(name = "Weather.findAll", query = "SELECT w FROM Weather w"),
     @NamedQuery(name = "Weather.findByEventId", query = "SELECT w FROM Weather w WHERE w.eventId = :eventId"),
-    @NamedQuery(name = "Weather.findByConstraint", query = "SELECT w FROM Weather w WHERE w.constraint = :constraint"),
+    @NamedQuery(name = "Weather.findByConstraint", query = "SELECT w FROM Weather w WHERE w.weather_constraint = :constraint"),
     @NamedQuery(name = "Weather.findByForecast", query = "SELECT w FROM Weather w WHERE w.forecast = :forecast"),
     @NamedQuery(name = "Weather.findByLastUpdate", query = "SELECT w FROM Weather w WHERE w.lastUpdate = :lastUpdate"),
     @NamedQuery(name = "Weather.findByLocationCode", query = "SELECT w FROM Weather w WHERE w.locationCode = :locationCode")
@@ -45,7 +45,7 @@ public class Weather implements Serializable {
     @Column(name = "event_id", nullable = false, length = 11)
     private Integer eventId;
     @Column(name = "weather_constraint", length = 11)
-    private Integer constraint;
+    private Integer weather_constraint;
     @Column(name = "forecast", length = 11)
     private Integer forecast;
     @Column(name = "last_update")
@@ -65,7 +65,7 @@ public class Weather implements Serializable {
 
     public Weather(Integer eventId, Integer constraint, Integer forecast, Date lastUpdate, String locationCode, Event event) {
         this.eventId = eventId;
-        this.constraint = constraint;
+        this.weather_constraint = constraint;
         this.forecast = forecast;
         this.lastUpdate = lastUpdate;
         this.locationCode = locationCode;
@@ -91,11 +91,11 @@ public class Weather implements Serializable {
     }
 
     public Integer getConstraint() {
-        return constraint;
+        return weather_constraint;
     }
 
     public void setConstraint(Integer constraint) {
-        this.constraint = constraint;
+        this.weather_constraint = constraint;
     }
 
     public Integer getForecast() {

@@ -7,9 +7,9 @@
     <h:head>
         <title>MeteoCal</title>
     </h:head>
-    <h:body style="color: #3366ff; font-family: sans-serif">
+    <h:body style="font-family: sans-serif">
 
-        <h:form>
+        <h:form style="color: #3366ff">
             <h:panelGrid id="grid2" columns="8"  cellpadding="3">
                 <h:commandLink value="MeteoCal" style="font-size: large; font-weight: bold" action="personal.xhtml?faces-redirect=true"/>
                 <h:outputLabel value="beta" style="font-size: x-small"/>
@@ -28,7 +28,64 @@
             </h:panelGrid>
         </h:form>
         <hr style=" background-color: #3366ff; height: 5px" />
-        EVENT DATE = <h:outputLabel value="#{eventBean.myInfo()}" /> 
+        
+        <h2>#{eventBean.name}</h2>
+        
+        <div style="float: left; border-right: 5px; height: 100%; width: 450px">
+            <h:outputLabel value="#{eventBean.privacy}" />
+            <br></br>
+            <br></br>
+            <img src="http://clipart-box.com/zoom/weather-icons120320.jpg" alt="#{eventBean.forecast}" style="width:33%;height:33%"/>
+            <br></br>
+            <h:outputLabel value="#{eventBean.constraint}" />
+            <br></br>
+            <br></br>
+
+            <h:form>
+            <p:menu>
+                
+                    <p:menuitem value="Save" actionListener="#{menuView.save}"  icon="ui-icon-disk" />
+                    <p:menuitem value="Update" actionListener="#{menuView.update}" icon="ui-icon-arrowrefresh-1-w"/>
+                
+            </p:menu>
+            </h:form>
+           
+        </div>
+        
+        <div style="float: left">
+            <h:outputLabel value="Date:" style="font-style: italic; font-weight: bold; font-size: large"/>
+            <br></br>
+            <h:outputLabel value="#{eventBean.date}" />
+            <br></br>
+            <br></br>
+            <h:outputLabel value="Location:" style="font-style: italic; font-weight: bold; font-size: large"/>
+            <br></br>
+            <h:outputLabel value="#{eventBean.location}" />
+            <br></br>
+            <br></br>
+            <h:outputLabel value="Attendees:" style="font-style: italic; font-weight: bold; font-size: large"/>
+            <br></br>
+            <h:outputLabel value="#{eventBean.attendees}" />
+            <br></br>
+            <br></br>
+            <h:outputLabel value="Maybe going:" style="font-style: italic; font-weight: bold; font-size: large"/>
+            <br></br>
+            <h:outputLabel value="#{eventBean.maybe}" />
+            <br></br>
+            <br></br>
+            <h:outputLabel value="Not going:" style="font-style: italic; font-weight: bold; font-size: large"/>
+            <br></br>
+            <h:outputLabel value="#{eventBean.notGoing}" />
+            <br></br>
+            <br></br>
+            <h:outputLabel value="Description:" style="font-style: italic; font-weight: bold; font-size: large"/>
+            <br></br>
+            <h:outputLabel value="#{eventBean.description}" />
+            <br></br>
+            <br></br>
+            
+        </div>
+
     </h:body>
 </html>
 
