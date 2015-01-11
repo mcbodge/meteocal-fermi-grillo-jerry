@@ -310,11 +310,8 @@ public class PersonalBean implements Serializable {
 
     
     public void createEvent() {
-        if (geoname == null) {
-            pf.createEvent(eventName, text.trim(), dateTime, eventDuration, people, !event_private, constraint, descr);
-        } else {
-            //TODO Event w/ Integer geoname
-        }
+        if(!pf.createEvent(eventName, text.trim(), geoname, dateTime, eventDuration, people, !event_private, constraint, descr))
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"ERROR, overlap","ERROR, overlap"));
         init();
     }
 
@@ -365,7 +362,6 @@ public class PersonalBean implements Serializable {
         }
         return out;
     }    
-
     
     public void onEventSelect(SelectEvent selectEvent) {
         event = (ScheduleEvent) selectEvent.getObject();
