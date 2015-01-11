@@ -331,7 +331,7 @@ public class PersonalFacade {
             if (ev.isPublicEvent()) {
                 eventModel.addEvent(new DefaultScheduleEvent(ev.getName(), ev.getStart(), ev.getEnd()));
             } else {
-                eventModel.addEvent(new DefaultScheduleEvent("? " + ev.getName(), ev.getStart(), ev.getEnd()));
+                eventModel.addEvent(new DefaultScheduleEvent(" • "+ ev.getName(), ev.getStart(), ev.getEnd()));
             }
         }
         Logger.getLogger(PersonalFacade.class.getName()).log(Level.INFO, "-- eventModel ready");
