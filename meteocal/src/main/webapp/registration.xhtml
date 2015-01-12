@@ -14,33 +14,37 @@
                 <h:panelGrid id="grid" columns="3" cellpadding="5">
                     
                     <h:outputLabel for="firstname" value="Name" />
-                    <p:inputText id="firstname" value="#{registrationBean.firstName}" required="true" requiredMessage="First name required" />
+                    <p:inputText id="firstname" value="#{registrationBean.firstName}" required="true" requiredMessage="first name required" />
                     <p:message for="firstname" />
                     
                     <br></br>
-                    <p:inputText id="lastname" value="#{registrationBean.lastName}" required="true" requiredMessage="Last name required" />
+                    <p:inputText id="lastname" value="#{registrationBean.lastName}" required="true" requiredMessage="last name required" />
                     <p:message for="lastname" />
                     
                     <h:outputLabel value="User name" />
-                    <p:inputText id="username" value="#{registrationBean.username}" required="true" requiredMessage="this field is required" />
-                    <p:message for="username" />
+                    <p:inputText id="username" value="#{registrationBean.username}" required="true" requiredMessage="a user name is required" validatorMessage="user name must be more than 4 characters"> 
+                        <f:validateLength minimum="4" />
+                    </p:inputText>
+                    <p:message for="username" /> 
                     
                     <h:outputLabel value="Personal email" />                         
-                    <p:inputText id="email" value="#{registrationBean.email}" required="true" requiredMessage="A valid email is required" >
-                        <f:validateRegex pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$"/>
+                    <p:inputText id="email" value="#{registrationBean.email}" required="true" validatorMessage="a valid email is required" requiredMessage="your personal email is required" >
+                        <f:validateRegex pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
                     </p:inputText>
                     <p:message for="email" />
                                                          
                     <h:outputLabel value="Re-enter email" />
-                    <p:inputText type="email" id="emailagain" value="#{registrationBean.emailagain}" required="true" requiredMessage="The emails must match" />
+                    <p:inputText type="email" id="emailagain" value="#{registrationBean.emailagain}" required="true" validatorMessage="the emails must match" requiredMessage="retype personal email is required" />
                     <p:message for="emailagain" />
                                                             
                     <h:outputLabel value="Create password" />
-                    <p:password id="newpassword" value="#{registrationBean.password}" required="true" match="newpasswordagain" requiredMessage="Password mismatch" />
+                    <p:password id="newpassword" value="#{registrationBean.password}" required="true" requiredMessage="a password is required" validatorMessage="password is not in the required range">
+                        <f:validateLength minimum="8" maximum="16" />
+                    </p:password>
                     <p:message for="newpassword" />
                     
                     <h:outputLabel value="Re-enter password" />
-                    <p:password id="newpasswordagain" required="true" requiredMessage="Password mismatch" />
+                    <p:password id="newpasswordagain" required="true" requiredMessage="a password is required" match="newpassword" validatorMessage="password mismatch" />
                     <p:message for="newpasswordagain" />
                     
                     <br></br>
