@@ -62,8 +62,9 @@ public class EventFacade {
         Event e = getEvent(eventId);
         String out="Private event";
         
-        if(man.showable(e, getUser()))
+        if(man.showable(e, getUser())){
             out = e.getName();
+        }
         
         return out;
         
@@ -131,8 +132,11 @@ public class EventFacade {
         String out="hidden";
         Event e = getEvent(eventId);
         
-        if(man.showable(e, getUser()))
+        if(man.showable(e, getUser())){
             out = e.getLocation();
+            if(out==null || out.isEmpty())
+                out="none";
+        }
         
         return out;
 
@@ -198,8 +202,11 @@ public class EventFacade {
         String out="hidden";
         Event e = getEvent(eventId);
         
-        if(man.showable(e, getUser()))
+        if(man.showable(e, getUser())){
             out = e.getDescription();
+            if(out==null || out.isEmpty())
+                out="none";
+        }
         
         return out;
 
