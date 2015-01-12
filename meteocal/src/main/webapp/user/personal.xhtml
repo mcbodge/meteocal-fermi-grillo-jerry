@@ -90,8 +90,8 @@
                         <p:outputLabel for="startdate" value="Start:" />
                         <p:calendar id="startdate" value="#{personalBean.dateTime}" pattern="yyyy/MM/dd HH:mm:ss" />
 
-                        <p:outputLabel for="duration" value="Duration:" />
-                        <p:spinner id="duration" value="#{personalBean.eventDuration}" stepFactor="0.5" min="0.5" max="15"/>
+                        <p:outputLabel for="duration" value="Duration (hours):" />
+                        <p:spinner id="duration" value="#{personalBean.eventDuration}" stepFactor="0.5" min="0.5" />
 
                         <p:outputLabel for="weather" value="Select prefered weather condition:" />
                         <p:selectOneMenu id="weather" value="#{personalBean.constraint}" > 
