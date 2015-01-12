@@ -2,13 +2,18 @@ package com.meteocal.gui;
 
 import com.meteocal.business.boundary.EventFacade;
 import com.meteocal.business.boundary.PersonalFacade;
+import java.io.IOException;
 import java.io.Serializable;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import org.primefaces.model.ScheduleEvent;
 
 
 
@@ -116,7 +121,7 @@ public class EventBean implements Serializable{
         return ef.isCreator(eventId).toString();
     }
     
-    
+
     
 }
     
