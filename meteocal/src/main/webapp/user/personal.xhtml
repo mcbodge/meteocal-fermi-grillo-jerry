@@ -22,7 +22,7 @@
                 <p:commandButton id="searchgo" icon="ui-icon-search"  action="results.xhtml?faces-redirect=true"/>
                 <p:outputLabel value="#{personalBean.getLoggedUser()}" />
                 <p:spacer width="300" height="10" />
-                <p:commandButton id="notifications"  icon="fa fa-adjust"  action="notifications.xhtml?faces-redirect=true"/>
+                <p:commandButton id="notifications"  icon="ui-icon-mail-open"  action="notifications.xhtml?faces-redirect=true"/>
                 <p:menuButton id="opts" value="Options" >
                     <p:menuitem value="#{personalBean.calendarPrivacy}" action="#{personalBean.toggleCalendarPrivacy()}" update="opts"  />
                     <p:menuitem value="Import Calendar" action="upload.xhtml?faces-redirect=true"/>

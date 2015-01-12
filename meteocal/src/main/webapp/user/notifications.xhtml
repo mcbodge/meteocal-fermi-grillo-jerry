@@ -1,12 +1,55 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html">
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
     <h:head>
         <title>MeteoCal</title>
     </h:head>
-    <h:body>
-        Hello from Facelets
+    <h:body style="color: #3366ff; font-family: sans-serif">
+
+        <h:form>
+            <h:panelGrid id="grid2" columns="9"  cellpadding="3">
+                <h:commandLink value="MeteoCal" style="font-size: large; font-weight: bold" action="personal.xhtml?faces-redirect=true"/>
+                <h:outputLabel value="beta" style="font-size: x-small"/>
+                <p:outputLabel for="search" />
+                <p:inputText id="search" value="Search for people" size="30"/>
+                <p:commandButton id="searchgo" icon="ui-icon-search"  action="results.xhtml?faces-redirect=true"/>
+                <p:outputLabel value="#{personalBean.getLoggedUser()}" />
+                <p:spacer width="300" height="10" />
+                <p:commandButton id="notifications"  icon="ui-icon-mail-open"  action="notifications.xhtml?faces-redirect=true"/>
+                <p:menuButton id="opts" value="Options" >
+                    <p:menuitem value="#{personalBean.calendarPrivacy}" action="#{personalBean.toggleCalendarPrivacy()}" update="opts"  />
+                    <p:menuitem value="Import Calendar" action="upload.xhtml?faces-redirect=true"/>
+                    <p:menuitem value="Export Calendar" action="#{personalBean.getCalendar()}"/>
+                    <p:menuitem value="Sign Out" action="#{personalBean.logout()}" icon=" ui-icon-person"/>
+                </p:menuButton>
+            </h:panelGrid>
+        </h:form>
+
+
+        <p:dataScroller value="#{notificationsBean.string_list}" var="record" chunkSize="10">
+            <f:facet name="header">Yours Notifications</f:facet>
+            <h:panelGrid columns="2" style="width:100%" columnClasses="logo,detail">
+                <p:graphicImage name="#{record[0]}-icon.png" /> 
+
+                <p:outputPanel>
+                    <h:panelGrid columns="3" cellpadding="5">
+                        <h:outputText value="From:" style="font-weight: bold"/>
+                        <h:outputText value="#{record[1]}" />
+
+                        <h:outputText value="Details:" style="font-weight: bold"/>
+                        <h:outputText value="#{record[2]}" />
+                        <h:panelGrid rendered="#{notificationsBean.showButtons(record[0])}">
+                            <p:commandButton action="#{notificationsBean.accept()}" disabled="#{Boolean.parseBoolean(record[4])}" id="accept_btn"  icon="ui-icon-check" title="accept" />
+                            <p:commandButton action="#{notificationBean.decline()}" id="decline_btn" icon="ui-icon-close" title="decline" />
+                        </h:panelGrid>
+                    </h:panelGrid>
+                </p:outputPanel>
+            </h:panelGrid>
+        </p:dataScroller>
+
     </h:body>
 </html>
 
