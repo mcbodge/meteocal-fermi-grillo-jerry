@@ -121,6 +121,7 @@ public class EventBean implements Serializable{
         return ef.isCreator(eventId).toString();
     }
     
+    
 
     
 }
