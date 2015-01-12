@@ -312,7 +312,20 @@ public class PersonalBean implements Serializable {
     public void createEvent() {
         if(!pf.createEvent(eventName, text.trim(), geoname, dateTime, eventDuration, people, !event_private, constraint, descr))
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"ERROR, overlap","ERROR, overlap"));
-        init();
+        //init();
+         lazyEventModel = new LazyScheduleModel() {
+
+            @Override
+            public void loadEvents(Date start, Date end) {
+                
+                List<ScheduleEvent> list = pf.getEvents(start, end).getEvents();
+                
+                list.stream().forEach((e) -> {
+                    this.addEvent(e);
+                });
+            }
+
+        };
     }
 
     

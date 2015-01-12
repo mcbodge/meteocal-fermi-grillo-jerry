@@ -123,8 +123,9 @@ public class PersonalFacade {
                 Logger.getLogger(PersonalFacade.class.getName()).log(Level.INFO, "-- runtime event created: event_name = {0} start = {1} end = {2} location = {3}",
                         new Object[]{event.getName(), event.getStart(), event.getEnd(), event.getLocation()});
                 //save in db
-                event = em.merge(event);
                 em.flush();
+                event = em.merge(event);
+                
                 Logger.getLogger(PersonalFacade.class.getName()).log(Level.INFO, "-- runtime event saved into the DB : event_id = {0}", event.getEventId());
 
                 if(geoname == null){

@@ -205,6 +205,11 @@ public class EventFacade {
 
     }
     
+     public String getCreator(String eventId){
+        Event e = getEvent(eventId);
+        return e.getCreator().getUserName();
+    }
+    
    
     
 }
