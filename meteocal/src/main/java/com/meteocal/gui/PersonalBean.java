@@ -68,7 +68,7 @@ public class PersonalBean implements Serializable {
     private ScheduleModel lazyEventModel;
 
     private ScheduleEvent event;
-
+    
     public ScheduleEvent getEvent() {
         return event;
     }
@@ -79,11 +79,11 @@ public class PersonalBean implements Serializable {
 
     @PostConstruct
     public void init() {
-      
+        
         //get all events
         //lazyEventModel = pf.getAllEvents();
         lazyEventModel = new LazyScheduleModel() {
-
+  
             @Override
             public void loadEvents(Date start, Date end) {
                 
