@@ -204,12 +204,31 @@ public class EventFacade {
         return out;
 
     }
-    
-     public String getCreator(String eventId){
-        Event e = getEvent(eventId);
-        return e.getCreator().getUserName();
+
+    public Boolean canAccept(String eventId){
+
+        return getEvent(eventId).getMaybeGoing().contains(getUser());
+        
     }
     
-   
+    public Boolean canDecline(String eventId){
+        
+        Event e = getEvent(eventId);
+        
+        return e.getMaybeGoing().contains(getUser()) && e.getAttendee().contains(getUser());
+        
+    }
+    
+    public Boolean isCreator(String eventId){
+
+        return getEvent(eventId).getCreator().equals(getUser());
+        
+    }
+
+    public Boolean isObserver(String eventId) {
+                
+        return getEvent(eventId).getRelated().contains(getUser());
+        
+    }
     
 }

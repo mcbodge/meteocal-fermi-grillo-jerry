@@ -3,7 +3,7 @@ package com.meteocal.gui;
 import com.meteocal.business.boundary.EventFacade;
 import com.meteocal.business.boundary.PersonalFacade;
 import java.io.Serializable;
-import java.util.List;
+
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
@@ -22,7 +22,15 @@ import javax.faces.context.FacesContext;
 public class EventBean implements Serializable{
     
     private String eventId;
-    private boolean menuShowable;
+    private String menuShowable;
+
+    public String getMenuShowable() {
+        return menuShowable;
+    }
+
+    public void setMenuShowable(String menuShowable) {
+        this.menuShowable = menuShowable;
+    }
     
     @EJB
     EventFacade ef;
@@ -32,7 +40,10 @@ public class EventBean implements Serializable{
     @PostConstruct
     private void init(){
         eventId = FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("eventId").toString();
-        menuShowable = ef.getCreator(eventId).equals(pf.getLoggedUser());
+        menuShowable = ef.isObserver(eventId).toString();
+    }
+    
+    public EventBean(){
     }
    
     public String getEventId() {
@@ -89,12 +100,20 @@ public class EventBean implements Serializable{
         return ef.getForecast(eventId);
     }
 
-    public boolean isMenuShowable() {
-        return menuShowable;
+    public String canAccept(){
+        return ef.canAccept(eventId).toString();
     }
-
-    public void setMenuShowable(boolean menuShowable) {
-        this.menuShowable = menuShowable;
+    
+    public String canDecline(){
+        return ef.canDecline(eventId).toString();
+    }
+    
+    public String canDelete(){
+        return ef.isCreator(eventId).toString();
+    }
+    
+    public String canEdit(){
+        return ef.isCreator(eventId).toString();
     }
     
     

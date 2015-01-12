@@ -43,9 +43,10 @@
 
             <h:form>
                 <p:menu rendered="#{eventBean.menuShowable}">
-                
-                    <p:menuitem value="Save" actionListener="#{menuView.save}"  icon="ui-icon-disk" />
-                    <p:menuitem value="Update" actionListener="#{menuView.update}" icon="ui-icon-arrowrefresh-1-w"/>
+                    <p:menuitem value="Accept invitation" rendered="#{eventBean.canAccept()}"   icon="ui-icon-check" />
+                    <p:menuitem value="Decline invitation" rendered="#{eventBean.canDecline()}"   icon="ui-icon-closethick" />
+                    <p:menuitem value="Delete event" rendered="#{eventBean.canDelete()}"   icon="ui-icon-closethick" />
+                    <p:menuitem value="Edit event" rendered="#{eventBean.canEdit()}"  icon="ui-icon-arrowrefresh-1-w"/>
                 
             </p:menu>
             </h:form>
