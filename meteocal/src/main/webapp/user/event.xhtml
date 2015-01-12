@@ -42,7 +42,7 @@
             <br></br>
 
             <h:form>
-            <p:menu>
+                <p:menu rendered="#{eventBean.menuShowable}">
                 
                     <p:menuitem value="Save" actionListener="#{menuView.save}"  icon="ui-icon-disk" />
                     <p:menuitem value="Update" actionListener="#{menuView.update}" icon="ui-icon-arrowrefresh-1-w"/>

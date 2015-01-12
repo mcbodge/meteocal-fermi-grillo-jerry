@@ -1,6 +1,7 @@
 package com.meteocal.gui;
 
 import com.meteocal.business.boundary.EventFacade;
+import com.meteocal.business.boundary.PersonalFacade;
 import java.io.Serializable;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -21,13 +22,17 @@ import javax.faces.context.FacesContext;
 public class EventBean implements Serializable{
     
     private String eventId;
+    private boolean menuShowable;
     
     @EJB
     EventFacade ef;
+    @EJB
+    PersonalFacade pf;
     
     @PostConstruct
     private void init(){
         eventId = FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("eventId").toString();
+        menuShowable = ef.getCreator(eventId).equals(pf.getLoggedUser());
     }
    
     public String getEventId() {
@@ -83,6 +88,15 @@ public class EventBean implements Serializable{
     public String getForecast(){
         return ef.getForecast(eventId);
     }
+
+    public boolean isMenuShowable() {
+        return menuShowable;
+    }
+
+    public void setMenuShowable(boolean menuShowable) {
+        this.menuShowable = menuShowable;
+    }
+    
     
     
 }
