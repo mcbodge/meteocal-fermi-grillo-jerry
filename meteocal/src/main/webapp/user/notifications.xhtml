@@ -45,7 +45,7 @@
                         </h:panelGrid>
                         <h:panelGrid columns="2" style="margin-top: 5px;">
                             <p:commandButton value="#{notificationsBean.acceptText(record.get(0))}" action="#{notificationsBean.accept(record.get(3),record.get(0))}" disabled="#{Boolean.parseBoolean(record.get(4))}" id="accept_btn"  icon="ui-icon-check" title="accept" />
-                            <p:commandButton value="Decline" action="#{notificationBean.decline(record.get(3))}" id="decline_btn" icon="ui-icon-close" title="decline" rendered="#{notificationsBean.showButton(record.get(0))}" />
+                            <p:commandButton value="Decline" action="#{notificationsBean.decline(record.get(3))}" id="decline_btn" icon="ui-icon-close" title="decline" rendered="#{notificationsBean.showButton(record.get(0))}" />
                         </h:panelGrid>
                     </p:outputPanel>
                 </p:column>
