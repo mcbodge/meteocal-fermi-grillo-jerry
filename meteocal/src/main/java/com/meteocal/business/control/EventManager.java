@@ -1,7 +1,6 @@
 package com.meteocal.business.control;
 
 import com.meteocal.business.boundary.EmailManager;
-import com.meteocal.business.entity.Answer;
 import com.meteocal.business.entity.Event;
 import com.meteocal.business.entity.Information;
 import com.meteocal.business.entity.User;

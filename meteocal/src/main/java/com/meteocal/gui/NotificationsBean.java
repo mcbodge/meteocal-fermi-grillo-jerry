@@ -69,12 +69,14 @@ public class NotificationsBean implements Serializable {
         return out;
     }
 
-    public void accept(String eventId, String type) {
+    public void accept(String id, String type) {
         
         if (type.equals("invitation")) {
             //accept invitation
+            //nf.acceptInvitation(Integer.parseInt(id));
         }else{
             //hide information
+            nf.readInformation(Integer.parseInt(id));
         }
     }
 

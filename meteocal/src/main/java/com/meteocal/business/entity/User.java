@@ -355,7 +355,7 @@ public class User implements Serializable {
         }
         return list;
     }
-    
+
 
     /**
      * Returns all the information "sent" to this user
@@ -368,6 +368,7 @@ public class User implements Serializable {
         }
         return list;
     }
+  
     
     
     public List <Event> getCreatedEvents(){
