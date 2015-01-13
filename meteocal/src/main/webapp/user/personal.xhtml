@@ -62,20 +62,20 @@
                             <p:selectOneMenu id="country" value="#{personalBean.country}" style="width:150px">
                                 <p:ajax listener="#{personalBean.onCountryChange}" update="province"/> 
                                 <f:selectItem itemLabel="Select Country" itemValue="" noSelectionOption="true" />
-                                <f:selectItems value="#{personalBean.countries}" itemValue="IT"/>
+                                <f:selectItems value="#{personalBean.countries}" />
                             </p:selectOneMenu>
 
                             <p:outputLabel for="province" value="Province: " />
                             <p:selectOneMenu id="province" value="#{personalBean.province}" style="width:150px">
                                 <p:ajax listener="#{personalBean.onProvinceChange}" update="city" />
                                 <f:selectItem itemLabel="Select Province" itemValue="" noSelectionOption="true" />
-                                <f:selectItems value="#{personalBean.provinces}" itemValue="BS" />
+                                <f:selectItems value="#{personalBean.provinces}"  />
                             </p:selectOneMenu>
 
                             <p:outputLabel for="city" value="City: " />
                             <p:selectOneMenu id="city" value="#{personalBean.city}" style="width:150px">
                                 <p:ajax listener="#{personalBean.onCityChange}" update="out confirm" resetValues=""/>
-                                <f:selectItem itemLabel="Select City"  itemValue="Isorella" noSelectionOption="true" />
+                                <f:selectItem itemLabel="Select City"  noSelectionOption="true" />
                                 <f:selectItems value="#{personalBean.cities}" />
                             </p:selectOneMenu>
                         </h:panelGrid>
