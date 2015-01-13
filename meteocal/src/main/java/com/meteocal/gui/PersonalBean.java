@@ -322,8 +322,9 @@ public class PersonalBean implements Serializable {
     public void createEvent() {
 
         if (!pf.createEvent(eventName, text.trim(), geoname, dateTime, eventDuration, people, !event_private, constraint, descr)) 
-            FacesContext.getCurrentInstance().addMessage("howdy", new FacesMessage(":( Your event has not been created."));
-        FacesContext.getCurrentInstance().addMessage("howdy", new FacesMessage("Your event has been created."));
+            FacesContext.getCurrentInstance().addMessage("info", new FacesMessage(":( Your event has not been created."));
+        else
+            FacesContext.getCurrentInstance().addMessage("info", new FacesMessage("Your event has been created."));
         
 
     }
