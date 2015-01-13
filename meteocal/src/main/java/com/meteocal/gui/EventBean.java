@@ -20,7 +20,7 @@ import org.primefaces.model.ScheduleEvent;
 
 /**
  *
- * @author Jude
+ * @author Manuel
  */
 @ManagedBean/*(name="eventBean")*/
 @ViewScoped

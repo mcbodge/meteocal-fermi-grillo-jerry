@@ -13,7 +13,7 @@ import javax.faces.bean.ManagedBean;
 
 /**
  *
- * @author Jude
+ * @author Francesco
  */
 @ManagedBean
 @SessionScoped

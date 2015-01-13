@@ -130,6 +130,10 @@ public class EventFacade {
 
     }
     
+    public Integer getConstraintBack(String eventId){
+        return getEvent(eventId).getConstraint();
+    }
+    
     
     public String getForecast(String eventId){
 
