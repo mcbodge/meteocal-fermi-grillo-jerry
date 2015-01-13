@@ -122,7 +122,31 @@ public class EventBean implements Serializable{
     }
     
     
+    public void edit(){
+        
+        ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+        
+        ec.getSessionMap().clear();
+        
+        ec.getSessionMap().put("editMode", true);
+        ec.getSessionMap().put("dateTime", ef.getStart(eventId));
+        ec.getSessionMap().put("eventName", ef.getName(eventId));
+        ec.getSessionMap().put("people", ef.getPeople(eventId));
+        ec.getSessionMap().put("descr", ef.getDescription(eventId));
+        ec.getSessionMap().put("constraint", ef.getConstraint(eventId));
+        ec.getSessionMap().put("eventDuration", ef.getDuration(eventId));
+        ec.getSessionMap().put("event_private", ef.eventPrivate(eventId));
+        ec.getSessionMap().put("geoname", ef.getGeoname(eventId));
+        ec.getSessionMap().put("text", ef.getLocation(eventId));
 
+         
+        try {
+            ec.redirect("personal.xhtml?faces-includeViewParams=true");
+        } catch (IOException ex) {
+            Logger.getLogger(PersonalBean.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }  
     
 }
     

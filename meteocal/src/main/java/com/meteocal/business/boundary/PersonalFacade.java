@@ -328,6 +328,7 @@ public class PersonalFacade {
             if (ev.isPublicEvent()) {
                 eventModel.addEvent(new DefaultScheduleEvent(ev.getName(), ev.getStart(), ev.getEnd(), ev.getEventId()));
             } else {
+                //TODO if the user is not in isRelated(), the name isn't loaded. 
                 eventModel.addEvent(new DefaultScheduleEvent("(P) " + ev.getName(), ev.getStart(), ev.getEnd(), ev.getEventId()));
             }
         });
