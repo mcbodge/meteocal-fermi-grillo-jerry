@@ -284,8 +284,10 @@ public class EventFacade {
             a.add(u);
         });
         
-        if(!a.isEmpty())
-            out = a.toString().substring(1,out.length()-2);
+        if(!a.isEmpty()){
+            String temp = a.toString();
+            out = temp.substring(1,temp.length()-2);
+        }
         
         return out;
 
