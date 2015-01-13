@@ -28,7 +28,6 @@
             </h:panelGrid>
         </h:form>
 
-
         <p:dataScroller value="#{notificationsBean.string_list}" var="record" chunkSize="10" >
             <f:facet name="header">Yours Notifications</f:facet>
             <h:panelGrid columns="2" columnClasses="logo,detail" style="margin: 5px; padding: 5px;">
@@ -36,19 +35,17 @@
                     <img src="#{notificationsBean.iconPath(record.get(0))}" style="width:100px;height:100px;" />
                 </p:column>
                 <p:column style="width:75%;">
-                    <p:outputPanel>
-                        <h:panelGrid columns="2" cellpadding="5" style="margin: 20px;" >
+                    <p:outputPanel style="margin: 20px;">
+                        <h:panelGrid columns="2" cellpadding="5" >
                             <h:outputText value="From:" style="font-weight: bold"/>
                             <h:outputText value="#{record.get(1)}" />
 
                             <h:outputText value="Details:" style="font-weight: bold"/>
                             <h:outputText value="#{record.get(2)}" />
-
-                            <h:panelGrid columns="2">
-                                <p:commandButton value="#{notificationsBean.acceptText(record.get(0))}" action="#{notificationsBean.accept(record.get(3),record.get(0))}" disabled="#{Boolean.parseBoolean(record.get(4))}" id="accept_btn"  icon="ui-icon-check" title="accept" />
-                                <p:commandButton value="Decline" action="#{notificationBean.decline(record.get(3))}" id="decline_btn" icon="ui-icon-close" title="decline" rendered="#{notificationsBean.showButton(record.get(0))}" />
-                            </h:panelGrid>
-
+                        </h:panelGrid>
+                        <h:panelGrid columns="2" style="margin-top: 5px;">
+                            <p:commandButton value="#{notificationsBean.acceptText(record.get(0))}" action="#{notificationsBean.accept(record.get(3),record.get(0))}" disabled="#{Boolean.parseBoolean(record.get(4))}" id="accept_btn"  icon="ui-icon-check" title="accept" />
+                            <p:commandButton value="Decline" action="#{notificationBean.decline(record.get(3))}" id="decline_btn" icon="ui-icon-close" title="decline" rendered="#{notificationsBean.showButton(record.get(0))}" />
                         </h:panelGrid>
                     </p:outputPanel>
                 </p:column>

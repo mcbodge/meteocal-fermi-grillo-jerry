@@ -40,13 +40,17 @@ public class NotificationsFacade {
     LogInManager lm;
 
     private List<Information> getInformations() {
-        Logger.getLogger(NotificationsFacade.class.getName()).log(Level.INFO, "informations found = {0}", getUser(lm.getLoggedUserName()).getInformations().size());
-        return getUser(lm.getLoggedUserName()).getInformations();
+        //Logger.getLogger(NotificationsFacade.class.getName()).log(Level.INFO, "informations found = {0}", getUser(lm.getLoggedUserName()).getInformations().size());
+        User user = getUser(lm.getLoggedUserName());
+        em.refresh(user);
+        return user.getInformations();
     }
 
     private List<Event> getInvitations() {
-        Logger.getLogger(NotificationsFacade.class.getName()).log(Level.INFO, "invitatios found = {0}", getUser(lm.getLoggedUserName()).getInvitations().size());
-        return getUser(lm.getLoggedUserName()).getInvitations();
+        //Logger.getLogger(NotificationsFacade.class.getName()).log(Level.INFO, "invitatios found = {0}", getUser(lm.getLoggedUserName()).getInvitations().size());
+        User user = getUser(lm.getLoggedUserName());
+        em.refresh(user);
+        return user.getInvitations();
     }
 
     public List<ArrayList<String>> getCompleteList() {
