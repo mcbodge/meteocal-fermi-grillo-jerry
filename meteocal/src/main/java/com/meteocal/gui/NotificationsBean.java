@@ -60,19 +60,33 @@ public class NotificationsBean implements Serializable {
         }
         return out;
     }
-    public String iconPath(String type){
-        String out = "http://icons.iconarchive.com/icons/custom-icon-design/mono-general-1/512/information-icon.png";
+
+    public String iconPath(String type) {
+        String out = "https://cdn3.iconfinder.com/data/icons/49handdrawing/256x256/info.png";
         if (type.equals("invitation")) {
-            out = "http://cdn2.iconfinder.com/data/icons/windows-8-metro-style/512/ticket.png";
+            out = "https://cdn3.iconfinder.com/data/icons/49handdrawing/128x128/mail.png";
         }
         return out;
     }
 
-    public void accept(String eventId) {
-
+    public void accept(String eventId, String type) {
+        
+        if (type.equals("invitation")) {
+            //accept invitation
+        }else{
+            //hide information
+        }
     }
 
     public void decline(String eventId) {
+        //decline invitation
+    }
 
+    public String acceptText(String type) {
+        String out = "Got it";
+        if (type.equals("invitation")) {
+            out = "Accept";
+        }
+        return out;
     }
 }

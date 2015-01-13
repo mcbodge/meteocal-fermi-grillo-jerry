@@ -33,7 +33,7 @@
             <f:facet name="header">Yours Notifications</f:facet>
             <h:panelGrid columns="2" columnClasses="logo,detail" style="margin: 5px; padding: 5px;">
                 <p:column style="width:25%">
-                    <img src="#{notificationsBean.iconPath(record.get(0))}" style="width:120px;height:120px;" />
+                    <img src="#{notificationsBean.iconPath(record.get(0))}" style="width:100px;height:100px;" />
                 </p:column>
                 <p:column style="width:75%;">
                     <p:outputPanel>
@@ -45,8 +45,8 @@
                             <h:outputText value="#{record.get(2)}" />
 
                             <h:panelGrid columns="2">
-                                <p:commandButton action="#{notificationsBean.accept(record.get(3))}" disabled="#{Boolean.parseBoolean(record.get(4))}" id="accept_btn"  icon="ui-icon-check" title="accept" />
-                                <p:commandButton action="#{notificationBean.decline(record.get(3))}" id="decline_btn" icon="ui-icon-close" title="decline" rendered="#{notificationsBean.showButton(record.get(0))}" />
+                                <p:commandButton value="#{notificationsBean.acceptText(record.get(0))}" action="#{notificationsBean.accept(record.get(3),record.get(0))}" disabled="#{Boolean.parseBoolean(record.get(4))}" id="accept_btn"  icon="ui-icon-check" title="accept" />
+                                <p:commandButton value="Decline" action="#{notificationBean.decline(record.get(3))}" id="decline_btn" icon="ui-icon-close" title="decline" rendered="#{notificationsBean.showButton(record.get(0))}" />
                             </h:panelGrid>
 
                         </h:panelGrid>

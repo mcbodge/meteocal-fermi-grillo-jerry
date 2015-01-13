@@ -8,34 +8,43 @@
         <title>MeteoCal</title>        
         <style type="text/css">
             /* Grid CSS */.ui-grid{clear:both;padding:3px;margin:0px;}.ui-grid:before,.ui-grid:after{content:"";display:table;}.ui-grid:after{clear:both;}.ui-grid .ui-grid-row{display:-webkit-box;display:-moz-box;display:-ms-flexbox;display:-webkit-flex;display:flex;clear:both;}.ui-grid-row:after{clear:both;content:"";display:table;}.ui-grid-col-1,.ui-grid-col-2,.ui-grid-col-3,.ui-grid-col-4,.ui-grid-col-5,.ui-grid-col-6,.ui-grid-col-7,.ui-grid-col-8,.ui-grid-col-9,.ui-grid-col-10,.ui-grid-col-11,.ui-grid-col-12{float:left;box-sizing:border-box;}.ui-grid-col-1{width:8.33333%;}.ui-grid-col-2{width:16.66666%;}.ui-grid-col-3{width:25%;}.ui-grid-col-4{width:33.33333%;}.ui-grid-col-5{width:41.66666%;}.ui-grid-col-6{width:50%;}.ui-grid-col-7{width:58.33333%;}.ui-grid-col-8{width:66.66666%;}.ui-grid-col-9{width:75%;}.ui-grid-col-10{width:83.33333%;}.ui-grid-col-11{width:91.66666%;}.ui-grid-col-12{width:100%;}@media (min-width:480px){.ui-grid-fixed{width:480px;}}@media (min-width:768px){.ui-grid-fixed{width:768px;}}@media (min-width:960px){.ui-grid-fixed{width:960px;}}@media (min-width:1024px){.ui-grid-fixed{width:1024px;}}/* Responsive */@media (max-width:35em){.ui-grid-responsive .ui-grid-row{display:block;}.ui-grid-responsive .ui-grid-col-1,.ui-grid-responsive .ui-grid-col-2,.ui-grid-responsive .ui-grid-col-3,.ui-grid-responsive .ui-grid-col-4,.ui-grid-responsive .ui-grid-col-5,.ui-grid-responsive .ui-grid-col-6,.ui-grid-responsive .ui-grid-col-7,.ui-grid-responsive .ui-grid-col-8,.ui-grid-responsive .ui-grid-col-9,.ui-grid-responsive .ui-grid-col-10,.ui-grid-responsive .ui-grid-col-11,.ui-grid-responsive .ui-grid-col-12{width:100%;float:none;}}
-            </style>
+        </style>
 
     </h:head>
     <h:body style="color: #3366ff; font-family: sans-serif">
 
         <h:form>
-            <h:panelGrid id="grid2" columns="9"  cellpadding="3">
-                <h:commandLink value="MeteoCal" style="font-size: large; font-weight: bold" action="personal.xhtml?faces-redirect=true"/>
-                <h:outputLabel value="beta" style="font-size: x-small"/>
-                <p:outputLabel for="search" />
-                <p:inputText id="search" value="Search for people" size="30"/>
-                <p:commandButton id="searchgo" icon="ui-icon-search"  action="results.xhtml?faces-redirect=true"/>
-                <p:outputLabel value="#{personalBean.getLoggedUser()}" />
-                <p:spacer width="300" height="10" />
-                <p:commandButton id="notifications"  icon="ui-icon-mail-open"  action="notifications.xhtml?faces-redirect=true"/>
-                <p:menuButton id="opts" value="Options" >
-                    <p:menuitem value="#{personalBean.calendarPrivacy}" action="#{personalBean.toggleCalendarPrivacy()}" update="opts"  />
-                    <p:menuitem value="Import Calendar" action="upload.xhtml?faces-redirect=true"/>
-                    <p:menuitem value="Export Calendar" action="#{personalBean.getCalendar()}"/>
-                    <p:menuitem value="Sign Out" action="#{personalBean.logout()}" icon=" ui-icon-person"/>
-                </p:menuButton>
+            <h:panelGrid id="grid2" columns="2"  cellpadding="3" width="100%">
+                <p:column style="width:85%;">
+                    <div style="float: left; ">
+                        <h:commandLink value="MeteoCal" style="font-size: large; font-weight: bold; padding-right: 2px" action="personal.xhtml?faces-redirect=true"/>
+                        <h:outputLabel value="beta" style="font-size: x-small; padding-right: 15px"/>
+                        <p:outputLabel for="search" />
+                        <p:inputText id="search" value="Search for people" size="40" style="padding: 8px"/>
+                        <p:commandButton id="searchgo" icon="ui-icon-search"  action="results.xhtml?faces-redirect=true"/>
+                        <p:outputLabel value="#{personalBean.getLoggedUser()}" />
+                    </div>
+                </p:column>
+
+
+                <p:column style="width:20%;">
+                    <div style="float: right;">
+                        <p:commandButton id="notifications"  icon="ui-icon-mail-open"  action="notifications.xhtml?faces-redirect=true"/>
+                        <p:menuButton id="opts" value="Options" style="float: right;">
+                            <p:menuitem value="#{personalBean.calendarPrivacy}" action="#{personalBean.toggleCalendarPrivacy()}" update="opts"  />
+                            <p:menuitem value="Import Calendar" action="upload.xhtml?faces-redirect=true"/>
+                            <p:menuitem value="Export Calendar" action="#{personalBean.getCalendar()}"/>
+                            <p:menuitem value="Sign Out" action="#{personalBean.logout()}" icon=" ui-icon-person"/>
+                        </p:menuButton>
+                    </div>
+                </p:column>
             </h:panelGrid>
         </h:form>
 
         <hr style=" background-color: #3366ff; height: 5px" />
 
 
-        <div style="float: left; border-right: 5px; height: 100%; width: 450px" >
+        <div style="float: left; border-right: 5px; height: 100%; width: 450px" ><!-- Sidebar -->
             <h:form>
                 <p:panel id="eventpanel" header="#{personalBean.header}" style="margin-bottom:5px;">
 
@@ -113,29 +122,26 @@
 
                     <p:commandButton id="confirm" value="#{personalBean.button}" action="#{personalBean.createEvent()}" icon="ui-icon-check" disabled="#{personalBean.cannotCreate()}" update=":formSchedule:schedule" />
                     <p:commandButton value="Cancel" action="personal.xhtml?faces-redirect=true" style="margin-right:20px;" /> <!--update="eventpanel" process="@this"-->  
-                        <!--<p:resetInput target="@all" />-->
+                    <!--<p:resetInput target="@all" />-->
                     <!--</p:commandButton>--> 
                 </p:panel>
             </h:form>
-        </div>
-        
+        </div><!-- END Sidebar -->
 
-        <h:form id="formSchedule">
+
+        <h:form id="formSchedule"><!-- Calendar -->
 
             <p:growl id="messages" showDetail="true" />
 
             <h:panelGrid columnClasses="value">
 
                 <p:schedule id="schedule" rendered="true" draggable="false" resizable="false" value="#{personalBean.lazyEventModel}" rightHeaderTemplate="month, agendaDay" timeFormat="HH:mm{ - HH:mm} \n" ignoreTimezone="false" > 
-                    
                     <p:ajax event="eventSelect" listener="#{personalBean.onEventSelect}" />
                 </p:schedule>
 
             </h:panelGrid>
 
-        </h:form>
-        
-
+        </h:form><!-- END Calendar -->
         <!-- wide calendar -->
         <style type="text/css">
             .value {
