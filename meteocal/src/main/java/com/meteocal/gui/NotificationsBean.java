@@ -31,6 +31,7 @@ public class NotificationsBean implements Serializable {
     @EJB
     NotificationsFacade nf;
 
+    private String title;
     private List<ArrayList<String>> string_list;
 
     public NotificationsBean() {
@@ -44,12 +45,26 @@ public class NotificationsBean implements Serializable {
     public void setString_list(List<ArrayList<String>> string_list) {
         this.string_list = string_list;
     }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
     //</editor-fold>
 
     @PostConstruct
     public void init() {
+        string_list = new ArrayList<>();
         Logger.getLogger(NotificationsBean.class.getName()).log(Level.INFO, "NOTIFICATIONS BEAN INIT---------START");
-        string_list = nf.getCompleteList();
+        if(nf.getCompleteList().isEmpty()){
+            title = "No notifications to show";
+        }else{
+            title = "Your Notifications";
+            string_list = nf.getCompleteList();
+        }
         Logger.getLogger(NotificationsBean.class.getName()).log(Level.INFO, "NOTIFICATIONS BEAN INIT---------END");
     }
 
@@ -69,7 +84,7 @@ public class NotificationsBean implements Serializable {
         return out;
     }
 
-    public void accept(String id, String type) {
+    public String accept(String id, String type) {
         
         if (type.equals("invitation")) {
             //accept invitation
@@ -78,10 +93,15 @@ public class NotificationsBean implements Serializable {
             //hide information
             nf.readInformation(Integer.parseInt(id));
         }
+        //refresh
+        return "notifications?faces-redirect=true";
     }
 
-    public void decline(String eventId) {
+    public String decline(String eventId) {
         //decline invitation
+        
+        //
+        return "notifications?faces-redirect=true";
     }
 
     public String acceptText(String type) {
