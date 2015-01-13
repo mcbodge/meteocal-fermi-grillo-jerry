@@ -133,7 +133,7 @@ public class EventBean implements Serializable{
         ec.getSessionMap().put("eventName", ef.getName(eventId));
         ec.getSessionMap().put("people", ef.getPeople(eventId));
         ec.getSessionMap().put("descr", ef.getDescription(eventId));
-        ec.getSessionMap().put("constraint", ef.getConstraint(eventId));
+        ec.getSessionMap().put("constraint", ef.getConstraintBack(eventId).toString());
         ec.getSessionMap().put("eventDuration", ef.getDuration(eventId));
         ec.getSessionMap().put("event_private", ef.eventPrivate(eventId));
         ec.getSessionMap().put("geoname", ef.getGeoname(eventId));
