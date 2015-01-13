@@ -6,10 +6,15 @@
 package com.meteocal.gui;
 
 import com.meteocal.business.boundary.HomeFacade;
+import java.io.IOException;
 import javax.ejb.EJB;
 import java.io.Serializable;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
 
 /**
  *
@@ -55,10 +60,12 @@ public class HomeBean implements Serializable {
     public String submitLogIn() {
         if (hf.submitLogIn(username, password)) {
             //goto personal page
-            return "/user/personal?faces-redirect=true";
+            ExternalContext exc = FacesContext.getCurrentInstance().getExternalContext();
+            exc.getSessionMap().put("justLoggedIn", true);
+            return "/user/personal?faces-redirect=true?faces-includeViewParams=true";
         }
         //stay in home
         return "/home?faces-redirect=true";
     }
-
+    //---
 }
