@@ -397,6 +397,7 @@ public class PersonalBean implements Serializable {
     }
 
     public void addMessage() {
+        // .
         ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
         if (ec.getSessionMap().containsKey("justLoggedIn") && (boolean) ec.getSessionMap().get("justLoggedIn")) {
             ec.getSessionMap().put("justLoggedIn", false);
