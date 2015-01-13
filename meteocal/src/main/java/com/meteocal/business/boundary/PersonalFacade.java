@@ -125,7 +125,7 @@ public class PersonalFacade {
                 //save in db
                 em.flush();
                 event = em.merge(event);
-                
+                em.flush();
                 Logger.getLogger(PersonalFacade.class.getName()).log(Level.INFO, "-- runtime event saved into the DB : event_id = {0}", event.getEventId());
 
                 if(geoname == null){
@@ -142,6 +142,7 @@ public class PersonalFacade {
                     
                     //weather.setLocationCode(geoname);
                     em.persist(weather);
+                    em.flush();
                 }
 
                 //send invitations
@@ -321,7 +322,7 @@ public class PersonalFacade {
         
         ScheduleModel eventModel = new DefaultScheduleModel();
         User user = getUser(getLoggedUser());
-        
+        em.refresh(user);
         List<Event> list_events = user.getEvents(from, to);
 
         list_events.stream().forEach((ev) -> {
