@@ -17,11 +17,11 @@
             <h:panelGrid id="grid2" columns="2"  cellpadding="3" width="100%">
                 <p:column style="width:85%;">
                     <div style="float: left; ">
-                        <h:commandLink value="MeteoCal" style="font-size: large; font-weight: bold; padding-right: 2px" action="personal.xhtml?faces-redirect=true"/>
+                        <h:commandLink value="MeteoCal" style="font-size: large; font-weight: bold; padding-right: 2px" action="personal?faces-redirect=true"/>
                         <h:outputLabel value="beta" style="font-size: x-small; padding-right: 15px"/>
                         <p:outputLabel for="search" />
                         <p:inputText id="search" value="Search for people" size="40" style="padding: 8px"/>
-                        <p:commandButton id="searchgo" icon="ui-icon-search"  action="results.xhtml?faces-redirect=true"/>
+                        <p:commandButton id="searchgo" icon="ui-icon-search"  action="results?faces-redirect=true"/>
                         <p:outputLabel value="#{personalBean.getLoggedUser()}" />
                     </div>
                 </p:column>
@@ -29,10 +29,10 @@
 
                 <p:column style="width:20%;">
                     <div style="float: right;">
-                        <p:commandButton id="notifications"  icon="ui-icon-mail-open"  action="notifications.xhtml?faces-redirect=true"/>
+                        <p:commandButton id="notifications"  icon="ui-icon-mail-open"  action="notifications?faces-redirect=true"/>
                         <p:menuButton id="opts" value="Options" style="float: right;">
                             <p:menuitem value="#{personalBean.calendarPrivacy}" action="#{personalBean.toggleCalendarPrivacy()}" update="opts"  />
-                            <p:menuitem value="Import Calendar" action="upload.xhtml?faces-redirect=true"/>
+                            <p:menuitem value="Import Calendar" action="upload?faces-redirect=true"/>
                             <p:menuitem value="Export Calendar" action="#{personalBean.getCalendar()}"/>
                             <p:menuitem value="Sign Out" action="#{personalBean.logout()}" icon=" ui-icon-person"/>
                         </p:menuButton>
@@ -123,7 +123,7 @@
                     </h:panelGrid>
 
                     <p:commandButton id="confirm" value="#{personalBean.button}" action="#{personalBean.createEvent()}" icon="ui-icon-check" disabled="#{personalBean.cannotCreate()}" update=":formSchedule:schedule" />
-                    <p:commandButton value="Cancel" action="personal.xhtml?faces-redirect=true" style="margin-right:20px;" /> <!--update="eventpanel" process="@this"-->  
+                    <p:commandButton value="Cancel" action="personal?faces-redirect=true" style="margin-right:20px;" /> <!--update="eventpanel" process="@this"-->  
                     <!--<p:resetInput target="@all" />-->
                     <!--</p:commandButton>--> 
                 </p:panel>
@@ -132,8 +132,6 @@
 
 
         <h:form id="formSchedule"><!-- Calendar -->
-
-            
 
             <h:panelGrid columnClasses="value">
 
