@@ -12,6 +12,7 @@ import com.meteocal.business.entity.Event;
 import com.meteocal.business.entity.User;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -169,8 +170,9 @@ public class EventFacade {
         
         if(man.showable(e, getUser())){
             out = e.getCreator().toString() + " [creator] ";
-            if(!e.getAttendee().isEmpty())
-                out = out + e.getAttendee().toString();
+            String temp = e.getAttendee().toString();
+            if(temp.length()>2)
+                out = out + ", " + temp.substring(1,temp.length()-2);
         }
         
         return out;
@@ -179,17 +181,19 @@ public class EventFacade {
     
     
     public String getMaybe(String eventId){
-        
+
         String out="hidden";
         Event e = getEvent(eventId);
         
         if(man.showable(e, getUser())){
-            out = "none";
-            if(!e.getMaybeGoing().isEmpty())
-                out = e.getMaybeGoing().toString();
+            out = "";
+            String temp = e.getMaybeGoing().toString();
+            if(temp.length()>2)
+                out = out + temp.substring(1,temp.length()-1);
         }
         
         return out;
+
 
     }
     
@@ -200,9 +204,10 @@ public class EventFacade {
         Event e = getEvent(eventId);
         
         if(man.showable(e, getUser())){
-            out = "none";
-            if(!e.getDeclined().isEmpty())
-                out = e.getDeclined().toString();
+            out = "";
+            String temp = e.getDeclined().toString();
+            if(temp.length()>2)
+                out = out + temp.substring(1,temp.length()-2);
         }
         
         return out;
@@ -276,20 +281,21 @@ public class EventFacade {
     public String getPeople(String eventId) {
         
         Event e = getEvent(eventId);
-        String out = "";
+
+        String people="";
         
-        List<User> a = e.getAttendee();
-        
-        e.getMaybeGoing().stream().forEach((u) -> {
-            a.add(u);
-        });
-        
-        if(!a.isEmpty()){
-            String temp = a.toString();
-            out = temp.substring(1,temp.length()-2);
+        for(User u : e.getAttendee()){
+            people = people + ", " + u.getUserName();
         }
         
-        return out;
+        for(User u : e.getMaybeGoing()){
+            people = people + ", " + u.getUserName();
+        }
+        
+        if(!people.isEmpty())
+            people = people.substring(2);
+
+        return people;
 
     }
     
