@@ -13,6 +13,8 @@ import com.meteocal.business.entity.User;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -272,8 +274,21 @@ public class EventFacade {
     
 
     public String getPeople(String eventId) {
+        
         Event e = getEvent(eventId);
-        return e.getAttendee().toString() + " " + e.getMaybeGoing().toString();
+        String out = "";
+        
+        List<User> a = e.getAttendee();
+        
+        e.getMaybeGoing().stream().forEach((u) -> {
+            a.add(u);
+        });
+        
+        if(!a.isEmpty())
+            out = a.toString().substring(1,out.length()-2);
+        
+        return out;
+
     }
     
 
