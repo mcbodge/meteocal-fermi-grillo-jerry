@@ -29,7 +29,7 @@
         </h:form>
 
         <p:dataScroller value="#{notificationsBean.string_list}" var="record" chunkSize="10" >
-            <f:facet name="header">Yours Notifications</f:facet>
+            <f:facet name="header">#{notificationsBean.title}</f:facet>
             <h:panelGrid columns="2" columnClasses="logo,detail" style="margin: 5px; padding: 5px;">
                 <p:column style="width:25%">
                     <img src="#{notificationsBean.iconPath(record.get(0))}" style="width:100px;height:100px;" />
@@ -54,4 +54,3 @@
 
     </h:body>
 </html>
-

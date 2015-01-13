@@ -103,16 +103,6 @@ public class NotificationsFacade {
             Logger.getLogger(NotificationsFacade.class.getName()).log(Level.INFO, "---\t{0}", row.toString());
             Logger.getLogger(NotificationsFacade.class.getName()).log(Level.INFO, "--------------------");
         }
-
-        if (list.isEmpty()) {
-            row = new ArrayList<>();
-            row.add("information");
-            row.add("MeteoCal");
-            row.add("No notifications to show");
-            row.add("");
-            row.add("false");
-            list.add(row);
-        }
         Logger.getLogger(NotificationsFacade.class.getName()).log(Level.INFO, "--END GET NOTIFICATIONS");
         return list;
     }
