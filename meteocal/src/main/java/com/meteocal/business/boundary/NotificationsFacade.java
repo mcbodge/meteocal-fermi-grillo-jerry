@@ -175,4 +175,16 @@ public class NotificationsFacade {
             return null;
         }
     }
+    
+    public void readInformation(int infoId){
+        Information info = em.createNamedQuery("Information.findByInformationId", Information.class).setParameter("informationId", infoId).getSingleResult();
+        em.remove(info);
+        info = null;
+        em.flush();
+    }
+    
+    public void acceptInvitation(int eventId){
+        
+    }
+    
 }

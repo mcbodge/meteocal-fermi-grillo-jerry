@@ -72,11 +72,6 @@ public class HomeFacade {
                         context.addMessage(null, new FacesMessage("Login OK."));
                         Logger.getLogger(LogInManager.class.getName()).log(Level.INFO, "Login succeeded, user {0} LoggedIn", u);
                         result = true;
-
-                        //create a welcome information
-                        String welcome_message = "Welcome " + user.getUserName() + "!";
-                        em.persist(eventmanager.newInformation(user, welcome_message));
-
                     } catch (ServletException e) {
                         //login failed
                         context.addMessage(null, new FacesMessage("Login failed."));
