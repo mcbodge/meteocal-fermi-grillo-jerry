@@ -115,7 +115,7 @@ public class Weather implements Serializable {
     }
 
     public String getLocationCode() {
-        return locationCode;
+            return locationCode;
     }
 
     public void setLocationCode(String locationCode) {

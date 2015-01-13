@@ -37,7 +37,7 @@
 
         <div style="float: left; border-right: 5px; height: 100%; width: 450px" >
             <h:form>
-                <p:panel id="eventpanel" header="New event" style="margin-bottom:5px;">
+                <p:panel id="eventpanel" header="#{personalBean.header}" style="margin-bottom:5px;">
 
                     <h:panelGrid id="grid3" columns="1" cellpadding="1">
 
@@ -53,20 +53,20 @@
                             <p:selectOneMenu id="country" value="#{personalBean.country}" style="width:150px">
                                 <p:ajax listener="#{personalBean.onCountryChange}" update="province"/> 
                                 <f:selectItem itemLabel="Select Country" itemValue="" noSelectionOption="true" />
-                                <f:selectItems value="#{personalBean.countries}" />
+                                <f:selectItems value="#{personalBean.countries}" itemValue="IT"/>
                             </p:selectOneMenu>
 
                             <p:outputLabel for="province" value="Province: " />
                             <p:selectOneMenu id="province" value="#{personalBean.province}" style="width:150px">
                                 <p:ajax listener="#{personalBean.onProvinceChange}" update="city" />
                                 <f:selectItem itemLabel="Select Province" itemValue="" noSelectionOption="true" />
-                                <f:selectItems value="#{personalBean.provinces}" />
+                                <f:selectItems value="#{personalBean.provinces}" itemValue="BS" />
                             </p:selectOneMenu>
 
                             <p:outputLabel for="city" value="City: " />
                             <p:selectOneMenu id="city" value="#{personalBean.city}" style="width:150px">
                                 <p:ajax listener="#{personalBean.onCityChange}" update="out confirm" resetValues=""/>
-                                <f:selectItem itemLabel="Select City"  itemValue="" noSelectionOption="true" />
+                                <f:selectItem itemLabel="Select City"  itemValue="Isorella" noSelectionOption="true" />
                                 <f:selectItems value="#{personalBean.cities}" />
                             </p:selectOneMenu>
                         </h:panelGrid>
@@ -111,10 +111,10 @@
                         <h:outputText value=" Mark as private" />
                     </h:panelGrid>
 
-                    <p:commandButton id="confirm" value="Submit" action="#{personalBean.createEvent()}" icon="ui-icon-check" disabled="#{personalBean.cannotCreate()}" update=":formSchedule:schedule" />
-                    <p:commandButton value="Cancel" type="reset" update="eventpanel" process="@this" style="margin-right:20px;"  >
-                        <p:resetInput target="@all" />
-                    </p:commandButton> 
+                    <p:commandButton id="confirm" value="#{personalBean.button}" action="#{personalBean.createEvent()}" icon="ui-icon-check" disabled="#{personalBean.cannotCreate()}" update=":formSchedule:schedule" />
+                    <p:commandButton value="Cancel" action="personal.xhtml?faces-redirect=true" style="margin-right:20px;" /> <!--update="eventpanel" process="@this"-->  
+                        <!--<p:resetInput target="@all" />-->
+                    <!--</p:commandButton>--> 
                 </p:panel>
             </h:form>
         </div>

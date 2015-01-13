@@ -38,18 +38,7 @@ public class PersonalBean implements Serializable {
     PersonalFacade pf;
     @EJB
     HomeFacade hf;
-    
-    /*    @ManagedProperty(value="#{eventBean}")
-    private EventBean eventBean;
-    
-    public EventBean getEventBean() {
-    return eventBean;
-    }
-    
-    public void setEventBean(EventBean eventBean) {
-    this.eventBean = eventBean;
-    }*/
-      
+         
     private static final long serialVersionUID = 1L;
 
     private Date dateTime = new Date();
@@ -69,6 +58,10 @@ public class PersonalBean implements Serializable {
 
     private ScheduleEvent event;
     
+    
+    private boolean editMode;
+    
+
     public ScheduleEvent getEvent() {
         return event;
     }
@@ -76,10 +69,48 @@ public class PersonalBean implements Serializable {
     public void setEvent(ScheduleEvent event) {
         this.event = event;
     }
+    
+    private String header;
+    private String button;
+
+    public String getHeader() {
+        return header;
+    }
+
+    public String getButton() {
+        return button;
+    }
 
     @PostConstruct
     public void init() {
         
+            ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+
+            if (ec.getSessionMap().containsKey("editMode") && (boolean) ec.getSessionMap().get("editMode")) {
+                
+                dateTime=(Date) ec.getSessionMap().get("dateTime");
+                eventName=(String) ec.getSessionMap().get("eventName");
+                people=(String) ec.getSessionMap().get("people");
+                descr=(String) ec.getSessionMap().get("descr");
+                constraint=(String) ec.getSessionMap().get("constraint");
+                eventDuration=(double) ec.getSessionMap().get("eventDuration");
+                event_private=(boolean) ec.getSessionMap().get("event_private");
+                geoname=(Integer)ec.getSessionMap().get("geoname");
+                text=(String) ec.getSessionMap().get("text");
+
+                ec.getSessionMap().clear();
+                
+                header="Edit event";
+                button="Save";
+                
+            }else{
+                
+                header="New event";
+                button="Create";
+                
+            }
+            
+               
         //get all events
         //lazyEventModel = pf.getAllEvents();
         lazyEventModel = new LazyScheduleModel() {
@@ -101,7 +132,7 @@ public class PersonalBean implements Serializable {
         calendarPrivacy = pf.getCalendarString();
 
     }
-
+    
 
     public Date getRandomDate(Date base) {
         Calendar date = Calendar.getInstance();
@@ -305,27 +336,17 @@ public class PersonalBean implements Serializable {
 
     
     public String getLoggedUser() {
+        
         return pf.getLoggedUser();
+        
     }
 
     
     public void createEvent() {
+        
         if(!pf.createEvent(eventName, text.trim(), geoname, dateTime, eventDuration, people, !event_private, constraint, descr))
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"ERROR, overlap","ERROR, overlap"));
-        //init();
-         lazyEventModel = new LazyScheduleModel() {
-
-            @Override
-            public void loadEvents(Date start, Date end) {
-                
-                List<ScheduleEvent> list = pf.getEvents(start, end).getEvents();
-                
-                list.stream().forEach((e) -> {
-                    this.addEvent(e);
-                });
-            }
-
-        };
+        
     }
 
     
@@ -342,47 +363,63 @@ public class PersonalBean implements Serializable {
     public void handleKeyEvent() {
           
         text = text.trim();
+        geoname=null;
 
     }
 
     
     public String logout() {
+        
         hf.logOut();
         return "/home?faces-redirect=true";
+        
     }
 
     
     public String getCalendarString() {
+        
         return pf.getCalendarString();
+        
     }
 
     
     public void toggleCalendarPrivacy() {
+        
         pf.togglePrivacy();
         calendarPrivacy = pf.getCalendarString();
+        
     }
     
 
     public String getCalendar() {
+        
         return pf.startDownload();
+        
     }
     
 
     public String cannotCreate() {
+        
         String out = "true";
+        
         if (((text != null && text.length() > 3) || geoname != null) && dateTime != null) {
             out = "false";
         }
+        
         return out;
+        
     }    
     
     public void onEventSelect(SelectEvent selectEvent) {
+        
         event = (ScheduleEvent) selectEvent.getObject();
-        ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
-        ec.getSessionMap().put("eventId", event.getData());
-        //TODO bind the ID of the original event (maybe we should to override getId() )
+        ExternalContext exc = FacesContext.getCurrentInstance().getExternalContext();
+        exc.getSessionMap().put("eventId", event.getData());
+        
+        //bind the ID of the original event 
+        
         try {
-            ec.redirect("event.xhtml?faces-includeViewParams=true");
+            exc.redirect("event.xhtml?faces-includeViewParams=true");
         } catch (IOException ex) {
             Logger.getLogger(PersonalBean.class.getName()).log(Level.SEVERE, null, ex);
         }

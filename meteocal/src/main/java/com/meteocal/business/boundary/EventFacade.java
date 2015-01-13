@@ -12,6 +12,7 @@ import com.meteocal.business.entity.Event;
 import com.meteocal.business.entity.User;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -46,6 +47,7 @@ public class EventFacade {
         }
     }
     
+    
     private Event getEvent(String e) {
         try {
             return em.createNamedQuery("Event.findByEventId", Event.class).setParameter("eventId", Integer.parseInt(e)).getSingleResult();
@@ -54,8 +56,10 @@ public class EventFacade {
         }
     }
     
+    
     public EventFacade(){
     }
+    
     
     public String getName(String eventId){
         
@@ -70,6 +74,7 @@ public class EventFacade {
         
     }
     
+    
     public String getPrivacy(String eventId){
 
         String out="";
@@ -81,6 +86,11 @@ public class EventFacade {
         
     }
     
+    public boolean eventPrivate(String eventId){
+        return !getEvent(eventId).isPublicEvent();
+    }
+    
+    
     public String getPicture(String eventId){
 
         String out="url";
@@ -91,6 +101,7 @@ public class EventFacade {
         return out;
 
     }
+    
     
     public String getConstraint(String eventId){
 
@@ -119,6 +130,7 @@ public class EventFacade {
 
     }
     
+    
     public String getForecast(String eventId){
 
         Event e = getEvent(eventId);
@@ -126,6 +138,7 @@ public class EventFacade {
         return OpenWeatherMapController.getValueFromCode(e.getForecast()).toString();
 
     }
+    
     
     public String getLocation(String eventId){
 
@@ -142,6 +155,7 @@ public class EventFacade {
 
     }
     
+    
     public String getAttendees(String eventId){
 
         String out="hidden";
@@ -156,6 +170,7 @@ public class EventFacade {
         return out;
 
     }
+    
     
     public String getMaybe(String eventId){
         
@@ -172,6 +187,7 @@ public class EventFacade {
 
     }
     
+    
     public String getNotGoing(String eventId){
        
         String out="hidden";
@@ -187,6 +203,7 @@ public class EventFacade {
 
     }
     
+    
     public String getDate(String eventId){
     
         Event e = getEvent(eventId);
@@ -196,6 +213,13 @@ public class EventFacade {
         return df.format(e.getStart()) + " - " + df.format(e.getEnd());
 
     }
+    
+    public Date getStart(String eventId){
+
+        return getEvent(eventId).getStart();
+
+    }
+    
     
     public String getDescription(String eventId){
         
@@ -209,14 +233,16 @@ public class EventFacade {
         }
         
         return out;
-
+        
     }
+    
 
     public Boolean canAccept(String eventId){
 
         return getEvent(eventId).getMaybeGoing().contains(getUser());
         
     }
+    
     
     public Boolean canDecline(String eventId){
         
@@ -226,11 +252,13 @@ public class EventFacade {
         
     }
     
+    
     public Boolean isCreator(String eventId){
 
         return getEvent(eventId).getCreator().equals(getUser());
         
     }
+    
 
     public Boolean isObserver(String eventId) {
                 
@@ -238,4 +266,29 @@ public class EventFacade {
         
     }
     
+
+    public String getPeople(String eventId) {
+        Event e = getEvent(eventId);
+        return e.getAttendee().toString() + " " + e.getMaybeGoing().toString();
+    }
+    
+
+    public Integer getGeoname(String eventId) {  
+        try{
+            return Integer.parseInt(getEvent(eventId).getWeather().getLocationCode());
+        }catch(NullPointerException e){
+            return null;
+        }
+      
+    }
+    
+
+    public double getDuration(String eventId) {
+        Event e = getEvent(eventId);
+
+        return ((double)e.getEnd().getTime() - (double)e.getStart().getTime())/3600000;
+    }
+
+    //TODO Edit before today
+            
 }
