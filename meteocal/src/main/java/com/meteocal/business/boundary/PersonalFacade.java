@@ -127,7 +127,7 @@ public class PersonalFacade {
                 event = em.merge(event);
                 em.flush();
                 Logger.getLogger(PersonalFacade.class.getName()).log(Level.INFO, "-- runtime event saved into the DB : event_id = {0}", event.getEventId());
-
+                result=true;
                 if(geoname == null){
                     //no weather condition is given
                     Logger.getLogger(PersonalFacade.class.getName()).log(Level.INFO, "-- weather conditions : {0}", constraint);
@@ -159,6 +159,7 @@ public class PersonalFacade {
                     Logger.getLogger(PersonalFacade.class.getName()).log(Level.INFO, "-- all invitations have been stored");
                 }
             }
+            
         }
         Logger.getLogger(PersonalFacade.class.getName()).log(Level.INFO, "STOP createEvent PersonalFacade ---------------");
         return result;

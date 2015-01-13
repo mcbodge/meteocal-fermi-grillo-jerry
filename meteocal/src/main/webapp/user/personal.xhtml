@@ -47,7 +47,8 @@
         <f:event type="preRenderView" listener="#{personalBean.addMessage()}" />
         <!-- content -->
         <div style="float: left; border-right: 5px; height: 100%; width: 450px" ><!-- Sidebar -->
-            <h:form>
+            <h:form id="event_stuff">
+                <p:growl id="msg2" for="info" />
                 <p:panel id="eventpanel" header="#{personalBean.header}" style="margin-bottom:5px;">
 
                     <h:panelGrid id="grid3" columns="1" cellpadding="1">
@@ -122,7 +123,7 @@
                         <h:outputText value=" Mark as private" />
                     </h:panelGrid>
 
-                    <p:commandButton id="confirm" value="#{personalBean.button}" action="#{personalBean.createEvent()}" icon="ui-icon-check" disabled="#{personalBean.cannotCreate()}" update=":formSchedule:schedule" />
+                    <p:commandButton id="confirm" value="#{personalBean.button}" action="#{personalBean.createEvent()}" icon="ui-icon-check" disabled="#{personalBean.cannotCreate()}" update=":formSchedule:schedule msg2" />
                     <p:commandButton value="Cancel" action="personal?faces-redirect=true" style="margin-right:20px;" /> <!--update="eventpanel" process="@this"-->  
                     <!--<p:resetInput target="@all" />-->
                     <!--</p:commandButton>--> 
