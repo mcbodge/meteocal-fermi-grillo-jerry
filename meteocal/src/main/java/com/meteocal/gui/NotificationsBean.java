@@ -88,7 +88,7 @@ public class NotificationsBean implements Serializable {
         
         if (type.equals("invitation")) {
             //accept invitation
-            //nf.acceptInvitation(Integer.parseInt(id));
+            nf.acceptInvitation(Integer.parseInt(id));
         }else{
             //hide information
             nf.readInformation(Integer.parseInt(id));
@@ -99,8 +99,7 @@ public class NotificationsBean implements Serializable {
 
     public String decline(String eventId) {
         //decline invitation
-        
-        //
+        nf.declineInvitation(Integer.parseInt(eventId));
         return "notifications?faces-redirect=true";
     }
 

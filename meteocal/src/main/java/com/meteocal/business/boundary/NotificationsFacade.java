@@ -7,6 +7,7 @@ package com.meteocal.business.boundary;
 
 import com.meteocal.business.control.EventManager;
 import com.meteocal.business.control.LogInManager;
+import com.meteocal.business.entity.Answer;
 import com.meteocal.business.entity.Event;
 import com.meteocal.business.entity.Information;
 import com.meteocal.business.entity.User;
@@ -65,11 +66,11 @@ public class NotificationsFacade {
             //from
             if (info.getEventId() == null) {
                 row.add("MeteoCal Service");
-                
+
             } else {
                 //Dall evento
                 row.add("Event: " + info.getEventId().getName());
-                
+
             }
             //text
             row.add(info.getText());
@@ -77,7 +78,7 @@ public class NotificationsFacade {
             row.add(info.getInformationId().toString());
             //disable accept button
             row.add("true");
-            
+
             //add element
             list.add(row);
             Logger.getLogger(NotificationsFacade.class.getName()).log(Level.INFO, "--------------------");
@@ -165,16 +166,51 @@ public class NotificationsFacade {
             return null;
         }
     }
-    
-    public void readInformation(int infoId){
-        Information info = em.createNamedQuery("Information.findByInformationId", Information.class).setParameter("informationId", infoId).getSingleResult();
-        em.remove(info);
+
+    public void readInformation(int infoId) {
+        Information info = em.find(Information.class, infoId);
+        if (info != null) {
+            em.remove(info);
+        }
         info = null;
         em.flush();
     }
-    
-    public void acceptInvitation(int eventId){
-        
+
+    public void acceptInvitation(int eventId) {
+        Event event = em.find(Event.class, eventId);
+        User user = getUser(lm.getLoggedUserName());
+        if (event != null) {
+            ev_m.acceptInvitation(user, event);
+
+            //save into the db
+            em.merge(event);
+            em.merge(user);
+
+            //add answer
+            Answer answer = new Answer(event.getEventId(), user.getUserId(), true);
+            em.persist(answer);
+            //create info for the creator
+            em.merge(ev_m.newInformation(event.getCreator(), user.getUserName() + " is attending the event: " + event.getName() + ".", event));
+            em.flush();
+            //send email notification for the creator
+            String subject = "METEOCAL: " + event.getName() + ", new attender";
+            String body = "Dear " + event.getCreator().getFirstName() + " " + event.getCreator().getLastName() + ",\n" + user.getUserName() + " is attending the event: " + event.getName() + ".\n\nPLEASE DO NOT REPLY TO THIS EMAIL";
+            EmailManager.getInstance().sendEmail(user.getEmail(), subject, body);
+
+        }
+
     }
-    
+
+    public void declineInvitation(int eventId) {
+        Event event = em.find(Event.class, eventId);
+        User user = getUser(lm.getLoggedUserName());
+        if (event != null) {
+            ev_m.declineInvitation(user, event);
+            em.merge(event);
+            em.merge(user);
+            Answer answer = new Answer(event.getEventId(), user.getUserId(), false);
+            em.persist(answer);
+            em.flush();
+        }
+    }
 }
