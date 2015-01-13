@@ -40,10 +40,12 @@
                 </p:column>
             </h:panelGrid>
         </h:form>
-
+    
         <hr style=" background-color: #3366ff; height: 5px" />
+        <!-- growl -->
         <p:growl id="msg" for="howdy" />
         <f:event type="preRenderView" listener="#{personalBean.addMessage()}" />
+        <!-- content -->
         <div style="float: left; border-right: 5px; height: 100%; width: 450px" ><!-- Sidebar -->
             <h:form>
                 <p:panel id="eventpanel" header="#{personalBean.header}" style="margin-bottom:5px;">
