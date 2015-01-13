@@ -189,14 +189,16 @@ public class NotificationsFacade {
             //add answer
             Answer answer = new Answer(event.getEventId(), user.getUserId(), true);
             em.persist(answer);
-            //create info for the creator
-            em.merge(ev_m.newInformation(event.getCreator(), user.getUserName() + " is attending the event: " + event.getName() + ".", event));
-            em.flush();
+            /*
             //send email notification for the creator
             String subject = "METEOCAL: " + event.getName() + ", new attender";
             String body = "Dear " + event.getCreator().getFirstName() + " " + event.getCreator().getLastName() + ",\n" + user.getUserName() + " is attending the event: " + event.getName() + ".\n\nPLEASE DO NOT REPLY TO THIS EMAIL";
-            EmailManager.getInstance().sendEmail(user.getEmail(), subject, body);
-
+            EmailManager.getInstance().sendEmail(event.getCreator().getEmail(), subject, body);
+            */
+            //new information for the creator
+            Information info = ev_m.newInformation(event.getCreator(), user.toString() + " is attending your event: " + event.getName(), event);
+            em.merge(info);
+            em.flush();
         }
 
     }
