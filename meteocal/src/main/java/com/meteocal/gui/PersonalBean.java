@@ -220,7 +220,6 @@ public class PersonalBean implements Serializable {
     }
 
     //</editor-fold>
-    
     @PostConstruct
     public void init() {
         ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
@@ -321,6 +320,10 @@ public class PersonalBean implements Serializable {
 
     }
 
+    public String getLoggedUserFormatted() {
+        return pf.getUser(getLoggedUser()).toString();
+    }
+
     public void createEvent() {
 
         if (!pf.createEvent(eventName, text.trim(), geoname, dateTime, eventDuration, people, !event_private, constraint, descr)) {
@@ -412,13 +415,30 @@ public class PersonalBean implements Serializable {
     }
 
     public List<String> completeSearchText(String query) {
-        List<String> results = new ArrayList<String>();
-
-        for (int i = 0; i < 10; i++) {
-            results.add(query + i);
-        }
-
-        return results;
+        return pf.searchUser(query);
     }
+
+    public void searchGo() {
+        //searched_user = FirstName LastName (username)
+        if (searched_user != null && searched_user.length() > 2) {
+            String username = searched_user.trim().substring(searched_user.lastIndexOf("(") + 1, searched_user.length() - 1);
+            ExternalContext exc = FacesContext.getCurrentInstance().getExternalContext();
+            exc.getSessionMap().put("loadUser", username);
+            //bind the ID of the original event 
+            try {
+                exc.redirect("profile.xhtml?faces-redirect=true?faces-includeViewParams=true");
+            } catch (IOException ex) {
+                Logger.getLogger(PersonalBean.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+        }
+    }
+
+
+
+
+
+
+
 
 }
