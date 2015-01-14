@@ -438,7 +438,8 @@ public class PersonalBean implements Serializable {
         if (searched_user != null && searched_user.length() > 2) {
             String username = searched_user.trim().substring(searched_user.lastIndexOf("(") + 1, searched_user.length() - 1);
             ExternalContext exc = FacesContext.getCurrentInstance().getExternalContext();
-            exc.getSessionMap().put("loadUser", username);
+            Logger.getLogger(PersonalBean.class.getName()).log(Level.INFO, "pf.getUserId(username){0}", pf.getUserId(username));
+            exc.getSessionMap().put("loadUser", Integer.parseInt(pf.getUserId(username)));
             //bind the ID of the original event 
             try {
                 exc.redirect("profile.xhtml?faces-redirect=true?faces-includeViewParams=true");

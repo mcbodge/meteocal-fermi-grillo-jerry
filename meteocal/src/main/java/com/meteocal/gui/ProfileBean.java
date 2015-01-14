@@ -5,9 +5,9 @@
  */
 package com.meteocal.gui;
 
-import com.meteocal.business.boundary.EventFacade;
 import com.meteocal.business.boundary.ProfileFacade;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
@@ -29,17 +29,51 @@ import org.primefaces.model.ScheduleModel;
  */
 @ManagedBean
 @ViewScoped
-public class ProfileBean {
+public class ProfileBean implements Serializable {
+    
+    
     
     @EJB
     ProfileFacade pf;
     
+    private Integer loadedUser;
 
-    private String loadedUser;
     private ScheduleModel lazyEventModel;
-    private String calendarVisible;
+    
+    private String userNames;
+    
+    private String privacy;
+    
+    private boolean calendarVisible = false;
+
+    public String isCalendarVisible() {
+        //Logger.getLogger(ProfileBean.class.getName()).log(Level.INFO, "1: " + Boolean.toString(calendarVisible));
+        return Boolean.toString(calendarVisible);
+    }
+    
+    public String isNotCalendarVisible() {
+        //Logger.getLogger(ProfileBean.class.getName()).log(Level.INFO, "2: " + Boolean.toString(!calendarVisible));
+        return Boolean.toString(!calendarVisible);
+    }
+
+    public String getUserNames() {
+        return userNames;
+    }
+
+    public String getPrivacy() {
+        return privacy;
+    }
+
+    
+
+    
+    
+    public ScheduleModel getLazyEventModel() {
+        return lazyEventModel;
+    }
 
     public ProfileBean() {
+        //calendarVisible = pf.isCalendarVisible(loadedUser);
     }
     
     @PostConstruct
@@ -48,27 +82,29 @@ public class ProfileBean {
         ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
         
         if (ec.getSessionMap().containsKey("loadUser")){
-            loadedUser = (String) ec.getSessionMap().get("loadUser");
-            ec.getSessionMap().clear();
             
+            loadedUser = (Integer) ec.getSessionMap().get("loadUser");
             
-        lazyEventModel = new LazyScheduleModel() {
-
-            @Override
-            public void loadEvents(Date start, Date end) {
-
-                List<ScheduleEvent> list = pf.getEvents(start, end, loadedUser).getEvents();
-
-                list.stream().forEach((e) -> {
-                    this.addEvent(e);
-                });
-            }
-
-        };
-
-        calendarVisible = pf.isCalendarVisible(loadedUser);
+            calendarVisible = pf.isCalendarVisible(loadedUser);
             
+            userNames = pf.getUserNames(loadedUser);
             
+            privacy = pf.getUserNames(loadedUser);
+
+            lazyEventModel = new LazyScheduleModel() {
+
+                @Override
+                public void loadEvents(Date start, Date end) {
+
+                    List<ScheduleEvent> list = pf.getEvents(start, end, loadedUser).getEvents();
+
+                    list.stream().forEach((e) -> {
+                        this.addEvent(e);
+                    });
+                }
+
+            };
+
         } else {
             try {
                 ec.redirect("error.xhtml?faces-includeViewParams=true");
@@ -76,10 +112,9 @@ public class ProfileBean {
                 Logger.getLogger(ProfileBean.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        
+
     }
-    
-    
+
     public void onEventSelect(SelectEvent selectEvent) {
 
         ScheduleEvent event = (ScheduleEvent) selectEvent.getObject();
@@ -99,5 +134,5 @@ public class ProfileBean {
 
         }
     }
-         
+
 }
