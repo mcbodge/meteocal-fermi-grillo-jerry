@@ -16,7 +16,6 @@ import com.meteocal.business.entity.Weather;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
@@ -271,7 +270,6 @@ public class PersonalFacade {
         }
         return out;
     }
-
     /**
      * It changes the privacy setting of the given user (from public to private
      * or vice versa).
@@ -326,7 +324,6 @@ public class PersonalFacade {
             if (ev.isPublicEvent()) {
                 eventModel.addEvent(new DefaultScheduleEvent(ev.getName(), ev.getStart(), ev.getEnd(), ev.getEventId()));
             } else {
-                //TODO if the user is not in isRelated(), the name isn't loaded. 
                 eventModel.addEvent(new DefaultScheduleEvent("(P) " + ev.getName(), ev.getStart(), ev.getEnd(), ev.getEventId()));
             }
         });
