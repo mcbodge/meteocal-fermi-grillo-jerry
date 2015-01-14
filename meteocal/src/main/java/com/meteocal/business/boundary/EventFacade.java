@@ -5,14 +5,24 @@
  */
 package com.meteocal.business.boundary;
 
+import com.meteocal.business.control.EventCreationManager;
 import com.meteocal.business.control.EventManager;
 import com.meteocal.business.control.LogInManager;
 import com.meteocal.business.control.OpenWeatherMapController;
 import com.meteocal.business.entity.Event;
+import com.meteocal.business.entity.Information;
+import com.meteocal.business.entity.Location;
 import com.meteocal.business.entity.User;
+import com.meteocal.business.entity.Weather;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+import java.util.StringTokenizer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -25,16 +35,19 @@ import javax.persistence.PersistenceContext;
  */
 @Stateless
 public class EventFacade {
-    
+
     @PersistenceContext(unitName = "meteocal_PU")
     EntityManager em;
 
     @Inject
     LogInManager lm;
-    
+
     @Inject
     EventManager man;
-        
+    
+    @Inject
+    EventCreationManager ev_cm;
+
     /**
      *
      * @return the entity of the current user
@@ -46,8 +59,7 @@ public class EventFacade {
             return null;
         }
     }
-    
-    
+
     private Event getEvent(String e) {
         try {
             return em.createNamedQuery("Event.findByEventId", Event.class).setParameter("eventId", Integer.parseInt(e)).getSingleResult();
@@ -55,263 +67,266 @@ public class EventFacade {
             return null;
         }
     }
-    
-    
-    public EventFacade(){
+
+    public EventFacade() {
     }
-    
-    
-    public String getName(String eventId){
-        
+
+    public String getName(String eventId) {
+
         Event e = getEvent(eventId);
-        String out="Private event";
-        
-        if(man.showable(e, getUser())){
+        String out = "Private event";
+
+        if (man.showable(e, getUser())) {
             out = e.getName();
         }
-        
-        return out;
-        
-    }
-    
-    
-    public String getPrivacy(String eventId){
 
-        String out="";
-        
-        if(man.showable(getEvent(eventId), getUser()))
+        return out;
+
+    }
+
+    public String getPrivacy(String eventId) {
+
+        String out = "";
+
+        if (man.showable(getEvent(eventId), getUser())) {
             out = "Public event";
-        
+        }
+
         return out;
-        
+
     }
-    
-    public boolean eventPrivate(String eventId){
+
+    public boolean eventPrivate(String eventId) {
         return !getEvent(eventId).isPublicEvent();
-    } 
-    
-    public String getPicture(String eventId){
+    }
 
-        String out="url";
-        
-        if(man.showable(getEvent(eventId), getUser()))
+    public String getPicture(String eventId) {
+
+        String out = "url";
+
+        if (man.showable(getEvent(eventId), getUser())) {
             out = "lock";
-        
+        }
+
         return out;
 
     }
-    
-    
-    public String getConstraint(String eventId){
+
+    public String getConstraint(String eventId) {
 
         Event e = getEvent(eventId);
-        String out="No weather constraint";
-        
-        if(e.getConstraint()!=null && man.showable(e, getUser())){
+        String out = "No weather constraint";
+
+        if (e.getConstraint() != null && man.showable(e, getUser())) {
             switch (e.getConstraint()) {
                 case 1: //Requires clear sky
-                    out="Requires clear sky";
+                    out = "Requires clear sky";
                     break;
                 case 2: //Requires no precipitation
-                    out="Requires no precipitation";
+                    out = "Requires no precipitation";
                     break;
                 case 3: //Requires snow
-                    out="Requires snow";
+                    out = "Requires snow";
                     break;
                 case 4: //No extreme conditions
-                    out="No extreme conditions";
+                    out = "No extreme conditions";
                     break;
                 default:
             }
         }
-        
+
         return out;
 
     }
-    
-    public Integer getConstraintBack(String eventId){
+
+    public Integer getConstraintBack(String eventId) {
         return getEvent(eventId).getConstraint();
     }
-    
-    
-    public String getForecast(String eventId){
+
+    public String getForecast(String eventId) {
 
         Event e = getEvent(eventId);
-        
+
         return OpenWeatherMapController.getValueFromCode(e.getForecast()).toString();
 
     }
-    
-    
-    public String getLocation(String eventId){
 
-        String out="hidden";
+    public String getLocation(String eventId) {
+
+        String out = "hidden";
         Event e = getEvent(eventId);
-        
-        if(man.showable(e, getUser())){
+
+        if (man.showable(e, getUser())) {
             out = e.getLocation();
-            if(out==null || out.isEmpty())
-                out="none";
+            if (out == null || out.isEmpty()) {
+                out = "none";
+            }
         }
-        
+
         return out;
 
     }
-    
-    
-    public String getAttendees(String eventId){
 
-        String out="hidden";
+    public String getAttendees(String eventId) {
+
+        String out = "hidden";
         Event e = getEvent(eventId);
-        
-        if(man.showable(e, getUser())){
+
+        if (man.showable(e, getUser())) {
             out = e.getCreator().toString() + " [creator] ";
             String temp = e.getAttendee().toString();
-            if(temp.length()>2)
-                out = out + ", " + temp.substring(1,temp.length()-2);
+            if (temp.length() > 2) {
+                out = out + ", " + temp.substring(1, temp.length() - 2);
+            }
         }
-        
+
         return out;
 
     }
-    
-    
-    public String getMaybe(String eventId){
 
-        String out="hidden";
+    public String getMaybe(String eventId) {
+
+        String out = "hidden";
         Event e = getEvent(eventId);
-        
-        if(man.showable(e, getUser())){
+
+        if (man.showable(e, getUser())) {
             out = "";
             String temp = e.getMaybeGoing().toString();
-            if(temp.length()>2)
-                out = out + temp.substring(1,temp.length()-1);
+            if (temp.length() > 2) {
+                out = out + temp.substring(1, temp.length() - 1);
+            }
         }
-        
+
         return out;
 
-
     }
-    
-    
-    public String getNotGoing(String eventId){
-       
-        String out="hidden";
+
+    public String getNotGoing(String eventId) {
+
+        String out = "hidden";
         Event e = getEvent(eventId);
-        
-        if(man.showable(e, getUser())){
+
+        if (man.showable(e, getUser())) {
             out = "";
             String temp = e.getDeclined().toString();
-            if(temp.length()>2)
-                out = out + temp.substring(1,temp.length()-2);
+            if (temp.length() > 2) {
+                out = out + temp.substring(1, temp.length() - 2);
+            }
         }
-        
+
         return out;
 
     }
-    
-    
-    public String getDate(String eventId){
-    
+
+    public String getDate(String eventId) {
+
         Event e = getEvent(eventId);
-      
+
         DateFormat df = new SimpleDateFormat("EEE, yyyy/MM/dd, HH:mm");
 
         return df.format(e.getStart()) + " - " + df.format(e.getEnd());
 
     }
-    
-    public Date getStart(String eventId){
+
+    public Date getStart(String eventId) {
 
         return getEvent(eventId).getStart();
 
     }
-    
-    
-    public String getDescription(String eventId){
-        
-        String out="hidden";
-        Event e = getEvent(eventId);
-        
-        if(man.showable(e, getUser())){
-            out = e.getDescription();
-            if(out==null || out.isEmpty())
-                out="none";
-        }
-        
-        return out;
-        
-    }
-    
 
-    public Boolean canAccept(String eventId){
+    public String getDescription(String eventId) {
+
+        String out = "hidden";
+        Event e = getEvent(eventId);
+
+        if (man.showable(e, getUser())) {
+            out = e.getDescription();
+            if (out == null || out.isEmpty()) {
+                out = "none";
+            }
+        }
+
+        return out;
+
+    }
+
+    public Boolean canAccept(String eventId) {
 
         return getEvent(eventId).getMaybeGoing().contains(getUser());
-        
+
     }
-    
-    
-    public Boolean canDecline(String eventId){
-        
+
+    public Boolean canDecline(String eventId) {
+
         Event e = getEvent(eventId);
-        
+
         return e.getMaybeGoing().contains(getUser()) && e.getAttendee().contains(getUser());
-        
+
     }
-    
-    
-    public Boolean isCreator(String eventId){
+
+    public Boolean isCreator(String eventId) {
 
         return getEvent(eventId).getCreator().equals(getUser());
-        
+
     }
-    
 
     public Boolean isObserver(String eventId) {
-                
+
         return getEvent(eventId).getRelated().contains(getUser());
-        
+
     }
-    
 
     public String getPeople(String eventId) {
-        
+
         Event e = getEvent(eventId);
 
-        String people="";
-        
-        for(User u : e.getAttendee()){
+        String people = "";
+
+        for (User u : e.getAttendee()) {
             people = people + ", " + u.getUserName();
         }
-        
-        for(User u : e.getMaybeGoing()){
+
+        for (User u : e.getMaybeGoing()) {
             people = people + ", " + u.getUserName();
         }
-        
-        if(!people.isEmpty())
+
+        if (!people.isEmpty()) {
             people = people.substring(2);
+        }
 
         return people;
 
     }
-    
 
-    public Integer getGeoname(String eventId) {  
-        try{
+    public Integer getGeoname(String eventId) {
+        try {
             return Integer.parseInt(getEvent(eventId).getWeather().getLocationCode());
-        }catch(NullPointerException e){
+        } catch (NullPointerException e) {
             return null;
         }
-      
+
     }
-    
 
     public double getDuration(String eventId) {
         Event e = getEvent(eventId);
 
-        return ((double)e.getEnd().getTime() - (double)e.getStart().getTime())/3600000;
+        return ((double) e.getEnd().getTime() - (double) e.getStart().getTime()) / 3600000;
     }
 
-    //TODO Edit before today
-            
+    public void deleteEvent(int eventId) {
+        Event event = em.find(Event.class, eventId);
+        event.getAttendee().stream().map((u) -> man.newInformation(u, event.getCreator().toString() + " has just deleted the event: \"" + event.getName() + "\"")).map((info) -> {
+            em.merge(info);
+            return info;
+        }).forEach((_item) -> {
+            em.flush();
+        });
+
+        //delete event;
+        em.remove(event);
+        em.flush();
+
+    }
+
+
 }

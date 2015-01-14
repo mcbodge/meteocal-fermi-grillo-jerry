@@ -301,7 +301,7 @@ public class Event implements Serializable {
     //get the constraint code for this event from the Weather table. Null if it doesn't exist
     public Integer getConstraint() {
         
-        Integer out=null;
+        Integer out=0;
         if (weather!= null)
             out=weather.getConstraint();
         return out;

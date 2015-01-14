@@ -304,8 +304,6 @@ public class User implements Serializable {
             if (ans.getUser().equals(this) && ans.getValue()) {
                 Logger.getLogger(User.class.getName()).log(Level.INFO, "----| Answer added");
                 list.add(ans.getEvent());
-            } else {
-                Logger.getLogger(User.class.getName()).log(Level.INFO, "----| Answer NOT added");
             }
         }
         Logger.getLogger(User.class.getName()).log(Level.INFO, "---- STOP User.getEvents() -----------");
