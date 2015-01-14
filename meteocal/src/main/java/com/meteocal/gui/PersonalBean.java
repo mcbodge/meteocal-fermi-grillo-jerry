@@ -37,26 +37,27 @@ public class PersonalBean implements Serializable {
     HomeFacade hf;
 
     private static final long serialVersionUID = 1L;
-
+    private String searched_user;
     private Date dateTime = new Date();
     private String eventName, eventLocation, people, descr, constraint;
     private double eventDuration = 0.5;
     private boolean event_private;
-
     private String country, city, province;
     private Integer geoname = null;
-
     private List<String> countries, cities, provinces;
     private String text = "";
-
     private String calendarPrivacy;
-
     private ScheduleModel lazyEventModel;
-
     private ScheduleEvent event;
-
     private boolean editMode;
+    private String header;
+    private String button;
 
+    public PersonalBean() {
+
+    }
+
+    //<editor-fold defaultstate="collapsed" desc="GETTERS AND SETTERS">
     public ScheduleEvent getEvent() {
         return event;
     }
@@ -64,9 +65,6 @@ public class PersonalBean implements Serializable {
     public void setEvent(ScheduleEvent event) {
         this.event = event;
     }
-
-    private String header;
-    private String button;
 
     public String getHeader() {
         return header;
@@ -76,64 +74,14 @@ public class PersonalBean implements Serializable {
         return button;
     }
 
-    @PostConstruct
-    public void init() {
-        ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
-        if (ec.getSessionMap().containsKey("editMode") && (boolean) ec.getSessionMap().get("editMode")) {
-
-            dateTime = (Date) ec.getSessionMap().get("dateTime");
-            eventName = (String) ec.getSessionMap().get("eventName");
-            people = (String) ec.getSessionMap().get("people");
-            descr = (String) ec.getSessionMap().get("descr");
-            constraint = (String) ec.getSessionMap().get("constraint");
-            eventDuration = (double) ec.getSessionMap().get("eventDuration");
-            event_private = (boolean) ec.getSessionMap().get("event_private");
-            geoname = (Integer) ec.getSessionMap().get("geoname");
-            text = (String) ec.getSessionMap().get("text");
-
-            ec.getSessionMap().clear();
-
-            header = "Edit event";
-            button = "Save";
-
-        } else {
-
-            header = "New event";
-            button = "Create";
-
-        }
-
-        //get all events
-        //lazyEventModel = pf.getAllEvents();
-        lazyEventModel = new LazyScheduleModel() {
-
-            @Override
-            public void loadEvents(Date start, Date end) {
-
-                List<ScheduleEvent> list = pf.getEvents(start, end).getEvents();
-
-                list.stream().forEach((e) -> {
-                    this.addEvent(e);
-                });
-            }
-
-        };
-
-        countries = pf.getCountries();
-
-        calendarPrivacy = pf.getCalendarString();
-
+    public String getSearched_user() {
+        return searched_user;
     }
 
-    public Date getRandomDate(Date base) {
-        Calendar date = Calendar.getInstance();
-        date.setTime(base);
-        date.add(Calendar.DATE, ((int) (Math.random() * 30)) + 1);    //set random day of month
-
-        return date.getTime();
+    public void setSearched_user(String searched_user) {
+        this.searched_user = searched_user;
     }
 
-    //<editor-fold defaultstate="collapsed" desc="GETTERS AND SETTERS">
     public String getPeople() {
         return people;
     }
@@ -272,8 +220,62 @@ public class PersonalBean implements Serializable {
     }
 
     //</editor-fold>
-    public PersonalBean() {
+    
+    @PostConstruct
+    public void init() {
+        ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+        if (ec.getSessionMap().containsKey("editMode") && (boolean) ec.getSessionMap().get("editMode")) {
 
+            dateTime = (Date) ec.getSessionMap().get("dateTime");
+            eventName = (String) ec.getSessionMap().get("eventName");
+            people = (String) ec.getSessionMap().get("people");
+            descr = (String) ec.getSessionMap().get("descr");
+            constraint = (String) ec.getSessionMap().get("constraint");
+            eventDuration = (double) ec.getSessionMap().get("eventDuration");
+            event_private = (boolean) ec.getSessionMap().get("event_private");
+            geoname = (Integer) ec.getSessionMap().get("geoname");
+            text = (String) ec.getSessionMap().get("text");
+
+            ec.getSessionMap().clear();
+
+            header = "Edit event";
+            button = "Save";
+
+        } else {
+
+            header = "New event";
+            button = "Create";
+
+        }
+
+        //get all events
+        //lazyEventModel = pf.getAllEvents();
+        lazyEventModel = new LazyScheduleModel() {
+
+            @Override
+            public void loadEvents(Date start, Date end) {
+
+                List<ScheduleEvent> list = pf.getEvents(start, end).getEvents();
+
+                list.stream().forEach((e) -> {
+                    this.addEvent(e);
+                });
+            }
+
+        };
+
+        countries = pf.getCountries();
+
+        calendarPrivacy = pf.getCalendarString();
+
+    }
+
+    public Date getRandomDate(Date base) {
+        Calendar date = Calendar.getInstance();
+        date.setTime(base);
+        date.add(Calendar.DATE, ((int) (Math.random() * 30)) + 1);    //set random day of month
+
+        return date.getTime();
     }
 
     public void onCountryChange() {
@@ -321,11 +323,11 @@ public class PersonalBean implements Serializable {
 
     public void createEvent() {
 
-        if (!pf.createEvent(eventName, text.trim(), geoname, dateTime, eventDuration, people, !event_private, constraint, descr)) 
+        if (!pf.createEvent(eventName, text.trim(), geoname, dateTime, eventDuration, people, !event_private, constraint, descr)) {
             FacesContext.getCurrentInstance().addMessage("info", new FacesMessage(":( Your event has not been created."));
-        else
+        } else {
             FacesContext.getCurrentInstance().addMessage("info", new FacesMessage("Your event has been created."));
-        
+        }
 
     }
 
@@ -408,6 +410,15 @@ public class PersonalBean implements Serializable {
             FacesContext.getCurrentInstance().addMessage("howdy", new FacesMessage(summary));
         }
     }
-    
+
+    public List<String> completeSearchText(String query) {
+        List<String> results = new ArrayList<String>();
+
+        for (int i = 0; i < 10; i++) {
+            results.add(query + i);
+        }
+
+        return results;
+    }
 
 }

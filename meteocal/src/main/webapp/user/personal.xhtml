@@ -20,7 +20,9 @@
                         <h:commandLink value="MeteoCal" style="font-size: large; font-weight: bold; padding-right: 2px" action="personal?faces-redirect=true"/>
                         <h:outputLabel value="beta" style="font-size: x-small; padding-right: 15px"/>
                         <p:outputLabel for="search" />
-                        <p:inputText id="search" value="Search for people" size="40" style="padding: 8px"/>
+                        <p:outputLabel value="Min Length (3):" for="acMinLength" />
+                        <p:autoComplete id="search" minQueryLength="3" value="#{personalBean.searched_user}" completeMethod="#{autoCompleteView.completeText}" cache="true" cacheTimeout="30000" effect="fade" />
+                        <!--<p:inputText id="search" value="Search for people" size="40" style="padding: 8px"/>-->
                         <p:commandButton id="searchgo" icon="ui-icon-search"  action="results?faces-redirect=true"/>
                         <p:outputLabel value="#{personalBean.getLoggedUser()}" />
                     </div>
@@ -40,7 +42,7 @@
                 </p:column>
             </h:panelGrid>
         </h:form>
-    
+
         <hr style=" background-color: #3366ff; height: 5px" />
         <!-- growl -->
         <p:growl id="msg" for="howdy" />

@@ -127,31 +127,11 @@ public class EventManager {
      */
     public void acceptInvitation(User u, Event e) {
         if (e.getMaybeGoing().contains(u)) {
-
-            //no overlap
             //delete invitation
             e.getInvitedUserCollection().remove(u);
             u.getEventInvitationCollection().remove(e);
-                //e.getMaybeGoing().remove(u);
-            //u.getInvitations().remove(e);
-                /*
-                
-             //save into the db
-             em.merge(e);
-             em.merge(u);
-                
-             //add answer
-             Answer answer = new Answer(e.getEventId(), u.getUserId(), true);
-             em.persist(answer);
-                
-             //create info for the creator
-             newInformation(e.getCreator(), u.getUserName() + " is attending the event: " + e.getName() + ".", e);
-             //send email notification for the creator
-             String subject = "METEOCAL: " + e.getName() + ", new attender";
-             String body = "Dear " + e.getCreator().getFirstName() + " " + e.getCreator().getLastName() + ",\n" + u.getUserName() + " is attending the event: " + e.getName() + ".\n\nPLEASE DO NOT REPLY TO THIS EMAIL";
-             EmailManager.getInstance().sendEmail(u.getEmail(), subject, body);
-                
-             */
+            //e.getMaybeGoing().remove(u);
+            //u.getInvitations().remove(e);           
         }
         //if the user have not been invited 
     }

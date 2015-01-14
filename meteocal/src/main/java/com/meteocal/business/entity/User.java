@@ -57,69 +57,68 @@ import javax.xml.bind.annotation.XmlTransient;
 public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "user_id", nullable = false)
     private Integer userId;
-    
+
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 15)
     @Column(name = "user_name", nullable = false, length = 15)
     private String userName;
-    
+
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 45)
     @Column(name = "first_name", nullable = false, length = 45)
     private String firstName;
-    
+
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 45)
     @Column(name = "last_name", nullable = false, length = 45)
     private String lastName;
-    
-    @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", 
-            message="Invalid email")
+
+    @Pattern(regexp = "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?",
+            message = "Invalid email")
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 45)
     @Column(name = "email", nullable = false, length = 45)
     private String email;
-    
+
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 255)
     @Column(name = "password", nullable = false, length = 255)
     private String password;
-    
+
     @Basic(optional = false)
     @NotNull
     @Column(name = "public_calendar", nullable = false)
     private boolean publicCalendar;
-    
+
     @Column(name = "groupname")
     private String groupname;
-      
-    
+
     @ManyToMany(mappedBy = "invitedUserCollection")
     private Collection<Event> eventInvitationCollection;
-    
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     private Collection<Answer> answerCollection;
-    
+
     @OneToMany(mappedBy = "userId")
     private Collection<Information> informationCollection;
-    
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "creator")
     private Collection<Event> eventCreatedCollection;
 
     public User() {
     }
-    
+
     public User(String userName, String firstName, String lastName, String email, String password, boolean publicCalendar) {
         this.userName = userName;
         this.firstName = firstName;
@@ -172,14 +171,15 @@ public class User implements Serializable {
     public void setPassword(String password) {
         this.password = LogInManager.encryptPassword(password);
     }
-    
+
     /**
-     * 
-     * @deprecated use isPublicCalendar 
+     *
+     * @deprecated use isPublicCalendar
      */
     public boolean getPublicCalendar() {
         return publicCalendar;
     }
+
     public boolean isPublicCalendar() {
         return publicCalendar;
     }
@@ -187,7 +187,7 @@ public class User implements Serializable {
     public void setPublicCalendar(boolean publicCalendar) {
         this.publicCalendar = publicCalendar;
     }
-    
+
     public void setGroupName(String groupName) {
         this.groupname = groupName;
     }
@@ -195,9 +195,9 @@ public class User implements Serializable {
     public String getGroupName() {
         return groupname;
     }
+
     /**
-     * @deprecated
-     * @return 
+     * @deprecated @return
      */
     @XmlTransient
     public Collection<Event> getEventInvitationCollection() {
@@ -205,16 +205,14 @@ public class User implements Serializable {
     }
 
     /**
-     * @deprecated
-     * @param eventInvitationCollection 
+     * @deprecated @param eventInvitationCollection
      */
     public void setEventInvitationCollection(Collection<Event> eventInvitationCollection) {
         this.eventInvitationCollection = eventInvitationCollection;
     }
-    
+
     /**
-     * @deprecated
-     * @return 
+     * @deprecated @return
      */
     @XmlTransient
     public Collection<Answer> getAnswerCollection() {
@@ -222,16 +220,14 @@ public class User implements Serializable {
     }
 
     /**
-     * @deprecated
-     * @param answerCollection 
+     * @deprecated @param answerCollection
      */
     public void setAnswerCollection(Collection<Answer> answerCollection) {
         this.answerCollection = answerCollection;
     }
-    
+
     /**
-     * @deprecated
-     * @return 
+     * @deprecated @return
      */
     @XmlTransient
     public Collection<Information> getInformationCollection() {
@@ -239,16 +235,14 @@ public class User implements Serializable {
     }
 
     /**
-     * @deprecated
-     * @param informationCollection 
+     * @deprecated @param informationCollection
      */
     public void setInformationCollection(Collection<Information> informationCollection) {
         this.informationCollection = informationCollection;
     }
 
     /**
-     * @deprecated
-     * @return 
+     * @deprecated @return
      */
     @XmlTransient
     public Collection<Event> getEventCreatedCollection() {
@@ -256,8 +250,7 @@ public class User implements Serializable {
     }
 
     /**
-     * @deprecated
-     * @param eventCreatedCollection 
+     * @deprecated @param eventCreatedCollection
      */
     public void setEventCreatedCollection(Collection<Event> eventCreatedCollection) {
         this.eventCreatedCollection = eventCreatedCollection;
@@ -287,17 +280,18 @@ public class User implements Serializable {
     public String toString() {
         return firstName + " " + lastName + " (" + userName + ")";
     }
-    
+
     // <editor-fold desc="Entity properties (User)">
-    
     //
     /**
-     * Returns all the events that the user is attending, including the ones created by him
-     * @return 
+     * Returns all the events that the user is attending, including the ones
+     * created by him
+     *
+     * @return
      */
-    public List<Event> getEvents(){
+    public List<Event> getEvents() {
         Logger.getLogger(User.class.getName()).log(Level.INFO, "---- START User.getEvents() -----------");
-        
+
         List<Event> list = new ArrayList<>();
         for (Iterator<Event> it = this.eventCreatedCollection.iterator(); it.hasNext();) {
             Event e = it.next();
@@ -310,20 +304,21 @@ public class User implements Serializable {
             if (ans.getUser().equals(this) && ans.getValue()) {
                 Logger.getLogger(User.class.getName()).log(Level.INFO, "----| Answer added");
                 list.add(ans.getEvent());
+            } else {
+                Logger.getLogger(User.class.getName()).log(Level.INFO, "----| Answer NOT added");
             }
-            Logger.getLogger(User.class.getName()).log(Level.INFO, "----| Answer NOT added");
         }
         Logger.getLogger(User.class.getName()).log(Level.INFO, "---- STOP User.getEvents() -----------");
         return list;
     }
-    
-    public List<Event> getEvents(Date from, Date to){
+
+    public List<Event> getEvents(Date from, Date to) {
         Logger.getLogger(User.class.getName()).log(Level.INFO, "---- START User.getEvents() -----------");
-        
+
         List<Event> list = new ArrayList<>();
         for (Iterator<Event> it = this.eventCreatedCollection.iterator(); it.hasNext();) {
             Event e = it.next();
-            if(from.before(e.getStart()) && to.after(e.getEnd())){
+            if (from.before(e.getStart()) && to.after(e.getEnd())) {
                 list.add(e);
             }
         }
@@ -341,13 +336,13 @@ public class User implements Serializable {
         Logger.getLogger(User.class.getName()).log(Level.INFO, "---- STOP User.getEvents() -----------");
         return list;
     }
-    
 
     /**
      * Returns all the events with invitations for this user
-     * @return 
+     *
+     * @return
      */
-    public List<Event> getInvitations(){
+    public List<Event> getInvitations() {
         List<Event> list = new ArrayList<>();
         for (Iterator<Event> it = this.eventInvitationCollection.iterator(); it.hasNext();) {
             Event e = it.next();
@@ -356,36 +351,31 @@ public class User implements Serializable {
         return list;
     }
 
-
     /**
      * Returns all the information "sent" to this user
-     * @return 
+     *
+     * @return
      */
-    public List<Information> getInformations(){
+    public List<Information> getInformations() {
         List<Information> list = new ArrayList<>();
-        for(Information inf : this.informationCollection){
+        for (Information inf : this.informationCollection) {
             list.add(inf);
         }
         return list;
     }
-  
-    
-    
-    public List <Event> getCreatedEvents(){
+
+    public List<Event> getCreatedEvents() {
         List<Event> list = new ArrayList<>();
-        for(Event e : this.eventCreatedCollection){
+        for (Event e : this.eventCreatedCollection) {
             list.add(e);
         }
         return list;
     }
-    
-    
+
     //+ other gets, to use Lists instead of collections in controls or boudaries -- if needed.
-    
-    
-    void addEventInvitation(Event e){
+    void addEventInvitation(Event e) {
         this.eventInvitationCollection.add(e);
     }
     // </editor-fold>
-    
+
 }

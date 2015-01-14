@@ -41,23 +41,21 @@ public class NotificationsFacade {
     LogInManager lm;
 
     private List<Information> getInformations() {
-        //Logger.getLogger(NotificationsFacade.class.getName()).log(Level.INFO, "informations found = {0}", getUser(lm.getLoggedUserName()).getInformations().size());
         User user = getUser(lm.getLoggedUserName());
         em.refresh(user);
         return user.getInformations();
     }
 
     private List<Event> getInvitations() {
-        //Logger.getLogger(NotificationsFacade.class.getName()).log(Level.INFO, "invitatios found = {0}", getUser(lm.getLoggedUserName()).getInvitations().size());
         User user = getUser(lm.getLoggedUserName());
         em.refresh(user);
         return user.getInvitations();
     }
 
     public List<ArrayList<String>> getCompleteList() {
+        Logger.getLogger(NotificationsFacade.class.getName()).log(Level.INFO, "?-- START getCompleteList() --");
         ArrayList<String> row = new ArrayList<>();//{"type", "from", "text", "event_id", "disabled"};
         List<ArrayList<String>> list = new ArrayList<>();
-        Logger.getLogger(NotificationsFacade.class.getName()).log(Level.INFO, "--START GET NOTIFICATIONS");
         for (Iterator<Information> it = getInformations().iterator(); it.hasNext();) {
             row = new ArrayList<>();
             Information info = it.next();
@@ -81,11 +79,7 @@ public class NotificationsFacade {
 
             //add element
             list.add(row);
-            Logger.getLogger(NotificationsFacade.class.getName()).log(Level.INFO, "--------------------");
-            Logger.getLogger(NotificationsFacade.class.getName()).log(Level.INFO, "---information added:");
-            Logger.getLogger(NotificationsFacade.class.getName()).log(Level.INFO, "---\t{0}", row.toString());
-            Logger.getLogger(NotificationsFacade.class.getName()).log(Level.INFO, "--------------------");
-
+            Logger.getLogger(NotificationsFacade.class.getName()).log(Level.INFO, "|-- information added:{0}", row.toString());
         }
 
         for (Iterator<Event> it = getInvitations().iterator(); it.hasNext();) {
@@ -99,12 +93,9 @@ public class NotificationsFacade {
             row.add(e.getEventId().toString());
             row.add(String.valueOf(!canAccept(e)));
             list.add(row);
-            Logger.getLogger(NotificationsFacade.class.getName()).log(Level.INFO, "--------------------");
-            Logger.getLogger(NotificationsFacade.class.getName()).log(Level.INFO, "---invitation added:");
-            Logger.getLogger(NotificationsFacade.class.getName()).log(Level.INFO, "---\t{0}", row.toString());
-            Logger.getLogger(NotificationsFacade.class.getName()).log(Level.INFO, "--------------------");
+            Logger.getLogger(NotificationsFacade.class.getName()).log(Level.INFO, "---| invitation added: {0}", row.toString());
         }
-        Logger.getLogger(NotificationsFacade.class.getName()).log(Level.INFO, "--END GET NOTIFICATIONS");
+        Logger.getLogger(NotificationsFacade.class.getName()).log(Level.INFO, "?-- END getComleteList() --");
         return list;
     }
 
@@ -144,13 +135,11 @@ public class NotificationsFacade {
                     .setParameter(11, formatter.format(start))
                     .setParameter(12, formatter.format(end))
                     .getSingleResult();
-            Logger.getLogger(PersonalFacade.class.getName()).log(Level.INFO, "-- query = {0}", query);
-            Logger.getLogger(PersonalFacade.class.getName()).log(Level.INFO, "-- (long)num overlapping events = {0}", l);
             count = l.intValue();
         } catch (NoResultException ex) {
 
         }
-        Logger.getLogger(PersonalFacade.class.getName()).log(Level.INFO, "-- num overlapping events = {0}", count);
+        Logger.getLogger(PersonalFacade.class.getName()).log(Level.INFO, "|-->-- num overlapping events = {0}", count);
         return count;
     }
 
@@ -174,6 +163,7 @@ public class NotificationsFacade {
         }
         info = null;
         em.flush();
+        Logger.getLogger(NotificationsFacade.class.getName()).log(Level.INFO, "-- information read");
     }
 
     public void acceptInvitation(int eventId) {
@@ -199,6 +189,7 @@ public class NotificationsFacade {
             Information info = ev_m.newInformation(event.getCreator(), user.toString() + " is attending your event: " + event.getName(), event);
             em.merge(info);
             em.flush();
+            Logger.getLogger(NotificationsFacade.class.getName()).log(Level.INFO, "-- invitation accepted.");
         }
 
     }
@@ -214,5 +205,6 @@ public class NotificationsFacade {
             em.persist(answer);
             em.flush();
         }
+        Logger.getLogger(NotificationsFacade.class.getName()).log(Level.INFO, "-- invitation declined.");
     }
 }
