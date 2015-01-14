@@ -20,17 +20,15 @@
                         <h:commandLink value="MeteoCal" style="font-size: large; font-weight: bold; padding-right: 2px" action="personal?faces-redirect=true"/>
                         <h:outputLabel value="beta" style="font-size: x-small; padding-right: 15px"/>
                         <p:outputLabel for="search" />
-                        <p:outputLabel value="Min Length (3):" for="acMinLength" />
-                        <p:autoComplete id="search" minQueryLength="3" value="#{personalBean.searched_user}" completeMethod="#{autoCompleteView.completeText}" cache="true" cacheTimeout="30000" effect="fade" />
-                        <!--<p:inputText id="search" value="Search for people" size="40" style="padding: 8px"/>-->
-                        <p:commandButton id="searchgo" icon="ui-icon-search"  action="results?faces-redirect=true"/>
-                        <p:outputLabel value="#{personalBean.getLoggedUser()}" />
+                        <p:autoComplete id="search" minQueryLength="3" forceSelection="true" value="#{personalBean.searched_user}" completeMethod="#{personalBean.completeSearchText}" effect="fade" emptyMessage="No users match"/>
+                        <p:commandButton id="searchgo" icon="ui-icon-search"  action="#{personalBean.searchGo()}"/>
                     </div>
                 </p:column>
 
 
                 <p:column style="width:20%;">
                     <div style="float: right;">
+                        <p:outputLabel value="#{personalBean.getLoggedUserFormatted()}" style="font-size: small; padding-right: 15px"/>
                         <p:commandButton id="notifications"  icon="ui-icon-mail-open"  action="notifications?faces-redirect=true"/>
                         <p:menuButton id="opts" value="Options" style="float: right;">
                             <p:menuitem value="#{personalBean.calendarPrivacy}" action="#{personalBean.toggleCalendarPrivacy()}" update="opts"  />
