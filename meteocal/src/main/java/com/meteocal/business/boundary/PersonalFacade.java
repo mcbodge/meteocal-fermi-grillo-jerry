@@ -342,7 +342,7 @@ public class PersonalFacade {
                 .setParameter(3, param + "%")
                 .setParameter(4, getLoggedUser())
                 .getResultList();
-        Logger.getLogger(PersonalFacade.class.getName()).log(Level.INFO, "-- query = {0}", query);
+           Logger.getLogger(PersonalFacade.class.getName()).log(Level.INFO, "-- query = {0}", query);
         if (users_founded != null) {
             users_founded.stream().forEach((u) -> {
                 result.add(u.toString());
@@ -350,6 +350,12 @@ public class PersonalFacade {
         }
         return result;
     }
+
+    
+    public String getUserId(String username) {
+        return getUser(username).getUserId().toString();
+    }
+
 
     public boolean updateEvent(int eventId, String name, String location, Integer geoname, Date dateTime, double duration, String invited_users, boolean event_private, String constraint, String description) {
         boolean result = false;
@@ -464,5 +470,6 @@ public class PersonalFacade {
         }
         return out;
     }
+
 
 }
