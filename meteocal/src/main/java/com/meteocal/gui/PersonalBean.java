@@ -1,5 +1,6 @@
 package com.meteocal.gui;
 
+import com.meteocal.business.boundary.EventFacade;
 import com.meteocal.business.boundary.HomeFacade;
 import com.meteocal.business.boundary.PersonalFacade;
 import java.io.IOException;
@@ -34,6 +35,8 @@ public class PersonalBean implements Serializable {
     PersonalFacade pf;
     @EJB
     HomeFacade hf;
+    @EJB
+    EventFacade ef;
 
     private static final long serialVersionUID = 1L;
     private String searched_user;
@@ -51,6 +54,7 @@ public class PersonalBean implements Serializable {
     private boolean editMode;
     private String header;
     private String button;
+    private int eventId;
 
     public PersonalBean() {
 
@@ -223,7 +227,6 @@ public class PersonalBean implements Serializable {
     public void init() {
         ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
         if (ec.getSessionMap().containsKey("editMode") && (boolean) ec.getSessionMap().get("editMode")) {
-
             dateTime = (Date) ec.getSessionMap().get("dateTime");
             eventName = (String) ec.getSessionMap().get("eventName");
             people = (String) ec.getSessionMap().get("people");
@@ -233,6 +236,7 @@ public class PersonalBean implements Serializable {
             event_private = (boolean) ec.getSessionMap().get("event_private");
             geoname = (Integer) ec.getSessionMap().get("geoname");
             text = (String) ec.getSessionMap().get("text");
+            eventId = (int)ec.getSessionMap().get("eventId");
 
             ec.getSessionMap().clear();
 
@@ -324,13 +328,25 @@ public class PersonalBean implements Serializable {
     }
 
     public void createEvent() {
-
-        if (!pf.createEvent(eventName, text.trim(), geoname, dateTime, eventDuration, people, !event_private, constraint, descr)) {
-            FacesContext.getCurrentInstance().addMessage("info", new FacesMessage(":( Your event has not been created."));
+        //TODO
+        //scegli se creare evento o se update
+        ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+        if (button.equals("Save")) {
+            //crea nuovo evento
+            if (!pf.createEvent(eventName, text.trim(), geoname, dateTime, eventDuration, people, !event_private, constraint, descr)) {
+                FacesContext.getCurrentInstance().addMessage("info", new FacesMessage(":( Your event has not been created."));
+            } else {
+                FacesContext.getCurrentInstance().addMessage("info", new FacesMessage("Your event has been created."));
+            }
         } else {
-            FacesContext.getCurrentInstance().addMessage("info", new FacesMessage("Your event has been created."));
+            //update evento
+            pf.updateEvent(eventId, eventName, text.trim(), geoname, dateTime, eventDuration, people, !event_private, constraint, descr);
+            try {
+                ec.redirect("personal?faces-redirect=true");
+            } catch (IOException ex) {
+                Logger.getLogger(PersonalBean.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
-
     }
 
     public void setText(String text) {
@@ -432,12 +448,5 @@ public class PersonalBean implements Serializable {
 
         }
     }
-
-
-
-
-
-
-
 
 }

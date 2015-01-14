@@ -9,6 +9,7 @@ import com.meteocal.business.control.EventCreationManager;
 import com.meteocal.business.control.EventManager;
 import com.meteocal.business.control.LogInManager;
 import com.meteocal.business.control.UserCalendarManager;
+import com.meteocal.business.entity.Answer;
 import com.meteocal.business.entity.Event;
 import com.meteocal.business.entity.Location;
 import com.meteocal.business.entity.User;
@@ -270,6 +271,7 @@ public class PersonalFacade {
         }
         return out;
     }
+
     /**
      * It changes the privacy setting of the given user (from public to private
      * or vice versa).
@@ -335,9 +337,9 @@ public class PersonalFacade {
         List<String> result = new ArrayList<>();
         String query = "SELECT * FROM users WHERE (UPPER(users.user_name) LIKE UPPER(?) OR UPPER(users.first_name) LIKE UPPER(?) OR UPPER(users.last_name) LIKE UPPER(?)) AND users.user_name <> ?";
         List<User> users_founded = em.createNativeQuery(query, User.class)
-                .setParameter(1, param+"%")
-                .setParameter(2, param+"%")
-                .setParameter(3, param+"%")
+                .setParameter(1, param + "%")
+                .setParameter(2, param + "%")
+                .setParameter(3, param + "%")
                 .setParameter(4, getLoggedUser())
                 .getResultList();
         Logger.getLogger(PersonalFacade.class.getName()).log(Level.INFO, "-- query = {0}", query);
@@ -347,6 +349,120 @@ public class PersonalFacade {
             });
         }
         return result;
+    }
+
+    public boolean updateEvent(int eventId, String name, String location, Integer geoname, Date dateTime, double duration, String invited_users, boolean event_private, String constraint, String description) {
+        boolean result = false;
+
+        //get the original event
+        Event event = em.find(Event.class, eventId);
+        if (!isFinished(eventId)) {
+
+            //verify mandatory fields (name, dateTime, duration)
+            if (name != null && dateTime != null) {
+
+                //calculate date end
+                event.setEnd(ev_cm.calcDateEnd(dateTime, duration));
+
+                //check constraint
+                Integer constr = Integer.parseInt(constraint);
+
+                //generate invited users list
+                List<User> invited_users_list = null;
+                if (invited_users != null) {
+                    invited_users_list = new ArrayList<>();
+                    StringTokenizer people = new StringTokenizer(invited_users, ",");
+                    User u = null;
+                    while (people.hasMoreElements()) {
+                        u = getUser(people.nextToken().trim());
+                        if (u != null) {
+                            invited_users_list.add(u);
+                        }
+                    }
+                }
+
+                //generate location string
+                String event_location = location;
+                if (geoname != null) {
+                    //location with geoname
+                    event_location = em.createNamedQuery("Location.findByGeonameid", Location.class).setParameter("geonameid", geoname).getSingleResult().toString();
+                }
+                event.setLocation(event_location);
+
+                //update the event if not overlap    
+                if (getNumOverlappingEvents(event.getCreator(), event.getStart(), event.getEnd()) == 0) {
+                    //save in db
+                    event = em.merge(event);
+                    em.flush();
+                    result = true;
+                    Weather weather = em.find(Weather.class, eventId);
+                    if (geoname == null) {
+                        //no weather condition is given, delete old
+                        if (weather != null) {
+                            em.remove(weather);
+                            em.flush();
+                        }
+                    } else {
+                        //create weather constraint and bind it to the event
+                        if (constraint != null) {
+                            weather.setConstraint(Integer.parseInt(constraint));
+
+                            //weather.setLocationCode(geoname);
+                            em.persist(weather);
+                            em.flush();
+                        }
+                    }
+                    //revoke or send invitations
+                    if (invited_users_list != null && !invited_users_list.isEmpty()) {
+
+                        //check revoke invitations | if the user was an attendee then info+mail
+                        for (User u : event.getAttendee()) {
+                            if (!invited_users_list.contains(u)) {
+                                //revoke+mail
+                                Answer ans = (Answer) em.createNativeQuery("SELECT * FROM answers WHERE answers.event_id = ? AND answers.user_id = ?", Answer.class).setParameter(1, event.getEventId()).setParameter(2, u.getUserId()).getSingleResult();
+                                ev_m.revokeParticipation(u, event, ans);
+                                em.remove(ans);
+                                em.flush();
+                            }
+                        }
+                        for (User u : event.getMaybeGoing()) {
+                            if (!invited_users_list.contains(u)) {
+                                //revoke
+                                ev_m.revokeInvitation(u, event);
+                                em.merge(event);
+                                em.merge(u);
+                            }
+                        }
+
+                        //invite only new users;
+                        for (User u : invited_users_list) {
+                            if (event.getMaybeGoing().contains(u) || event.getAttendee().contains(u)) {
+                                //no invitation 
+                                invited_users_list.remove(u);
+                            }
+                        }
+
+                        ev_m.sendInvitations(invited_users_list, event);
+                        for (User u : invited_users_list) {
+                            em.flush();
+                            em.merge(u);
+                        }
+                    }
+                }
+
+            }
+            Logger.getLogger(PersonalFacade.class.getName()).log(Level.INFO, "STOP createEvent PersonalFacade ---------------");
+        }
+        return result;
+    }
+
+    public boolean isFinished(int eventId) {
+        boolean out = false;
+        Event event = em.find(Event.class, eventId);
+        if (event.getEnd().before(new Date())) {
+            out = true;
+        }
+        return out;
     }
 
 }

@@ -1,6 +1,7 @@
 package com.meteocal.business.control;
 
 import com.meteocal.business.boundary.EmailManager;
+import com.meteocal.business.entity.Answer;
 import com.meteocal.business.entity.Event;
 import com.meteocal.business.entity.Information;
 import com.meteocal.business.entity.User;
@@ -93,30 +94,27 @@ public class EventManager {
         //revoke invitation
         if (e.getMaybeGoing().contains(u)) {
             //revoke invitaiton
+            e.getMaybeGoing().remove(u);
+            u.getInvitations().remove(e);
             e.getInvitedUserCollection().remove(u);
             u.getEventInvitationCollection().remove(e);
-            //e.getMaybeGoing().remove(u);
-            //u.getInvitations().remove(e);
 
-            /*
-             em.merge(e);
-             em.merge(u);
-             */
-        } else {
-            //if user have already accepted,  
-            if (e.getAttendee().contains(u)) {
-                //remove from the event
-                e.getAttendee().remove(u);
-                u.getEvents().remove(e);
-                /*
-                 em.merge(e);
-                 em.merge(u);
-                 //and send him an info
-                 newInformation(u, "You have been removed from the event: " + e.getName() + ".");
-                 */
-            }
-            //if user declined or he is not in the invited list do nothing.
         }
+    }
+
+    public void revokeParticipation(User u, Event e, Answer a) {
+        //if user have already accepted,  
+        if (e.getAttendee().contains(u)) {
+            //remove from the event
+            e.getAttendee().remove(u);
+            u.getEvents().remove(e);
+            e.getAnswerCollection().remove(a);
+            //email text parts
+            String subject = "METEOCAL: participation revoked";
+            String body = "Dear " + u.toString() + ",\nWe are sorry to inform you that your invitation to the event \""+ e.getName() +"\"has been revoked.\n\n\nPLEASE DO NOT REPLY TO THIS EMAIL";
+            EmailManager.getInstance().sendEmail(u.getEmail(), subject, body);
+        }
+        //if user declined or he is not in the invited list do nothing.
     }
 
     /**
