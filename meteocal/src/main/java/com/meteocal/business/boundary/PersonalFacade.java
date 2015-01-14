@@ -372,7 +372,7 @@ public class PersonalFacade {
 
                 //check constraint
                 Integer constr = Integer.parseInt(constraint);
-
+                
                 //generate invited users list
                 List<User> invited_users_list = null;
                 if (invited_users != null) {

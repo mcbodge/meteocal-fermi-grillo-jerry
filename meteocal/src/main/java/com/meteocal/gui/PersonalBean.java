@@ -227,6 +227,7 @@ public class PersonalBean implements Serializable {
     public void init() {
         ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
         if (ec.getSessionMap().containsKey("editMode") && (boolean) ec.getSessionMap().get("editMode")) {
+            editMode = true;
             dateTime = (Date) ec.getSessionMap().get("dateTime");
             eventName = (String) ec.getSessionMap().get("eventName");
             people = (String) ec.getSessionMap().get("people");
@@ -244,7 +245,8 @@ public class PersonalBean implements Serializable {
             button = "Save";
 
         } else {
-
+            
+            editMode = false;
             header = "New event";
             button = "Create";
 
@@ -328,27 +330,26 @@ public class PersonalBean implements Serializable {
     }
 
     public void createEvent() {
-        //TODO
-        //scegli se creare evento o se update
         ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
-        if (button.equals("Save")) {
-            //crea nuovo evento
-            if (!pf.createEvent(eventName, text.trim(), geoname, dateTime, eventDuration, people, !event_private, constraint, descr)) {
-                FacesContext.getCurrentInstance().addMessage("info", new FacesMessage(":( Your event has not been created."));
-            } else {
-                FacesContext.getCurrentInstance().addMessage("info", new FacesMessage("Your event has been created."));
-            }
-        } else {
+        if(editMode){
+            editMode = false;
             //update evento
             pf.updateEvent(eventId, eventName, text.trim(), geoname, dateTime, eventDuration, people, !event_private, constraint, descr);
+
             try {
-                ec.redirect("personal?faces-redirect=true");
+                ec.redirect("personal.xhtml?faces-redirect=true");
             } catch (IOException ex) {
                 Logger.getLogger(PersonalBean.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+            //crea nuovo evento
+        if (pf.createEvent(eventName, text.trim(), geoname, dateTime, eventDuration, people, !event_private, constraint, descr)) {
+            FacesContext.getCurrentInstance().addMessage("info", new FacesMessage("Your event has been created."));
+        } else {
+            FacesContext.getCurrentInstance().addMessage("info", new FacesMessage(":( The event hasn't been created."));
+        }
     }
-
+    
     public void setText(String text) {
         if (text == null) {
             this.text = "";
