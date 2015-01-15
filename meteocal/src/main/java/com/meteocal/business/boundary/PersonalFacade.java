@@ -206,8 +206,38 @@ public class PersonalFacade {
                     .setParameter(11, formatter.format(start))
                     .setParameter(12, formatter.format(end))
                     .getSingleResult();
-            Logger.getLogger(PersonalFacade.class.getName()).log(Level.INFO, "-- query = {0}", query);
-            Logger.getLogger(PersonalFacade.class.getName()).log(Level.INFO, "-- (long)num overlapping events = {0}", l);
+            count = l.intValue();
+        } catch (NoResultException ex) {
+
+        }
+        Logger.getLogger(PersonalFacade.class.getName()).log(Level.INFO, "-- num overlapping events = {0}", count);
+        return count;
+    }
+    private int getNumOverlappingEvents(User creator, Date start, Date end, int eventId) {
+        em.flush();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        int count = 0;
+        try {
+            String query = "SELECT COUNT(e.event_id) FROM events e LEFT JOIN answers a ON e.event_id = a.event_id "
+                    + "WHERE (((e.creator = ?) OR ( a.answer_value = 1 AND a.user_id = ?)) "
+                    + "AND("+ "(e.start_date <= ? AND e.end_date >= ? ) OR (e.start_date >= ? AND e.end_date >= ? AND e.start_date < ? ) OR"
+                    + "(e.start_date <= ? AND e.end_date <= ? AND e.end_date > ? ) OR (e.start_date > ? AND e.end_date < ? )))"
+                    + "AND e.event_id <> ?";
+            Long l = (Long) em.createNativeQuery(query)
+                    .setParameter(1, creator.getUserId())
+                    .setParameter(2, creator.getUserId())
+                    .setParameter(3, formatter.format(start))
+                    .setParameter(4, formatter.format(end))
+                    .setParameter(5, formatter.format(start))
+                    .setParameter(6, formatter.format(end))
+                    .setParameter(7, formatter.format(end))
+                    .setParameter(8, formatter.format(start))
+                    .setParameter(9, formatter.format(end))
+                    .setParameter(10, formatter.format(start))
+                    .setParameter(11, formatter.format(start))
+                    .setParameter(12, formatter.format(end))
+                    .setParameter(13, eventId)
+                    .getSingleResult();
             count = l.intValue();
         } catch (NoResultException ex) {
 
@@ -366,7 +396,8 @@ public class PersonalFacade {
 
             //verify mandatory fields (name, dateTime, duration)
             if (name != null && dateTime != null) {
-
+                event.setName(name);
+                event.setStart(dateTime);
                 //calculate date end
                 event.setEnd(ev_cm.calcDateEnd(dateTime, duration));
 
@@ -396,8 +427,12 @@ public class PersonalFacade {
                 event.setLocation(event_location);
 
                 //update the event if not overlap    
-                if (getNumOverlappingEvents(event.getCreator(), event.getStart(), event.getEnd()) == 0) {
+                if (getNumOverlappingEvents(event.getCreator(), event.getStart(), event.getEnd(), event.getEventId()) == 0) {
                     //save in db
+                    if(invited_users_list == null || invited_users_list.isEmpty()){
+                        event.setPersonal(true);
+                    }
+                    event.setPublicEvent(event_private);
                     event = em.merge(event);
                     em.flush();
                     result = true;
@@ -441,7 +476,7 @@ public class PersonalFacade {
                         }
 
                         //invite only new users;
-                        for (User u : invited_users_list) {
+                         for (User u : invited_users_list) {
                             if (event.getMaybeGoing().contains(u) || event.getAttendee().contains(u)) {
                                 //no invitation 
                                 invited_users_list.remove(u);

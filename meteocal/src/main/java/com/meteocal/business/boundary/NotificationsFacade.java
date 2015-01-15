@@ -75,7 +75,7 @@ public class NotificationsFacade {
             //info_id
             row.add(info.getInformationId().toString());
             //disable accept button
-            row.add("true");
+            row.add("false");
 
             //add element
             list.add(row);
