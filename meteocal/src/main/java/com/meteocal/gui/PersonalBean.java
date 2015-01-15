@@ -45,7 +45,7 @@ public class PersonalBean implements Serializable {
     private double eventDuration = 0.5;
     private boolean event_private;
     private String country, city, province;
-    private Integer geoname = null;
+    private Integer geoname;
     private List<String> countries, cities, provinces;
     private String text = "";
     private String calendarPrivacy;
@@ -236,8 +236,11 @@ public class PersonalBean implements Serializable {
             eventDuration = (double) ec.getSessionMap().get("eventDuration");
             event_private = (boolean) ec.getSessionMap().get("event_private");
             geoname = (Integer) ec.getSessionMap().get("geoname");
+            Logger.getLogger(PersonalBean.class.getName()).log(Level.INFO, "YYYYYYYYYYYYYYYY{0}", geoname);
             text = (String) ec.getSessionMap().get("text");
             eventId = (int) ec.getSessionMap().get("eventId");
+            
+            Logger.getLogger(PersonalBean.class.getName()).log(Level.INFO, "AAAAAAAAAAAAAAAAA{0}", geoname);
 
             ec.getSessionMap().clear();
 
@@ -334,6 +337,8 @@ public class PersonalBean implements Serializable {
         if (editMode) {
             editMode = false;
             //update evento
+            
+            Logger.getLogger(PersonalFacade.class.getName()).log(Level.INFO, "ZZZZZZZZZZZZZZZZZ{0}", geoname);
             if (pf.updateEvent(eventId, eventName, text.trim(), geoname, dateTime, eventDuration, people, !event_private, constraint, descr)) {
                 FacesContext.getCurrentInstance().addMessage("info", new FacesMessage("Your event has been updated."));
             } else {
@@ -358,7 +363,6 @@ public class PersonalBean implements Serializable {
             this.text = "";
         } else {
             this.text = text.trim();
-            geoname = null;
         }
     }
 

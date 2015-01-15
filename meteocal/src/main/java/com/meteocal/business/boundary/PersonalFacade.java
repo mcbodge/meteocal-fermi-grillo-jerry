@@ -12,7 +12,6 @@ import com.meteocal.business.control.UserCalendarManager;
 import com.meteocal.business.entity.Answer;
 import com.meteocal.business.entity.Event;
 import com.meteocal.business.entity.Location;
-import static com.meteocal.business.entity.Location_.geonameid;
 import com.meteocal.business.entity.User;
 import com.meteocal.business.entity.Weather;
 import java.text.SimpleDateFormat;
@@ -396,7 +395,8 @@ public class PersonalFacade {
         Event event = em.find(Event.class, eventId);
         
         //update the event if not overlap  
-
+        
+        //TODO solve
         if (/*!isFinished(eventId) &&*/ name != null && dateTime != null && getNumOverlappingEvents(event.getCreator(), dateTime, end, eventId) < 1) {
 
             //verify mandatory fields (name, dateTime, duration)
@@ -420,24 +420,37 @@ public class PersonalFacade {
                 }
                 
                 event.setDescription(description);
+                em.flush();
+                em.refresh(event);
 
                 //set constraint
 
                 //TODO start - must all the geoname-dependent parameters (location and weather)
-                //issue in changing the weather constraint in the db.
+                //issue in changing the weather constraint in the db (it doesn't change).
+                Logger.getLogger(PersonalFacade.class.getName()).log(Level.INFO, "XXXXXXXXXXXXXXXXXXXXX{0}", geoname);
+               
+                if(event.getWeather() != null){
+                    em.remove(event.getWeather());
+                    em.flush();
+                }
+                
                 if(geoname==null){
+                    
                     event.setLocation(location);
                     event.setWeather(null);
+                    
                 } else {
+                    
                     event.setWeather(new Weather(eventId, geoname));
-                    Weather w = em.merge(event.getWeather());
-                    w.setEventId(eventId);
-                    w.setLocationCode(geoname.toString());
+                    Weather w = event.getWeather();
                     w.setConstraint(Integer.parseInt(constraint));
-                    event.setWeather(w);
                     em.flush();
-                    em.refresh(w);
+                    event.setWeather(w);
+                    em.merge(w);
+                    em.merge(event);
+                    em.flush();
                     em.refresh(event);
+                    
                 }
                 //TODO end
                 
@@ -446,9 +459,7 @@ public class PersonalFacade {
                         event.setPersonal(true);
                     }
                     event.setPublicEvent(event_private);
-                    //em.refresh(event);
-                    //em.flush();
-                    //event = em.merge(event);
+                    event = em.merge(event);
                     em.flush();
                     result = true;
                     
