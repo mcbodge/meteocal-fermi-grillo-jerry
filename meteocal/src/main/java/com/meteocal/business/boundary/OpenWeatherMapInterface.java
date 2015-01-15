@@ -79,14 +79,13 @@ public class OpenWeatherMapInterface {
                 }
 
             }
-
         } catch (MalformedURLException ex) {
             Logger.getLogger(OpenWeatherMapInterface.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             Logger.getLogger(OpenWeatherMapInterface.class.getName()).log(Level.SEVERE, null, ex);
         }
-
-        return null;//builder.toString();    
+        
+        return builder.toString();    
         
     }
     

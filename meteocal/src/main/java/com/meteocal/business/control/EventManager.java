@@ -111,7 +111,7 @@ public class EventManager {
             e.getAnswerCollection().remove(a);
             //email text parts
             String subject = "METEOCAL: participation revoked";
-            String body = "Dear " + u.toString() + ",\nWe are sorry to inform you that your invitation to the event \""+ e.getName() +"\"has been revoked.\n\n\nPLEASE DO NOT REPLY TO THIS EMAIL";
+            String body = "Dear " + u.toString() + ",\nWe are sorry to inform you that your invitation to the event \"" + e.getName() + "\"has been revoked.\n\n\nPLEASE DO NOT REPLY TO THIS EMAIL";
             EmailManager.getInstance().sendEmail(u.getEmail(), subject, body);
         }
         //if user declined or he is not in the invited list do nothing.
@@ -159,7 +159,6 @@ public class EventManager {
         return out;
     }
 
-    //*any other condition*
     /**
      * Given an event it says if it has adverse weather conditions. If there are
      * adverse weather conditions, it returns false. In any other condition it
@@ -181,7 +180,7 @@ public class EventManager {
      * @param constraint
      * @return
      */
-    private boolean canBeDone(WeatherCondition wc, Integer constraint) {
+    public boolean canBeDone(WeatherCondition wc, Integer constraint) {
         boolean out = true;
 
         switch (constraint) {
@@ -267,6 +266,11 @@ public class EventManager {
             out = true;
         }
         return out;
+    }
+
+    public void sendEmail(String to,String subject,String body) {
+        EmailManager.getInstance().sendEmail(to, subject, body);
+        Logger.getLogger(EventManager.class.getName()).log(Level.INFO, "-- invitation email sent");
     }
 
 }
