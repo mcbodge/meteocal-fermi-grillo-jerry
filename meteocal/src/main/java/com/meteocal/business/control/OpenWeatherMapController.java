@@ -128,8 +128,8 @@ public class OpenWeatherMapController {
     }
 
     //TODO jDoc
-    public String sayForecast(Integer geoid) throws JSONException {
-        return getValueFromCode(parseForecastId(OpenWeatherMapInterface.getMessage(geoid))).toString();
+    public Integer getForecast(Integer geoid) throws JSONException {
+        return parseForecastId(OpenWeatherMapInterface.getMessage(geoid));
     }
 
 }

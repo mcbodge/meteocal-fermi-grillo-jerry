@@ -11,6 +11,8 @@ import com.meteocal.business.control.LogInManager;
 import com.meteocal.business.control.OpenWeatherMapController;
 import com.meteocal.business.entity.Event;
 import com.meteocal.business.entity.User;
+import com.meteocal.business.entity.Weather;
+import com.meteocal.business.entity.WeatherCondition;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -137,8 +139,9 @@ public class EventFacade {
     public String getForecast(String eventId) {
 
         Event e = getEvent(eventId);
-
-        return OpenWeatherMapController.getValueFromCode(e.getForecast()).toString();
+        Weather w = em.find(Weather.class, Integer.parseInt(eventId));
+        WeatherCondition wc = OpenWeatherMapController.getValueFromCode(w.getForecast());
+        return wc.toString();
 
     }
 
