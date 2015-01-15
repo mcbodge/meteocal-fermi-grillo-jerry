@@ -12,6 +12,7 @@ import com.meteocal.business.control.UserCalendarManager;
 import com.meteocal.business.entity.Answer;
 import com.meteocal.business.entity.Event;
 import com.meteocal.business.entity.Location;
+import static com.meteocal.business.entity.Location_.geonameid;
 import com.meteocal.business.entity.User;
 import com.meteocal.business.entity.Weather;
 import java.text.SimpleDateFormat;
@@ -386,30 +387,30 @@ public class PersonalFacade {
         return getUser(username).getUserId().toString();
     }
 
-
     public boolean updateEvent(int eventId, String name, String location, Integer geoname, Date dateTime, double duration, String invited_users, boolean event_private, String constraint, String description) {
+        
         boolean result = false;
-
+        Date end = ev_cm.calcDateEnd(dateTime, duration);
+        
         //get the original event
         Event event = em.find(Event.class, eventId);
-        if (!isFinished(eventId)) {
+        
+        //update the event if not overlap  
+
+        if (/*!isFinished(eventId) &&*/ name != null && dateTime != null && getNumOverlappingEvents(event.getCreator(), dateTime, end, eventId) < 1) {
 
             //verify mandatory fields (name, dateTime, duration)
-            if (name != null && dateTime != null) {
                 event.setName(name);
                 event.setStart(dateTime);
                 //calculate date end
-                event.setEnd(ev_cm.calcDateEnd(dateTime, duration));
-
-                //check constraint
-                Integer constr = Integer.parseInt(constraint);
+                event.setEnd(end);
                 
                 //generate invited users list
                 List<User> invited_users_list = null;
                 if (invited_users != null) {
                     invited_users_list = new ArrayList<>();
                     StringTokenizer people = new StringTokenizer(invited_users, ",");
-                    User u = null;
+                    User u;
                     while (people.hasMoreElements()) {
                         u = getUser(people.nextToken().trim());
                         if (u != null) {
@@ -417,42 +418,40 @@ public class PersonalFacade {
                         }
                     }
                 }
+                
+                event.setDescription(description);
 
-                //generate location string
-                String event_location = location;
-                if (geoname != null) {
-                    //location with geoname
-                    event_location = em.createNamedQuery("Location.findByGeonameid", Location.class).setParameter("geonameid", geoname).getSingleResult().toString();
+                //set constraint
+
+                //TODO start - must all the geoname-dependent parameters (location and weather)
+                //issue in changing the weather constraint in the db.
+                if(geoname==null){
+                    event.setLocation(location);
+                    event.setWeather(null);
+                } else {
+                    event.setWeather(new Weather(eventId, geoname));
+                    Weather w = em.merge(event.getWeather());
+                    w.setEventId(eventId);
+                    w.setLocationCode(geoname.toString());
+                    w.setConstraint(Integer.parseInt(constraint));
+                    event.setWeather(w);
+                    em.flush();
+                    em.refresh(w);
+                    em.refresh(event);
                 }
-                event.setLocation(event_location);
-
-                //update the event if not overlap    
-                if (getNumOverlappingEvents(event.getCreator(), event.getStart(), event.getEnd(), event.getEventId()) == 0) {
+                //TODO end
+                
                     //save in db
                     if(invited_users_list == null || invited_users_list.isEmpty()){
                         event.setPersonal(true);
                     }
                     event.setPublicEvent(event_private);
-                    event = em.merge(event);
+                    //em.refresh(event);
+                    //em.flush();
+                    //event = em.merge(event);
                     em.flush();
                     result = true;
-                    Weather weather = em.find(Weather.class, eventId);
-                    if (geoname == null) {
-                        //no weather condition is given, delete old
-                        if (weather != null) {
-                            em.remove(weather);
-                            em.flush();
-                        }
-                    } else {
-                        //create weather constraint and bind it to the event
-                        if (constraint != null) {
-                            weather.setConstraint(Integer.parseInt(constraint));
-
-                            //weather.setLocationCode(geoname);
-                            em.persist(weather);
-                            em.flush();
-                        }
-                    }
+                    
                     //revoke or send invitations
                     if (invited_users_list != null && !invited_users_list.isEmpty()) {
 
@@ -491,9 +490,6 @@ public class PersonalFacade {
                     }
                 }
 
-            }
-            Logger.getLogger(PersonalFacade.class.getName()).log(Level.INFO, "STOP createEvent PersonalFacade ---------------");
-        }
         return result;
     }
 
