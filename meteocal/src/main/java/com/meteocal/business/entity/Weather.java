@@ -77,9 +77,19 @@ public class Weather implements Serializable {
         this.locationCode = locationCode;
     }
     
+    public Weather(Integer eventId, String locationCode, Integer constraint) {
+        this.eventId = eventId;
+        this.locationCode = locationCode;
+        this.weather_constraint = constraint;
+    }
+    
     public Weather(Integer eventId, Integer locationCode) {
         this.eventId = eventId;
         this.locationCode = locationCode.toString();
+    }
+
+    public Weather(Integer eventId, Integer geoname, int parseInt) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
     public Integer getEventId() {
@@ -160,6 +170,7 @@ public class Weather implements Serializable {
     /*    public void update(){
     
     }*/
+
     
     
     // </editor-fold>

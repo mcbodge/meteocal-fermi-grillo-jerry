@@ -334,13 +334,11 @@ public class PersonalBean implements Serializable {
         if (editMode) {
             editMode = false;
             //update evento
-            if (pf.updateEvent(eventId, eventName, text.trim(), geoname, dateTime, eventDuration, people, !event_private, constraint, descr)){
+            if (pf.updateEvent(eventId, eventName, text.trim(), geoname, dateTime, eventDuration, people, !event_private, constraint, descr)) {
                 FacesContext.getCurrentInstance().addMessage("info", new FacesMessage("Your event has been updated."));
             } else {
                 FacesContext.getCurrentInstance().addMessage("info", new FacesMessage(":( The event hasn't been updated."));
-            }
-
-            try {
+            } try {
                 ec.redirect("personal.xhtml?faces-redirect=true");
             } catch (IOException ex) {
                 Logger.getLogger(PersonalBean.class.getName()).log(Level.SEVERE, null, ex);
@@ -365,9 +363,9 @@ public class PersonalBean implements Serializable {
     }
 
     public void handleKeyEvent() {
-
-        text = text.trim();
         geoname = null;
+        text = text.trim();
+        
 
     }
 
