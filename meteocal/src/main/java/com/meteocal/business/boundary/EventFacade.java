@@ -37,7 +37,7 @@ public class EventFacade {
 
     @Inject
     EventManager man;
-    
+
     @Inject
     EventCreationManager ev_cm;
 
@@ -138,11 +138,13 @@ public class EventFacade {
 
     public String getForecast(String eventId) {
 
-        Event e = getEvent(eventId);
         Weather w = em.find(Weather.class, Integer.parseInt(eventId));
-        WeatherCondition wc = OpenWeatherMapController.getValueFromCode(w.getForecast());
+        Integer code = null;
+        if (w != null) {
+            code = w.getForecast();
+        }
+        WeatherCondition wc = OpenWeatherMapController.getValueFromCode(code);
         return wc.toString();
-
     }
 
     public String getLocation(String eventId) {
@@ -321,6 +323,5 @@ public class EventFacade {
         em.flush();
 
     }
-
 
 }
