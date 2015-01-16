@@ -20,6 +20,7 @@ import javax.ejb.Singleton;
 public class OpenWeatherMapInterface {
      
     static final String url="http://api.openweathermap.org/data/2.5/weather?id=";
+    static final String DAILY_URL = "http://api.openweathermap.org/data/2.5/forecast/daily?id=";
 
     public static String getMessage(Integer geoid){
         
@@ -87,6 +88,34 @@ public class OpenWeatherMapInterface {
         
         return builder.toString();    
         
+    }
+    
+    public static String getCntMessage(Integer geoid, Integer days){
+        String line;
+        StringBuilder builder = new StringBuilder();
+        URL url_weather;
+
+        try {
+
+            url_weather = new URL(DAILY_URL + geoid.toString() + "&mode=json&cnt=" + days.toString());
+
+            HttpURLConnection httpURLConnection = (HttpURLConnection) url_weather.openConnection();
+
+            if (httpURLConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+
+                BufferedReader reader = new BufferedReader(new InputStreamReader(httpURLConnection.getInputStream()), 512);
+                while ((line = reader.readLine()) != null) {
+                    builder.append(line);
+                }
+
+            }
+        } catch (MalformedURLException ex) {
+            Logger.getLogger(OpenWeatherMapInterface.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(OpenWeatherMapInterface.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return builder.toString();   
     }
     
 }

@@ -53,7 +53,8 @@ public class TimerService {
                 Weather w = it.next();
                 int geoname = Integer.parseInt(w.getLocationCode());
                 try {
-                    int updatedForecast = owmc.getForecast(geoname);
+                    int updatedForecast = owmc.getForecast(geoname,2);
+                    System.out.println("----- Read: " + updatedForecast);
                     if (w.getForecast() != null && !w.getForecast().equals(updatedForecast)) {
                         //new information for all attendee
                         for (User u : w.getEvent().getAttendee()) {

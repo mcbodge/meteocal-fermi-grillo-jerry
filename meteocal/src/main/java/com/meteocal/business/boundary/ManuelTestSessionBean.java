@@ -12,7 +12,7 @@ public class ManuelTestSessionBean {
     OpenWeatherMapController wc;
 
     public String test() throws JSONException{
-        return wc.getForecast(292223).toString();
+        return wc.getForecast(524901, 1).toString();
     }
 }
 
