@@ -101,7 +101,7 @@ public class UserTestManagedBean {
         if (null != uploadedFile) {
             try {
                 InputStream is = uploadedFile.getInputStream();
-                String filename = FacesContext.getCurrentInstance().getExternalContext().getRealPath("files/") + File.separatorChar
+                String filename = FacesContext.getCurrentInstance().getExternalContext().getRealPath("files") + File.separatorChar
                         + "TEST-UPLOAD.dat";
 
                 File file = new File(filename);
