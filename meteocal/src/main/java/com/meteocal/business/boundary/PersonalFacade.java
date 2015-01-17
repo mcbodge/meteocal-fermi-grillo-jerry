@@ -455,15 +455,15 @@ public class PersonalFacade {
             event.setStart(dateTime);
             //calculate date end
             event.setEnd(end);
-
             //generate invited users list
-            List<User> invited_users_list = null;
+            List<User> invited_users_list = new ArrayList<>();
             if (invited_users != null) {
-                invited_users_list = new ArrayList<>();
+
                 StringTokenizer people = new StringTokenizer(invited_users, ",");
                 User u;
                 while (people.hasMoreElements()) {
                     u = getUser(people.nextToken().trim());
+
                     if (u != null) {
                         invited_users_list.add(u);
                     }
@@ -530,40 +530,40 @@ public class PersonalFacade {
             result = true;
 
             //revoke or send new invitations
-            if (invited_users_list != null && !invited_users_list.isEmpty()) {
-
-                //check revoke invitations | if the user was an attendee then info+mail
-                for (User u : event.getAttendee()) {
-                    if (!invited_users_list.contains(u)) {
-                        //revoke+mail
-                        Answer ans = (Answer) em.createNativeQuery("SELECT * FROM answers WHERE answers.event_id = ? AND answers.user_id = ?", Answer.class).setParameter(1, event.getEventId()).setParameter(2, u.getUserId()).getSingleResult();
-                        ev_m.revokeParticipation(u, event, ans);
-                        em.remove(ans);
-                        em.flush();
-                    }
-                }
-                for (User u : event.getMaybeGoing()) {
-                    if (!invited_users_list.contains(u)) {
-                        //revoke
-                        ev_m.revokeInvitation(u, event);
-                        em.merge(event);
-                        em.merge(u);
-                    }
-                }
-
-                List<User> temp = new ArrayList<>(invited_users_list);
-                for (User u : temp) {
-                    if (event.getMaybeGoing().contains(u) || event.getAttendee().contains(u)) {
-                        //no invitation
-                        invited_users_list.remove(u);
-                    }
-                }
-
-                ev_m.sendInvitations(invited_users_list, event);
-                for (User u : invited_users_list) {
+            //check revoke invitations | if the user was an attendee then info+mail
+            for (User u : event.getAttendee()) {
+                if (!invited_users_list.contains(u)) {
+                    //revoke+mail
+                    Answer ans = (Answer) em.createNativeQuery("SELECT * FROM answers WHERE answers.event_id = ? AND answers.user_id = ?", Answer.class).setParameter(1, event.getEventId()).setParameter(2, u.getUserId()).getSingleResult();
+                    ev_m.revokeParticipation(u, event, ans);
+                    em.remove(ans);
+                    Information info = new Information(event, u, "Your participation has been revoked.");
+                    em.merge(info);
+                    em.merge(event);
                     em.flush();
+                }
+            }
+            for (User u : event.getMaybeGoing()) {
+                if (!invited_users_list.contains(u)) {
+                    //revoke
+                    ev_m.revokeInvitation(u, event);
+                    em.merge(event);
                     em.merge(u);
                 }
+            }
+            //create list new invitation
+            List<User> temp = new ArrayList<>(invited_users_list);
+            for (User u : temp) {
+                if (event.getMaybeGoing().contains(u) || event.getAttendee().contains(u)) {
+                    //no invitation
+                    invited_users_list.remove(u);
+                }
+            }
+            //invite people
+            ev_m.sendInvitations(invited_users_list, event);
+            for (User u : invited_users_list) {
+                em.flush();
+                em.merge(u);
             }
 
             //send info to old attendees
