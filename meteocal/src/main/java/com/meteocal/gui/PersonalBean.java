@@ -435,7 +435,7 @@ public class PersonalBean implements Serializable {
             FacesContext.getCurrentInstance().addMessage("howdy", new FacesMessage(summary));
         }
         if (pf.haveGotNotifications()) {
-            String summary = "You've got notifications." + getLoggedUser();
+            String summary = "You've got notifications.";
             FacesContext.getCurrentInstance().addMessage("howdy", new FacesMessage(summary));
         }
     }
