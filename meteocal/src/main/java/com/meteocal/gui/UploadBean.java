@@ -16,32 +16,34 @@ import org.primefaces.model.UploadedFile;
  *
  * @author Manuel
  */
-
 @ManagedBean
 public class UploadBean {
-    
+
     @EJB
     UploadFacade uf;
 
+    private UploadedFile file;
+
     public UploadBean() {
     }
-    
-    private UploadedFile file;
- 
+
     public UploadedFile getFile() {
         return file;
     }
- 
 
     public void setFile(UploadedFile file) {
         this.file = file;
     }
-     
+    
     public void upload(FileUploadEvent f) {
-            uf.upload(f.getFile());
+        uf.upload(f.getFile());
     }
-
-
     
-    
+    public void uploadSingle() {
+        if(file!= null){
+            uf.upload(file);
+        }
+    }
+     
+
 }
