@@ -16,6 +16,12 @@ import com.meteocal.business.entity.Information;
 import com.meteocal.business.entity.Location;
 import com.meteocal.business.entity.User;
 import com.meteocal.business.entity.Weather;
+import com.meteocal.gui.PersonalBean;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -27,6 +33,8 @@ import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.Stateful;
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -340,8 +348,30 @@ public class PersonalFacade {
      *
      * @return a link to the file to be downloaded
      */
-    public String startDownload() {
-        return ucm.startDownload(getUser(getLoggedUser()));
+    public void startDownload() {
+        FacesContext fc = FacesContext.getCurrentInstance();
+        ExternalContext ec = fc.getExternalContext();
+
+        ec.responseReset(); // Some JSF component library or some Filter might have set some headers in the buffer beforehand. We want to get rid of them, else it may collide.
+        ec.setResponseContentType("application/octet-stream"); // Check http://www.iana.org/assignments/media-types for all types. Use if necessary ExternalContext#getMimeType() for auto-detection based on filename.
+        //ec.setResponseContentLength(contentLength); // Set it with the file size. This header is optional. It will work if it's omitted, but the download progress will be unknown.
+        ec.setResponseHeader("Content-Disposition", "attachment; filename=\"" + getLoggedUser() + "_meteocal.dat" + "\""); // The Save As popup magic is done here. You can give it any file name you want, this only won't work in MSIE, it will use current request URL as file name instead.
+        try {
+            InputStream input = ucm.startDownload(getUser(getLoggedUser()));
+            OutputStream output = ec.getResponseOutputStream();
+            // Now you can write the InputStream of the file to the above OutputStream the usual way.
+            // ...
+            int numRead;
+            byte[] buf = new byte[8192];
+            while ((numRead = input.read(buf)) >= 0) {
+                output.write(buf, 0, numRead);
+            }
+            input.close();
+            output.close();
+        } catch (IOException ex) {
+            Logger.getLogger(PersonalBean.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        fc.responseComplete(); // Important! Otherwise JSF will attempt to render the response which obviously will fail since it's already written with a file and closed.
     }
 
     /**
@@ -551,6 +581,16 @@ public class PersonalFacade {
         boolean out = false;
         Event event = em.find(Event.class, eventId);
         if (event.getEnd().before(new Date())) {
+            out = true;
+        }
+        return out;
+    }
+
+    public boolean haveGotNotifications() {
+        boolean out = false;
+        User u = getUser(getLoggedUser());
+        //check info
+        if (u.getInformations() != null && !u.getInformations().isEmpty() || u.getInvitations() != null && !u.getInvitations().isEmpty()) {
             out = true;
         }
         return out;

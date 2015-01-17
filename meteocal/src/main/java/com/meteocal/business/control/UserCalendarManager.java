@@ -37,11 +37,11 @@ public class UserCalendarManager {
      * @param u the User who will download his own calendar.
      * @return the URL of the file position.
      */
-    public String startDownload(User u) {
+    public FileInputStream startDownload(User u) throws FileNotFoundException {
         //create a file in the /files directory 
-        String dir = FacesContext.getCurrentInstance().getExternalContext().getRealPath("files") + File.separatorChar;
+        String dir = FacesContext.getCurrentInstance().getExternalContext().getRealPath("files/") + File.separatorChar;
         String filename = u.getUserName() + "_meteocal" + EXT;
-        File file = new File(filename);
+        File file = new File(dir+filename);
         FileWriter writer;
 
         //if file already exist overwrite
@@ -56,14 +56,20 @@ public class UserCalendarManager {
             for (Event e : u.getCreatedEvents()) {
                 if (e.isPersonal() && e.isPublicEvent()) {
                     //write in file  eventid   name    location    start   end   descr   constraint
-                    writer.write("\n" + e.getEventId().toString() + "\t" + e.getName() + "\t" + e.getLocation() + "\t" + e.getStart().toString() + "\t" + e.getEnd().toString() + "\t" + e.getDescription() + "\t" + e.getWeather().getConstraint().toString());
+                    String weather_constraint = null;
+                    if(e.getWeather() != null)
+                        e.getWeather().getConstraint().toString();
+                    
+                    writer.write("\n" + e.getEventId().toString() + "\t" + e.getName() + "\t" + e.getLocation() + "\t" + e.getStart().toString() + "\t" + e.getEnd().toString() + "\t" + e.getDescription() + "\t" + weather_constraint);
                 }
             }
             writer.close();
         } catch (IOException ex) {
 
         }
-        return "files/" + filename;
+        System.out.println("srv path: files/" + filename);
+        //return "files/" + filename;
+        return new FileInputStream(file);
     }
 
     /**

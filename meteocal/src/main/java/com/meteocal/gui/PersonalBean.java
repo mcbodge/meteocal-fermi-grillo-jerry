@@ -22,6 +22,7 @@ import org.primefaces.model.LazyScheduleModel;
 import org.primefaces.model.ScheduleEvent;
 import org.primefaces.model.ScheduleModel;
 import org.primefaces.event.SelectEvent;
+import org.primefaces.model.StreamedContent;
 
 /**
  *
@@ -239,7 +240,7 @@ public class PersonalBean implements Serializable {
             Logger.getLogger(PersonalBean.class.getName()).log(Level.INFO, "YYYYYYYYYYYYYYYY{0}", geoname);
             text = (String) ec.getSessionMap().get("text");
             eventId = (int) ec.getSessionMap().get("eventId");
-            
+
             Logger.getLogger(PersonalBean.class.getName()).log(Level.INFO, "AAAAAAAAAAAAAAAAA{0}", geoname);
 
             ec.getSessionMap().clear();
@@ -337,13 +338,14 @@ public class PersonalBean implements Serializable {
         if (editMode) {
             editMode = false;
             //update evento
-            
+
             Logger.getLogger(PersonalFacade.class.getName()).log(Level.INFO, "ZZZZZZZZZZZZZZZZZ{0}", geoname);
             if (pf.updateEvent(eventId, eventName, text.trim(), geoname, dateTime, eventDuration, people, !event_private, constraint, descr)) {
                 FacesContext.getCurrentInstance().addMessage("info", new FacesMessage("Your event has been updated."));
             } else {
                 FacesContext.getCurrentInstance().addMessage("info", new FacesMessage(":( The event hasn't been updated."));
-            } try {
+            }
+            try {
                 ec.redirect("personal.xhtml?faces-redirect=true");
             } catch (IOException ex) {
                 Logger.getLogger(PersonalBean.class.getName()).log(Level.SEVERE, null, ex);
@@ -369,7 +371,6 @@ public class PersonalBean implements Serializable {
     public void handleKeyEvent() {
         geoname = null;
         text = text.trim();
-        
 
     }
 
@@ -392,11 +393,9 @@ public class PersonalBean implements Serializable {
         calendarPrivacy = pf.getCalendarString();
 
     }
-
-    public String getCalendar() {
-
-        return pf.startDownload();
-
+    
+    public void getCalendar() {
+         pf.startDownload();
     }
 
     public String cannotCreate() {
@@ -433,6 +432,10 @@ public class PersonalBean implements Serializable {
             ec.getSessionMap().put("justLoggedIn", false);
 
             String summary = "Howdy " + getLoggedUser();
+            FacesContext.getCurrentInstance().addMessage("howdy", new FacesMessage(summary));
+        }
+        if (pf.haveGotNotifications()) {
+            String summary = "You've got notifications." + getLoggedUser();
             FacesContext.getCurrentInstance().addMessage("howdy", new FacesMessage(summary));
         }
     }
