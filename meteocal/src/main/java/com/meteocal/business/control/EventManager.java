@@ -40,10 +40,10 @@ public class EventManager {
             Logger.getLogger(EventManager.class.getName()).log(Level.INFO, "--user has been already invited");
         } else {
             //check user not already answered
-            if (e.getAttendee().contains(u) || e.getDeclined().contains(u)) {
+            if (e.getAttendee().contains(u) /*|| e.getDeclined().contains(u)*/) {
                 //user has already answered -> do nothing
                 Logger.getLogger(EventManager.class.getName()).log(Level.INFO, "-- user has already answered");
-            } else {
+            } else {                
                 //OK, create new invitation
                 Logger.getLogger(EventManager.class.getName()).log(Level.INFO, "-- save invitation (in collection)");
 

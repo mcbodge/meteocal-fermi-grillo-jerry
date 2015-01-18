@@ -209,7 +209,7 @@ public class PersonalFacade {
         }
     }
 
-    private int getNumOverlappingEvents(User creator, Date start, Date end) {
+    public int getNumOverlappingEvents(User creator, Date start, Date end) {
         em.flush();
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         int count = 0;
@@ -560,6 +560,19 @@ public class PersonalFacade {
                     invited_users_list.remove(u);
                 }
             }
+            
+            //delete answers
+            for (User u : invited_users_list) {
+                if (event.getDeclined().contains(u)) {
+                    //delete old answer
+                    Answer a = (Answer)em.createNativeQuery("SELECT * FROM answers a WHERE a.event_id = ? AND a.user_id = ?", Answer.class).setParameter(1, event.getEventId()).setParameter(2, u.getUserId()).getSingleResult();
+                    event.getAnswerCollection().remove(a);
+                    u.getAnswerCollection().remove(a);
+                    em.remove(a);
+                    em.flush();                    
+                }
+            }
+            
             //invite people
             ev_m.sendInvitations(invited_users_list, event);
             for (User u : invited_users_list) {

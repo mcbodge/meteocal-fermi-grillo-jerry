@@ -18,6 +18,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -42,6 +43,9 @@ public class EventFacade {
 
     @Inject
     EventCreationManager ev_cm;
+    
+    @EJB
+    NotificationsFacade nf;
 
     /**
      *
@@ -55,7 +59,7 @@ public class EventFacade {
         }
     }
 
-    private Event getEvent(String e) {
+    public Event getEvent(String e) {
         try {
             return em.createNamedQuery("Event.findByEventId", Event.class).setParameter("eventId", Integer.parseInt(e)).getSingleResult();
         } catch (NoResultException ex) {
@@ -255,12 +259,15 @@ public class EventFacade {
         return getEvent(eventId).getMaybeGoing().contains(getUser());
 
     }
+    
+    
+    
 
     public Boolean canDecline(String eventId) {
 
         Event e = getEvent(eventId);
 
-        return e.getMaybeGoing().contains(getUser()) && e.getAttendee().contains(getUser());
+        return e.getMaybeGoing().contains(getUser()) || e.getAttendee().contains(getUser());
 
     }
 

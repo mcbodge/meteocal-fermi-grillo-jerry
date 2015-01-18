@@ -211,17 +211,11 @@ public class User implements Serializable {
         this.eventInvitationCollection = eventInvitationCollection;
     }
 
-    /**
-     * @deprecated @return
-     */
     @XmlTransient
     public Collection<Answer> getAnswerCollection() {
         return answerCollection;
     }
 
-    /**
-     * @deprecated @param answerCollection
-     */
     public void setAnswerCollection(Collection<Answer> answerCollection) {
         this.answerCollection = answerCollection;
     }
