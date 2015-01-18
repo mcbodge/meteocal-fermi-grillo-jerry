@@ -118,9 +118,9 @@ public class ProfileBean implements Serializable {
     public void onEventSelect(SelectEvent selectEvent) {
 
         ScheduleEvent event = (ScheduleEvent) selectEvent.getObject();
-        String id = (String) event.getData();
+        Integer id = (Integer) event.getData();
 
-        if (pf.eventPublic(id)) {
+        if (pf.eventPublic(id.toString())) {
 
             ExternalContext exc = FacesContext.getCurrentInstance().getExternalContext();
             exc.getSessionMap().put("eventId", id);

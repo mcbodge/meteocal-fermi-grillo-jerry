@@ -7,6 +7,7 @@ package com.meteocal.gui;
 
 import com.meteocal.business.boundary.NotificationsFacade;
 import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +18,7 @@ import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
 
@@ -109,5 +111,22 @@ public class NotificationsBean implements Serializable {
             out = "Accept";
         }
         return out;
+    }
+    
+    public void openEvent(Integer eventId){
+        ExternalContext exc = FacesContext.getCurrentInstance().getExternalContext();
+
+        exc.getSessionMap().put("eventId", eventId);
+
+        //bind the ID of the original event 
+        try {
+            exc.redirect("event.xhtml?faces-includeViewParams=true");
+        } catch (IOException ex) {
+            Logger.getLogger(PersonalBean.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public String hasEvent(Integer eventId){
+        return Boolean.toString(eventId!=null);
     }
 }
