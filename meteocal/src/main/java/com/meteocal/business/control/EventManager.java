@@ -12,6 +12,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.inject.Inject;
 
 /**
  * FROM - C:EventCreationManager FROM/TO - B: NotificationP TO - E:Event,
@@ -20,7 +21,9 @@ import java.util.logging.Logger;
  * @author Manuel
  */
 public class EventManager {
-
+    @Inject
+    EmailManager email_mng;
+    
     //*** use the new method w/ List<User> (don't use the collections***).
     /**
      * Creates a new invitation.
@@ -54,7 +57,8 @@ public class EventManager {
                 String email = u.getEmail();
                 String subject = "METEOCAL: new invitation";
                 String body = "Dear " + u.getFirstName() + " " + u.getLastName() + ",\nYou have been invited to the event: " + e.getName() + ".\nCheck your invitation request on Meteocal.\n\nPLEASE DO NOT REPLY TO THIS EMAIL";
-                EmailManager.getInstance().sendEmail(email, subject, body);
+                //EmailManager.getInstance().sendEmail(email, subject, body);
+                email_mng.sendEmail(email, subject, body);
                 Logger.getLogger(EventManager.class.getName()).log(Level.INFO, "-- invitation email sent");
             }
 
@@ -112,7 +116,7 @@ public class EventManager {
             //email text parts
             String subject = "METEOCAL: participation revoked";
             String body = "Dear " + u.toString() + ",\nWe are sorry to inform you that your invitation to the event \"" + e.getName() + "\"has been revoked.\n\n\nPLEASE DO NOT REPLY TO THIS EMAIL";
-            EmailManager.getInstance().sendEmail(u.getEmail(), subject, body);
+            email_mng.sendEmail(u.getEmail(), subject, body);
         }
         //if user declined or he is not in the invited list do nothing.
     }
@@ -269,7 +273,7 @@ public class EventManager {
     }
 
     public void sendEmail(String to,String subject,String body) {
-        EmailManager.getInstance().sendEmail(to, subject, body);
+        email_mng.sendEmail(to, subject, body);
         Logger.getLogger(EventManager.class.getName()).log(Level.INFO, "-- invitation email sent");
     }
 

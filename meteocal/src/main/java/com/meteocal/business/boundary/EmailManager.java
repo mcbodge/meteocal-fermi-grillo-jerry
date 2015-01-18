@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.ejb.Asynchronous;
 import javax.ejb.Stateless;
 import javax.mail.Authenticator;
 import javax.mail.Message;
@@ -26,17 +27,6 @@ import javax.mail.internet.MimeMessage;
 @Stateless
 public class EmailManager {
   
-   private static EmailManager instance = null;
-   
-    protected EmailManager() {
-       // Exists only to defeat instantiation.
-    }
-    public static EmailManager getInstance() {
-       if(instance == null) {
-          instance = new EmailManager();
-       }
-       return instance;
-    }
     //TODO We need to manage java.net.ConnectException
     //TODO (later) It would be better to get these infos from an encrypted txt file (after decrypting it in the code). Only if everything else is completed.
     private final int PORT = 587;
@@ -53,6 +43,7 @@ public class EmailManager {
      * @param subject the subject of the message
      * @param body the plaintext of the message
      */
+    @Asynchronous 
     public void sendEmail(String to, String subject, String body) {
         Properties props = new Properties();
         props.put("mail.smtp.host", HOST);

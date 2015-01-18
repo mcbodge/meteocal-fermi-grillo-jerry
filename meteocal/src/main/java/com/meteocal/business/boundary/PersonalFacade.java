@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.ejb.EJB;
 import javax.ejb.Stateful;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
@@ -68,7 +69,7 @@ public class PersonalFacade {
 
     @Inject
     OpenWeatherMapController owmc;
-
+    
     /**
      *
      * @return the username of the current user logged in.
