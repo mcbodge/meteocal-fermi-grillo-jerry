@@ -99,7 +99,7 @@ public class NotificationsFacade {
         return list;
     }
 
-    private boolean canAccept(Event e) {
+    public boolean canAccept(Event e) {
         boolean out = false;
         if (getNumOverlappingEvents(getUser(lm.getLoggedUserName()), e.getStart(), e.getEnd()) == 0) {
             out = true;
