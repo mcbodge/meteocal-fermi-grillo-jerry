@@ -16,6 +16,8 @@ import com.meteocal.business.entity.WeatherCondition;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -139,8 +141,10 @@ public class EventFacade {
     public String getForecast(String eventId) {
 
         Weather w = em.find(Weather.class, Integer.parseInt(eventId));
+        if(w!=null)
+            Logger.getLogger(EventFacade.class.getName()).log(Level.INFO, "Weather: {0}", w.toString());
         Integer code = null;
-        if (w != null) {
+        if (w != null && w.getForecast() != null) {
             code = w.getForecast();
         }
         WeatherCondition wc = OpenWeatherMapController.getValueFromCode(code);
