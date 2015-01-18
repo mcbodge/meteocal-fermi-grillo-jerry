@@ -27,7 +27,9 @@ public class ProblemsFacade {
 
     @PersistenceContext
     EntityManager em;
-
+    
+    @Inject 
+    EmailManager email_mng;
     
     /**
      * Returns the User if the email is a valid email of an user of the system.

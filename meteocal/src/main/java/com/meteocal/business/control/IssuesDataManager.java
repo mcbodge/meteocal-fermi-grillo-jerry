@@ -12,6 +12,7 @@ import org.apache.commons.lang3.RandomStringUtils;
  * @author Manuel
  */
 public class IssuesDataManager{
+    private EmailManager email_mng = new EmailManager();
     
     public IssuesDataManager(){ 
     }
@@ -29,7 +30,7 @@ public class IssuesDataManager{
             //email text parts
             String subject = "METEOCAL: user name request";
             String body = "Dear " + fullname + ",\nYour username is:\t" + username + ".\n\nPLEASE DO NOT REPLY TO THIS EMAIL";
-            EmailManager.getInstance().sendEmail(email, subject, body);
+            email_mng.sendEmail(email, subject, body);
         }
     }
     
@@ -50,7 +51,7 @@ public class IssuesDataManager{
             //email text parts
             String subject = "METEOCAL: password request";
             String body = "Dear " + fullname + ",\nYour new temporary password is:\t" + password + "\n\n\nPLEASE DO NOT REPLY TO THIS EMAIL";
-            EmailManager.getInstance().sendEmail(email, subject, body);
+            email_mng.sendEmail(email, subject, body);
             
             //edit user's pasword
             user.setPassword(password);
