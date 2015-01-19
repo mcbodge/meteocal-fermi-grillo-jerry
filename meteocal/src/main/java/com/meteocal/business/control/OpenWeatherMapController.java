@@ -2,6 +2,7 @@ package com.meteocal.business.control;
 
 import com.meteocal.business.boundary.OpenWeatherMapInterface;
 import com.meteocal.business.entity.WeatherCondition;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.primefaces.json.JSONArray;
@@ -108,6 +109,7 @@ public class OpenWeatherMapController {
         return out;
     }
 
+    
     //TODO jDoc
     public static Integer parseForecastId(String json) throws JSONException {
 
@@ -129,49 +131,78 @@ public class OpenWeatherMapController {
         return result_id;
 
     }
+    
 
     //TODO jDoc
     public Integer getForecast(Integer geoid) throws JSONException {
         return parseForecastId(OpenWeatherMapInterface.getMessage(geoid));
     }
     
+    
     public static Integer parseForecastId(String json, Integer day) throws JSONException {
 
         Integer result_id = null;
-        
-        if(day>16)
-            day=16;
 
-        if (json != null && json.startsWith("{") && json.endsWith("}")) {
-            
-            Logger.getLogger(OpenWeatherMapController.class.getName()).log(Level.INFO, "-----------{0}", json);
+        if (day < 1) {
+            result_id = parseForecastId(json);
+        } else {
+            if (day > 16)
+                day = 16;
 
-            JSONObject jsonObject = new JSONObject(json);
-            
-            Logger.getLogger(OpenWeatherMapController.class.getName()).log(Level.INFO, "-----------{0}", jsonObject.toString());
-            
-            JSONArray jsonList = jsonObject.getJSONArray("list");
-            
-            JSONObject jsonCnt = jsonList.getJSONObject(day-1);
-            
-            Logger.getLogger(OpenWeatherMapController.class.getName()).log(Level.INFO, "-----------{0}", jsonList.toString());
-            
-            JSONArray jsonWeather = jsonCnt.getJSONArray("weather");
-            
-            Logger.getLogger(OpenWeatherMapController.class.getName()).log(Level.INFO, "-----------{0}", jsonWeather.toString());
-            
-            
-            Logger.getLogger(OpenWeatherMapController.class.getName()).log(Level.INFO, "-----------{0}", jsonWeather.toString());
-         
-            if (jsonWeather.length() > 0) {
-                JSONObject JSONObject_weather = jsonWeather.getJSONObject(0);
-                result_id = JSONObject_weather.getInt("id");
+            if (json != null && json.startsWith("{") && json.endsWith("}")) {
+
+                JSONObject jsonObject = new JSONObject(json);
+
+                JSONArray jsonList = jsonObject.getJSONArray("list");
+
+                JSONObject jsonCnt = jsonList.getJSONObject(day - 1);
+
+                JSONArray jsonWeather = jsonCnt.getJSONArray("weather");
+
+                if (jsonWeather.length() > 0) {
+                    JSONObject JSONObject_weather = jsonWeather.getJSONObject(0);
+                    result_id = JSONObject_weather.getInt("id");
+                }
+
             }
-
         }
 
         return result_id;
     }
+    
+    /**
+     * Returns an array with the forecast codes for the next 16 days
+     * @param geoid
+     * @return
+     * @throws JSONException 
+     */
+    public ArrayList<Integer> get16Forecast(Integer geoid) throws JSONException {
+
+        ArrayList<Integer> out = new ArrayList<>();
+
+        String json = OpenWeatherMapInterface.getCntMessage(geoid, 16);
+
+        if (json != null && json.startsWith("{") && json.endsWith("}")) {
+
+            JSONObject jsonObject = new JSONObject(json);
+
+            JSONArray jsonList = jsonObject.getJSONArray("list");
+
+            for (int i = 0; i < 16; i++) {
+
+                JSONArray jsonWeather = jsonList.getJSONObject(i).getJSONArray("weather");
+
+                if (jsonWeather.length() > 0)
+                    out.add(jsonWeather.getJSONObject(0).getInt("id"));
+                else
+                    out.add(null);
+            }
+        }
+
+        return out;
+
+    }
+    
     
     public Integer getForecast(Integer geoid, Integer day) throws JSONException {
         return parseForecastId(OpenWeatherMapInterface.getCntMessage(geoid, day), day);

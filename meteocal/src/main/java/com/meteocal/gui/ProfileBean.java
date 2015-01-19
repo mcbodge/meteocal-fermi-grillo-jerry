@@ -120,12 +120,13 @@ public class ProfileBean implements Serializable {
         ScheduleEvent event = (ScheduleEvent) selectEvent.getObject();
         Integer id = (Integer) event.getData();
 
-        if (pf.eventPublic(id.toString())) {
+        if (pf.eventPublic(id.toString())) { //TODO hasRelated
 
             ExternalContext exc = FacesContext.getCurrentInstance().getExternalContext();
             exc.getSessionMap().put("eventId", id);
 
             //bind the ID of the original event 
+            
             try {
                 exc.redirect("event.xhtml?faces-includeViewParams=true");
             } catch (IOException ex) {
