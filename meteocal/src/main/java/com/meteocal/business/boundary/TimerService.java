@@ -6,9 +6,9 @@ import com.meteocal.business.entity.Event;
 import com.meteocal.business.entity.Information;
 import com.meteocal.business.entity.User;
 import com.meteocal.business.entity.Weather;
-import com.meteocal.business.entity.WeatherCondition;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
@@ -43,10 +43,10 @@ public class TimerService {
      * forecast has changed.
      *
      */
-    @Schedule( hour = "*/12", persistent = false)
+    @Schedule(hour = "*/12", persistent = false)
     public void updateAllForecasts() {
         System.out.println("- updateAllForecasts timer: " + new Date().toString());
-
+        SimpleDateFormat query_formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         //today
         Calendar cal_today = Calendar.getInstance();
         cal_today.setTime(new Date());
@@ -59,7 +59,7 @@ public class TimerService {
         //selsct events that starts within 16 days from now
         String query = "SELECT w.* FROM weather w JOIN events e ON w.event_id = e.event_id WHERE e.start_date > ? AND e.start_date < ? ORDER BY w.last_update";
         List<Weather> weather_list = em.createNativeQuery(query, Weather.class)
-                .setParameter(1, cal_today.getTime()).setParameter(2, cal_bound.getTime()).getResultList();
+                .setParameter(1, query_formatter.format(cal_today.getTime())).setParameter(2, query_formatter.format(cal_bound.getTime())).getResultList();
 
         if (weather_list != null) {
             //update all forecasts
@@ -111,6 +111,7 @@ public class TimerService {
     @Schedule(minute = "*/30", hour = "*", persistent = false)
     public void checkConstraintViolations() {
         final int CONSTR_VIOLATION_INTERVAL = 30; //minutes
+        SimpleDateFormat query_formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy 'at' HH:mm ");
         System.out.println("- checkConstraintViolations timer: " + new Date().toString());
 
@@ -137,8 +138,8 @@ public class TimerService {
                 + "WHERE (e.start_date > ? AND e.start_date <= ?) OR"
                 + "(e.start_date > ? AND e.start_date <= ?)";
         List<Event> events_list = em.createNativeQuery(query)
-                .setParameter(1, min3days.getTime()).setParameter(2, max3days.getTime())
-                .setParameter(3, min1day.getTime()).setParameter(4, max1day.getTime())
+                .setParameter(1, query_formatter.format(min3days.getTime())).setParameter(2, query_formatter.format(max3days.getTime()))
+                .setParameter(3, query_formatter.format(min1day.getTime())).setParameter(4, query_formatter.format(max1day.getTime()))
                 .getResultList();
 
         for (Event event : events_list) {
@@ -163,7 +164,7 @@ public class TimerService {
                     em.flush();
                 } else { //code for events start in three days
                     //propose to its creator the closest (in time) sunny day (if any).
-                    
+
                     //send info + email to creator
                     Information info = ev_m.newInformation(event.getCreator(), "The forecast has been changed on " + formatter.format(new Date()) + ".\nPlease reschedule your Event." + event.getName(), event);
                     em.merge(info);
@@ -173,6 +174,32 @@ public class TimerService {
 
             }
         }
+    }
+
+    @Schedule(hour = "*/1", persistent = false)
+    public void cleaner() {
+        System.out.println("- cleaner timer: " + new Date().toString());
+        SimpleDateFormat query_formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        //today
+        Calendar cal_today = Calendar.getInstance();
+        cal_today.setTime(new Date());
+
+        List<Event> list_events = (List<Event>) em.createNativeQuery("SELECT * FROM events e WHERE (e.start_date <= ?)", Event.class).setParameter(1, query_formatter.format(cal_today.getTime())).getResultList();
+
+        for (Event e : list_events) {
+            for (User u : e.getMaybeGoing()) {
+                e.getInvitedUserCollection().remove(u);
+                u.getEventInvitationCollection().remove(e);
+                em.merge(e);
+                em.merge(u);
+            }
+            List<Information> list_info = new ArrayList<>(e.getInformationCollection());
+            for (Information i : list_info) {
+                em.remove(i);
+                em.flush();
+            }
+        }
+
     }
 
 }
