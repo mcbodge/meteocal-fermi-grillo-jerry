@@ -164,26 +164,37 @@ public class TimerService {
                     em.merge(info);
                     em.flush();
                 } else { //code for events start in three days
-                    //propose to its creator the closest (in time) sunny day (if any).
 
+                    //propose to its creator the closest (in time) sunny day (if any).
                     //owmc.get16Forecast(); list<Integer>
+                    List<Integer> in = new ArrayList<>();
                     int count_days = 0;
-                    for (int f : owmc.get16Forecast()) {
+                    int index;
+                    for (int f : /*owmc.get16Forecast()*/ in) {
                         if (ev_m.canBeDone(owmc.getForecast(f), event.getConstraint())) {
+                            count_days = index;
+                            //new date
+                            Calendar new_date = Calendar.getInstance();
+                            new_date.setTime(new Date());
+                            new_date.add(Calendar.DAY_OF_YEAR, count_days);
                             break;
                         }
-                        count_days++;
+                        index++;
                     }
-                    //new date
-                    Calendar new_date = Calendar.getInstance();
-                    new_date.setTime(new Date());
-                    new_date.add(Calendar.DAY_OF_YEAR, count_days);
-
-                    //send info + email to creator
-                    Information info = ev_m.newInformation(event.getCreator(), "The forecast has been changed on " + formatter.format(new Date()) + ".\nPlease reschedule your Event." + event.getName(), event);
-                    em.merge(info);
-                    em.flush();
-                    ev_m.sendEmail(event.getCreator().getEmail(), "MeteoCal: bad weather conditions", "The event \"" + event.getName() + " has bad weather conditions.\nThe closest day that matches your constraint is on "+ formatter.format(new_date.getTime()) +"\nPlease reschedule your Event.");
+                    if (count_days > 0) {
+                        //send info + email to creator
+                        Information info = ev_m.newInformation(event.getCreator(), "The forecast has been changed on " + formatter.format(new Date()) + ".\nPlease reschedule your Event." + event.getName(), event);
+                        em.merge(info);
+                        em.flush();
+                        ev_m.sendEmail(event.getCreator().getEmail(), "MeteoCal: bad weather conditions", "The event \"" + event.getName() + " has bad weather conditions.\nThe closest day that matches your constraint is on " + formatter.format(new_date.getTime()) + "\nPlease reschedule your Event.");
+                    }else{
+                        //send info + email to creator
+                        Information info = ev_m.newInformation(event.getCreator(), "The forecast has been changed on " + formatter.format(new Date()) + ".\nPlease reschedule your Event." + event.getName(), event);
+                        em.merge(info);
+                        em.flush();
+                        ev_m.sendEmail(event.getCreator().getEmail(), "MeteoCal: bad weather conditions", "The event \"" + event.getName() + " has bad weather conditions.\nActually, no one of the next 16 days match your constraint.\nPlease reschedule your Event.");
+                        
+                    }
                 }
 
             }
