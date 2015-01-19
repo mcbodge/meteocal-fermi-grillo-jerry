@@ -1,10 +1,12 @@
 package com.meteocal.business.boundary;
 
+import com.meteocal.business.control.LogInManager;
 import com.meteocal.business.entity.Event;
 import com.meteocal.business.entity.User;
 import java.util.Date;
 import java.util.List;
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
@@ -22,6 +24,9 @@ public class ProfileFacade {
     
     @PersistenceContext(unitName = "meteocal_PU")
     EntityManager em;
+    
+    @Inject
+    LogInManager lm;
     
     public boolean eventPublic(String eventId){
         return getEvent(eventId).isPublicEvent();
@@ -78,11 +83,13 @@ public class ProfileFacade {
             return null;
         }
     }
+   
 
     public String getUserNames(Integer userId) {
         
         return getUserFromId(userId).toString();
     }
+    
 
     public String getPrivacy(Integer loadedUser) {
         String out = "Private calendar";
@@ -92,6 +99,34 @@ public class ProfileFacade {
         
         
         return out;
+    }
+    
+
+    public boolean hasRelated(Integer id) {
+        return getEvent(id.toString()).getRelated().contains(getUser(getUserId(getLoggedUser())));
+    }
+    
+    
+    private String getUserId(String username) {
+        return getUser(username).getUserId().toString();
+    }
+    
+    
+    /**
+     *
+     * @return the username of the current user logged in.
+     */
+    private String getLoggedUser() {
+        return lm.getLoggedUserName();
+    }
+    
+    
+    private User getUser(String username) {
+        try {
+            return em.createNamedQuery("User.findByUserName", User.class).setParameter("userName", username).getSingleResult();
+        } catch (NoResultException ex) {
+            return null;
+        }
     }
    
 }

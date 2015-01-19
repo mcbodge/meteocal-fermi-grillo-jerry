@@ -16,7 +16,7 @@ import org.primefaces.json.JSONObject;
  */
 public class OpenWeatherMapController {
 
-    //TODO jDoc
+
     /**
      *
      * @param code
@@ -110,7 +110,6 @@ public class OpenWeatherMapController {
     }
 
     
-    //TODO jDoc
     public static Integer parseForecastId(String json) throws JSONException {
 
         Integer result_id = null;
@@ -133,7 +132,6 @@ public class OpenWeatherMapController {
     }
     
 
-    //TODO jDoc
     public Integer getForecast(Integer geoid) throws JSONException {
         return parseForecastId(OpenWeatherMapInterface.getMessage(geoid));
     }
