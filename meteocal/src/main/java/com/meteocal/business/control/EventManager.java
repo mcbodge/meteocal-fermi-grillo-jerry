@@ -87,7 +87,7 @@ public class EventManager {
         return new Information(e, u, message);
     }
 
-    //TODO
+    
     /**
      * Remove a previously created invitation.
      *
@@ -177,7 +177,7 @@ public class EventManager {
 
     }
 
-    //TODO jDocs
+
     /**
      *
      * @param wc
