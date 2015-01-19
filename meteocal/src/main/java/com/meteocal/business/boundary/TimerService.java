@@ -167,10 +167,9 @@ public class TimerService {
 
                     //propose to its creator the closest (in time) sunny day (if any).
                     //owmc.get16Forecast(); list<Integer>
-                    List<Integer> in = new ArrayList<>();
                     int count_days = 0;
                     int index;
-                    for (int f : /*owmc.get16Forecast()*/ in) {
+                    for (int f : owmc.get16Forecast() ) {
                         if (ev_m.canBeDone(owmc.getForecast(f), event.getConstraint())) {
                             count_days = index;
                             //new date
