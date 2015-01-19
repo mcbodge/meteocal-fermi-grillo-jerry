@@ -33,7 +33,7 @@ public class RegistrationTest extends EasyMockSupport{
                 
                 RegistrationFacade rf = Mockito.mock(RegistrationFacade.class);
                 
-                RegistrationBean registrationBean = new RegistrationBean();
+                //RegistrationBean registrationBean = new RegistrationBean();
                 
                 rf.registerUser("me","you", "everyone","everyone@yahoo.com", "dddddddddd");
                 
