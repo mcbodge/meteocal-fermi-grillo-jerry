@@ -46,8 +46,10 @@ public class TimerService {
      */
     @Schedule(hour = "*/12", persistent = false)
     public void updateAllForecasts() {
+        
         System.out.println("- updateAllForecasts timer: " + new Date().toString());
         SimpleDateFormat query_formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        
         //today
         Calendar cal_today = Calendar.getInstance();
         cal_today.setTime(new Date());
@@ -71,12 +73,16 @@ public class TimerService {
                 //calc desired forecast day
                 Calendar cal_day = Calendar.getInstance();
                 cal_day.setTime(w.getEvent().getStart());
-                int day = cal_day.get(Calendar.DAY_OF_YEAR) - cal_today.get(Calendar.DAY_OF_YEAR) + 1;
+                int day = cal_day.get(Calendar.DAY_OF_YEAR) - cal_today.get(Calendar.DAY_OF_YEAR);
 
                 try {
                     //JSON request
-                    int updatedForecast = owmc.getForecast(geoname, day);
-
+                    int updatedForecast;
+                    if (day < 1) {
+                        updatedForecast = owmc.getForecast(geoname);
+                    } else {
+                        updatedForecast = owmc.getForecast(geoname, day);
+                    }
                     //case of success -> send 
                     if (w.getForecast() != null && !w.getForecast().equals(updatedForecast)) {
                         //new information for all attendee
@@ -86,7 +92,7 @@ public class TimerService {
                             em.merge(info);
                         }
                     }
-
+                    
                     //update forecast and store.
                     w.setForecast(updatedForecast);
                     w.setLastUpdate(new Timestamp(System.currentTimeMillis()));
@@ -111,6 +117,7 @@ public class TimerService {
      */
     @Schedule(minute = "*/30", hour = "*", persistent = false)
     public void checkConstraintViolations() {
+       
         final int CONSTR_VIOLATION_INTERVAL = 30; //minutes
         SimpleDateFormat query_formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy 'at' HH:mm ");
@@ -144,9 +151,6 @@ public class TimerService {
                 .getResultList();
 
         for (Event event : events_list) {
-            //Weather w = em.find(Weather.class, event.getEventId());
-            //WeatherCondition wc = OpenWeatherMapController.getValueFromCode(w.getForecast());
-            //Event e = w.getEvent();
 
             //check the constraint
             if (!ev_m.checkWeather(event)) {
@@ -166,33 +170,41 @@ public class TimerService {
                 } else { //code for events start in three days
 
                     //propose to its creator the closest (in time) sunny day (if any).
-                    //owmc.get16Forecast(); list<Integer>
                     int count_days = 0;
-                    int index;
-                    for (int f : owmc.get16Forecast() ) {
-                        if (ev_m.canBeDone(owmc.getForecast(f), event.getConstraint())) {
+                    int index = 0;
+                    ArrayList<Integer> list_forecasts = new ArrayList<>();
+                    
+                    try {
+                        list_forecasts = owmc.get16Forecast(Integer.parseInt(event.getWeather().getLocationCode()));
+                    } catch (JSONException ex) {
+                        Logger.getLogger(TimerService.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    
+                    for (Integer f : list_forecasts) {
+                        if ( f != null && ev_m.canBeDone(owmc.getValueFromCode(f), event.getConstraint())) {
                             count_days = index;
-                            //new date
-                            Calendar new_date = Calendar.getInstance();
-                            new_date.setTime(new Date());
-                            new_date.add(Calendar.DAY_OF_YEAR, count_days);
                             break;
                         }
                         index++;
                     }
+                    
+                    //new date
+                    Calendar new_date = Calendar.getInstance();
+                    new_date.setTime(new Date());
+                    new_date.add(Calendar.DAY_OF_YEAR, count_days);
+                    
                     if (count_days > 0) {
                         //send info + email to creator
                         Information info = ev_m.newInformation(event.getCreator(), "The forecast has been changed on " + formatter.format(new Date()) + ".\nPlease reschedule your Event." + event.getName(), event);
                         em.merge(info);
                         em.flush();
                         ev_m.sendEmail(event.getCreator().getEmail(), "MeteoCal: bad weather conditions", "The event \"" + event.getName() + " has bad weather conditions.\nThe closest day that matches your constraint is on " + formatter.format(new_date.getTime()) + "\nPlease reschedule your Event.");
-                    }else{
+                    } else {
                         //send info + email to creator
                         Information info = ev_m.newInformation(event.getCreator(), "The forecast has been changed on " + formatter.format(new Date()) + ".\nPlease reschedule your Event." + event.getName(), event);
                         em.merge(info);
                         em.flush();
                         ev_m.sendEmail(event.getCreator().getEmail(), "MeteoCal: bad weather conditions", "The event \"" + event.getName() + " has bad weather conditions.\nActually, no one of the next 16 days match your constraint.\nPlease reschedule your Event.");
-                        
                     }
                 }
 
@@ -200,10 +212,16 @@ public class TimerService {
         }
     }
 
+    /**
+     * Once an hour look for past events and delete all the past notifications
+     *
+     */
     @Schedule(hour = "*/1", persistent = false)
     public void cleaner() {
+        
         System.out.println("- cleaner timer: " + new Date().toString());
         SimpleDateFormat query_formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        
         //today
         Calendar cal_today = Calendar.getInstance();
         cal_today.setTime(new Date());
@@ -211,19 +229,22 @@ public class TimerService {
         List<Event> list_events = (List<Event>) em.createNativeQuery("SELECT * FROM events e WHERE (e.start_date <= ?)", Event.class).setParameter(1, query_formatter.format(cal_today.getTime())).getResultList();
 
         for (Event e : list_events) {
+            
             for (User u : e.getMaybeGoing()) {
                 e.getInvitedUserCollection().remove(u);
                 u.getEventInvitationCollection().remove(e);
                 em.merge(e);
                 em.merge(u);
             }
+            
             List<Information> list_info = new ArrayList<>(e.getInformationCollection());
+            
             for (Information i : list_info) {
                 em.remove(i);
                 em.flush();
             }
+            
         }
-
     }
 
 }

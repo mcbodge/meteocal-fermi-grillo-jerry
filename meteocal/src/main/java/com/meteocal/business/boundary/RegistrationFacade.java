@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.meteocal.business.boundary;
 
 import com.meteocal.business.control.ProfileDataManager;
@@ -27,7 +22,6 @@ public class RegistrationFacade {
     @Inject
     ProfileDataManager pdm;
 
-    //TODO check user
     /**
      * write in db
      *
@@ -40,14 +34,18 @@ public class RegistrationFacade {
      * @return true if registration is ok.
      */
     public boolean registerUser(String firstname, String lastname, String username, String email, String password) {
-        User user = null;        
+        
+        User user = null;      
+        
         if (verifySubmittedData(firstname, lastname, username, email, password)) {
             user = pdm.newUser(firstname, lastname, username, email, password);
             user.setGroupName(Group.USERS);
             user = em.merge(user);
             em.flush();
         }
+        
         return user != null;
+        
     }
 
     /**
@@ -75,8 +73,12 @@ public class RegistrationFacade {
                 //OK, email or username are not already in DB
                 return true;
             }
+            
         }
+        
         //Submitted data not valid
         return false;
+        
     }
+    
 }

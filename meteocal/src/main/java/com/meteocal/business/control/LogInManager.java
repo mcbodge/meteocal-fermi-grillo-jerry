@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.meteocal.business.control;
 
 import java.io.UnsupportedEncodingException;
@@ -32,10 +27,12 @@ public class LogInManager{
      * If the structure of the input is correct, it returns true
      * @param u the username
      * @param p the password
-     * @return false if the structure of the input is wrong
+     * @return false if the structure of the input is wrong.
      */
     public boolean checkLogInFields(String u, String p){
+        
         return !(p == null || p.length() < 8 || u == null || u.length() < 4 || u.length() > 15);
+        
     }
     
     /**
@@ -44,7 +41,9 @@ public class LogInManager{
      * @return the username of the current user logged in.
      */
     public String getLoggedUserName(){
+        
         return principal.getName();
+        
     }
     
     /**  
@@ -54,7 +53,9 @@ public class LogInManager{
      * @return password encrypted
      */
     public static String encryptPassword(String password) {
+        
         String encPass = null;
+        
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
             byte[] hash = digest.digest(password.getBytes("UTF-8"));
@@ -63,6 +64,8 @@ public class LogInManager{
         } catch (NoSuchAlgorithmException | UnsupportedEncodingException ex) {
             Logger.getLogger(LogInManager.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
         return encPass;
+        
     }
 }

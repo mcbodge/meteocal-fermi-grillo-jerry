@@ -2,23 +2,12 @@ package com.meteocal.business.control;
 
 import com.meteocal.business.entity.Event;
 import com.meteocal.business.entity.User;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.StringTokenizer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.faces.context.FacesContext;
 
 /**
@@ -40,6 +29,7 @@ public class UserCalendarManager {
      * @return the URL of the file position.
      */
     public FileInputStream startDownload(User u) throws FileNotFoundException {
+        
         //create a file in the /files directory 
         String dir = FacesContext.getCurrentInstance().getExternalContext().getRealPath("files/") + File.separatorChar;
         String filename = u.getUserName() + "_meteocal" + EXT;
@@ -54,42 +44,33 @@ public class UserCalendarManager {
         try {
             writer = new FileWriter(dir + filename);
             writer.write(u.getUserName());
+            
             //get all personal public events
             for (Event e : u.getCreatedEvents()) {
                 if (e.isPersonal() && e.isPublicEvent()) {
                     //write in file  eventid   name    location  geoname   start   end   descr   constraint
                     String weather_constraint = null;
                     String geoname = null;
+                    
                     if(e.getWeather() != null){
                         weather_constraint = e.getWeather().getConstraint().toString();
                         geoname = e.getWeather().getLocationCode().toString();
                     }
+                    
                     SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                     writer.write("\n" + e.getEventId().toString() + "\t" + e.getName() + "\t" + e.getLocation() + "\t" + geoname + "\t" + formatter.format(e.getStart()) + "\t" + formatter.format(e.getEnd()) + "\t" + e.getDescription() + "\t" + weather_constraint);
                 }
             }
+            
             writer.close();
         } catch (IOException ex) {
 
         }
-        System.out.println("srv path: files/" + filename);
-        //return "files/" + filename;
+        
         return new FileInputStream(file);
+        
     }
 
-    /**
-     * It does all the required procedures to upload a calendar: - upload the
-     * file; - verify it; - extract interesting events.
-     *
-     * @param u the user whose calendar will be uploaded.
-     * @param f the file to be uploaded
-     */ /*
-    public void startUpload(User u, File f) {
-        if (verifyFile(f)) {
-            extractFromFile(f, u);
-        }
-    }
-    */
     /**
      * It verify the consistency of the uploaded file: - verify the correct
      * type/extension; - verify the correct db structure. ?! <-- deprecated
@@ -99,6 +80,7 @@ public class UserCalendarManager {
      * @return
      */
     public boolean verifyFile(File f) {
+        
         double kilobytes = (f.length() / 1024);
 
         //check size < 2MB
@@ -108,7 +90,9 @@ public class UserCalendarManager {
                 return true;
             //}
         }
+        
         return false;
+        
     }
 
     

@@ -307,13 +307,13 @@ public class Event implements Serializable {
         return out;
 
     }
-
+    
     //get the weather code for this event from the Weather table
     public Integer getForecast() {
         
         Integer out=null;
         if (weather != null)
-            out=weather.getConstraint();
+            out=weather.getForecast();
         return out;
 
     }

@@ -27,7 +27,6 @@ import javax.mail.internet.MimeMessage;
 @Stateless
 public class EmailManager {
   
-    //TODO We need to manage java.net.ConnectException
     //TODO (later) It would be better to get these infos from an encrypted txt file (after decrypting it in the code). Only if everything else is completed.
     private final int PORT = 587;
     private final String HOST = "smtp.aol.com";
@@ -38,7 +37,8 @@ public class EmailManager {
     private  boolean debug = true;
 
     /**
-     * Sends a new email
+     * Sends a new email (async method)
+     * 
      * @param to the receiver email address
      * @param subject the subject of the message
      * @param body the plaintext of the message
@@ -98,7 +98,8 @@ public class EmailManager {
             Logger.getLogger(EmailManager.class.getName()).log(Level.INFO, "Email sent.");
         } catch (MessagingException ex ) {
             Logger.getLogger(EmailManager.class.getName()).log(Level.SEVERE, "Email NOT sent", ex);
-            //ex.printStackTrace();
+        } catch (Exception exc) {
+            Logger.getLogger(EmailManager.class.getName()).log(Level.SEVERE, "Email NOT sent", exc);
         }
     }
 }

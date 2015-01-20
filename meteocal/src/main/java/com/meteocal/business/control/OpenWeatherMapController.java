@@ -3,8 +3,6 @@ package com.meteocal.business.control;
 import com.meteocal.business.boundary.OpenWeatherMapInterface;
 import com.meteocal.business.entity.WeatherCondition;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.primefaces.json.JSONArray;
 import org.primefaces.json.JSONException;
 import org.primefaces.json.JSONObject;

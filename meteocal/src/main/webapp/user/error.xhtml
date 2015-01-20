@@ -33,7 +33,7 @@
                         <p:menuButton id="opts" value="Options" style="float: right;">
                             <p:menuitem value="#{personalBean.calendarPrivacy}" action="#{personalBean.toggleCalendarPrivacy()}" update="opts"  />
                             <p:menuitem value="Import Calendar" action="upload?faces-redirect=true"/>
-                            <p:menuitem value="Export Calendar" action="#{personalBean.getCalendar()}"/>
+                            <p:menuitem value="Export Calendar" ajax="false" action="#{personalBean.getCalendar()}" /> 
                             <p:menuitem value="Sign Out" action="#{personalBean.logout()}" icon=" ui-icon-person"/>
                         </p:menuButton>
                     </div>
@@ -41,7 +41,7 @@
             </h:panelGrid>
         </h:form>
 
-        <hr style=" background-color: #3366ff; height: 5px" />
+        <hr style=" background-color: #3366ff; height: 5px" align="center" />
         <h1>Hoops! Something went wrong. :(</h1>
         <h2>  Hugs.</h2>
     </h:body>
