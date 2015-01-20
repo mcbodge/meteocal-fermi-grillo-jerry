@@ -24,9 +24,17 @@ import javax.faces.context.FacesContext;
 @ViewScoped
 public class EventBean implements Serializable {
 
+    @EJB
+    EventFacade ef;
+    @EJB
+    PersonalFacade pf;
+    @EJB
+    NotificationsFacade nf;
+
     private String eventId;
     private String menuShowable;
 
+    //<editor-fold defaultstate="collapsed" desc="GETTERS AND SETTERS">
     public String getMenuShowable() {
         return menuShowable;
     }
@@ -35,28 +43,23 @@ public class EventBean implements Serializable {
         this.menuShowable = menuShowable;
     }
 
-    @EJB
-    EventFacade ef;
-    @EJB
-    PersonalFacade pf;
-    @EJB
-    NotificationsFacade nf;
-
-    @PostConstruct
-    private void init() {
-        eventId = FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("eventId").toString();
-        menuShowable = ef.isObserver(eventId).toString();
-    }
-
-    public EventBean() {
-    }
-
     public String getEventId() {
         return eventId;
     }
 
     public void setEventId(String eventId) {
         this.eventId = eventId;
+    }
+    //</editor-fold>
+
+    public EventBean() {
+
+    }
+
+    @PostConstruct
+    private void init() {
+        eventId = FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("eventId").toString();
+        menuShowable = ef.isObserver(eventId).toString();
     }
 
     public String getName() {
@@ -106,7 +109,8 @@ public class EventBean implements Serializable {
     public String canAccept() {
         return ef.canAccept(eventId).toString();
     }
-    public String disableAccept(){
+
+    public String disableAccept() {
         return String.valueOf(!nf.canAccept(ef.getEvent(eventId)));
     }
 
@@ -121,8 +125,8 @@ public class EventBean implements Serializable {
     public String canEdit() {
         String out = "false";
         //non edit un evento già finito
-        if(!(pf.isFinished(Integer.parseInt(eventId)))){
-           out = ef.isCreator(eventId).toString();
+        if (!(pf.isFinished(Integer.parseInt(eventId)))) {
+            out = ef.isCreator(eventId).toString();
         }
         return out;
     }
@@ -136,12 +140,12 @@ public class EventBean implements Serializable {
         nf.declineInvitation(Integer.parseInt(eventId));
         return "event?faces-redirect=true";
     }
-    
-    public String deleteEvent(){
+
+    public String deleteEvent() {
         ef.deleteEvent(Integer.parseInt(eventId));
         return "personal?faces-redirect=true";
     }
-    
+
     public void edit() {
 
         ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
@@ -149,7 +153,7 @@ public class EventBean implements Serializable {
         ec.getSessionMap().clear();
 
         ec.getSessionMap().put("editMode", true);
-        
+
         ec.getSessionMap().put("dateTime", ef.getStart(eventId));
         ec.getSessionMap().put("eventName", ef.getName(eventId));
         ec.getSessionMap().put("people", ef.getPeople(eventId));
@@ -167,6 +171,12 @@ public class EventBean implements Serializable {
             Logger.getLogger(PersonalBean.class.getName()).log(Level.SEVERE, null, ex);
         }
 
+    }
+
+    public String loadWeatehrImage() {
+        
+        return ef.loadWeatherImage(eventId);
+        
     }
 
 }
