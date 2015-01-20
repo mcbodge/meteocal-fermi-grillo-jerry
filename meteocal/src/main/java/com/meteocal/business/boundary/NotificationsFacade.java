@@ -255,4 +255,15 @@ public class NotificationsFacade {
         
     }
     
+    public void turnBack (int eventId) {
+        Event event = em.find(Event.class, eventId);
+        User user = getUser(lm.getLoggedUserName());
+        Answer a = (Answer)em.createNativeQuery("SELECT * FROM answers a WHERE a.event_id = ? AND a.user_id = ?",Answer.class).setParameter(1, eventId).setParameter(2, user.getUserId()).getSingleResult();
+        if (event != null && a.getValue()) {
+            a.setValue(false);
+            em.flush();
+        }
+        
+    }
+    
 }
