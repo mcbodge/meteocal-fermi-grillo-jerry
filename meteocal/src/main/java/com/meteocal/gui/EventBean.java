@@ -137,7 +137,11 @@ public class EventBean implements Serializable {
     }
 
     public String decline() {
-        nf.declineInvitation(Integer.parseInt(eventId));
+        if(ef.canAccept(eventId)){
+            nf.declineInvitation(Integer.parseInt(eventId));
+        }else{
+            nf.turnBack(Integer.parseInt(eventId));
+        }
         return "event?faces-redirect=true";
     }
 
