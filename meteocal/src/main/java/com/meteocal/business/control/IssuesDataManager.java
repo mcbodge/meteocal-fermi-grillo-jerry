@@ -23,6 +23,7 @@ public class IssuesDataManager{
      * @param user - the user that has requested support
      */
     public void sendUserName(User user){
+        
         if(user != null){
             String username = user.getUserName();
             String fullname = user.getFirstName() + " " + user.getLastName();
@@ -32,6 +33,7 @@ public class IssuesDataManager{
             String body = "Dear " + fullname + ",\nYour username is:\t" + username + ".\n\nPLEASE DO NOT REPLY TO THIS EMAIL";
             email_mng.sendEmail(email, subject, body);
         }
+        
     }
     
     /**
@@ -41,6 +43,7 @@ public class IssuesDataManager{
      * @return the user with the new password
      */
     public User sendPassword(User user){
+        
         if(user != null){
             String fullname = user.getFirstName() + " " + user.getLastName();
             String email = user.getEmail();
@@ -56,7 +59,9 @@ public class IssuesDataManager{
             //edit user's pasword
             user.setPassword(password);
         }
+        
         return user;
+        
     }
     
 }

@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.meteocal.business.boundary;
 
 import com.meteocal.business.control.EventManager;
@@ -37,24 +32,26 @@ public class HomeFacade {
     EventManager eventmanager;
 
     /**
-     * Logs in - a validated user - redirecting him to his/her personal page. It
-     * also sends a "welcome" information.
+     * Logs in - a validated user - redirecting him to his/her personal page. 
      *
      * @param u the username we want to log in
      * @param p the password
      * @return true if login is ok.
      */
     public boolean submitLogIn(String u, String p) {
+        
         boolean result = false;
 
         if (loginManager.checkLogInFields(u, p)) {
             //check if user exists and 
             User user = null;
+            
             try {
                 user = em.createNamedQuery("User.findByUserName", User.class).setParameter("userName", u).getSingleResult();
             } catch (NoResultException ex) {
                 Logger.getLogger(LogInManager.class.getName()).log(Level.SEVERE, "Login Failed, invalid username");
             }
+            
             if (user == null) {
                 //user does not exist 
             } else {
@@ -67,6 +64,7 @@ public class HomeFacade {
                     //try to login
                     FacesContext context = FacesContext.getCurrentInstance();
                     HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();
+                    
                     try {
                         request.login(u, p);
                         context.addMessage(null, new FacesMessage("Login OK."));
@@ -78,7 +76,9 @@ public class HomeFacade {
                         Logger.getLogger(LogInManager.class.getName()).log(Level.SEVERE, "Login Failed, failed to LogIn {0}", u);
                     }
                 }
+                
             }
+            
         }
         return result;
     }
@@ -88,10 +88,12 @@ public class HomeFacade {
      * 
      */
     public void logOut() {
+        
         Logger.getLogger(LogInManager.class.getName()).log(Level.INFO, "User {0} Logged out.", loginManager.getLoggedUserName());
         FacesContext context = FacesContext.getCurrentInstance();
         HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();
         request.getSession().invalidate();
+        
     }
 
 }

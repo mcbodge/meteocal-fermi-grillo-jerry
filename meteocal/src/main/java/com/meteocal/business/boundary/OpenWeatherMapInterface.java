@@ -22,6 +22,11 @@ public class OpenWeatherMapInterface {
     static final String url="http://api.openweathermap.org/data/2.5/weather?id=";
     static final String DAILY_URL = "http://api.openweathermap.org/data/2.5/forecast/daily?id=";
 
+    /**
+     * 
+     * @param geoid
+     * @return 
+     */
     public static String getMessage(Integer geoid){
         
 //<editor-fold defaultstate="collapsed" desc="old version">
@@ -90,7 +95,14 @@ public class OpenWeatherMapInterface {
         
     }
     
+    /**
+     * 
+     * @param geoid
+     * @param days
+     * @return 
+     */
     public static String getCntMessage(Integer geoid, Integer days){
+        
         String line;
         StringBuilder builder = new StringBuilder();
         URL url_weather;

@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.meteocal.business.boundary;
 
 import com.meteocal.business.control.EventCreationManager;
@@ -43,33 +38,57 @@ public class EventFacade {
 
     @Inject
     EventCreationManager ev_cm;
-    
+
     @EJB
     NotificationsFacade nf;
 
+    public EventFacade() {
+
+    }
+
     /**
      *
-     * @return the entity of the current user
+     * @return the current user (entity) or null if it is not in the DB
      */
     private User getUser() {
+
         try {
+
             return em.createNamedQuery("User.findByUserName", User.class).setParameter("userName", lm.getLoggedUserName()).getSingleResult();
+
         } catch (NoResultException ex) {
+
             return null;
+
         }
+
     }
 
+    /**
+     *
+     * @param e eventId
+     * @return the event (entity) or null if it is not in the DB
+     */
     public Event getEvent(String e) {
+
         try {
+
             return em.createNamedQuery("Event.findByEventId", Event.class).setParameter("eventId", Integer.parseInt(e)).getSingleResult();
+
         } catch (NoResultException ex) {
+
             return null;
+
         }
+
     }
 
-    public EventFacade() {
-    }
-
+    /**
+     *
+     * @param eventId
+     * @return the name of the event if it is not private, "Private event"
+     * otherwise.
+     */
     public String getName(String eventId) {
 
         Event e = getEvent(eventId);
@@ -83,6 +102,11 @@ public class EventFacade {
 
     }
 
+    /**
+     *
+     * @param eventId
+     * @return "Public event" if the user can see the event's details
+     */
     public String getPrivacy(String eventId) {
 
         String out = "";
@@ -95,10 +119,22 @@ public class EventFacade {
 
     }
 
+    /**
+     *
+     * @param eventId
+     * @return
+     */
     public boolean eventPrivate(String eventId) {
+
         return !getEvent(eventId).isPublicEvent();
+
     }
 
+    /**
+     *
+     * @param eventId
+     * @return
+     */
     public String getPicture(String eventId) {
 
         String out = "url";
@@ -111,6 +147,11 @@ public class EventFacade {
 
     }
 
+    /**
+     *
+     * @param eventId
+     * @return
+     */
     public String getConstraint(String eventId) {
 
         Event e = getEvent(eventId);
@@ -138,155 +179,241 @@ public class EventFacade {
 
     }
 
+    /**
+     *
+     * @param eventId
+     * @return
+     */
     public Integer getConstraintBack(String eventId) {
+
         return getEvent(eventId).getConstraint();
+
     }
 
+    /**
+     *
+     * @param eventId
+     * @return
+     */
     public String getForecast(String eventId) {
 
         Weather w = em.find(Weather.class, Integer.parseInt(eventId));
-        if(w!=null)
+
+        if (w != null) {
             Logger.getLogger(EventFacade.class.getName()).log(Level.INFO, "Weather: {0}", w.toString());
+        }
+
         Integer code = null;
+
         if (w != null && w.getForecast() != null) {
             code = w.getForecast();
         }
+
         WeatherCondition wc = OpenWeatherMapController.getValueFromCode(code);
         return wc.toString();
+
     }
 
+    /**
+     *
+     * @param eventId
+     * @return
+     */
     public String getLocation(String eventId) {
 
         String out = "hidden";
         Event e = getEvent(eventId);
 
         if (man.showable(e, getUser())) {
+
             out = e.getLocation();
+
             if (out == null || out.isEmpty()) {
                 out = "none";
             }
+
         }
 
         return out;
 
     }
 
+    /**
+     *
+     * @param eventId
+     * @return
+     */
     public String getAttendees(String eventId) {
 
         String out = "hidden";
         Event e = getEvent(eventId);
 
         if (man.showable(e, getUser())) {
+
             out = e.getCreator().toString() + " [creator] ";
             String temp = e.getAttendee().toString();
+
             if (temp.length() > 2) {
                 out = out + ", " + temp.substring(1, temp.length() - 2);
             }
+
         }
 
         return out;
 
     }
 
+    /**
+     *
+     * @param eventId
+     * @return
+     */
     public String getMaybe(String eventId) {
 
         String out = "hidden";
         Event e = getEvent(eventId);
 
         if (man.showable(e, getUser())) {
+
             out = "";
             String temp = e.getMaybeGoing().toString();
+
             if (temp.length() > 2) {
                 out = out + temp.substring(1, temp.length() - 1);
             }
+
         }
 
         return out;
 
     }
 
+    /**
+     *
+     * @param eventId
+     * @return
+     */
     public String getNotGoing(String eventId) {
 
         String out = "hidden";
         Event e = getEvent(eventId);
 
         if (man.showable(e, getUser())) {
+
             out = "";
             String temp = e.getDeclined().toString();
+
             if (temp.length() > 2) {
                 out = out + temp.substring(1, temp.length() - 2);
             }
+
         }
 
         return out;
 
     }
 
+    /**
+     *
+     * @param eventId
+     * @return
+     */
     public String getDate(String eventId) {
 
         Event e = getEvent(eventId);
-
         DateFormat df = new SimpleDateFormat("EEE, yyyy/MM/dd, HH:mm");
-
         return df.format(e.getStart()) + " - " + df.format(e.getEnd());
 
     }
 
+    /**
+     *
+     * @param eventId
+     * @return
+     */
     public Date getStart(String eventId) {
 
         return getEvent(eventId).getStart();
 
     }
 
+    /**
+     *
+     * @param eventId
+     * @return
+     */
     public String getDescription(String eventId) {
 
         String out = "hidden";
         Event e = getEvent(eventId);
 
         if (man.showable(e, getUser())) {
+
             out = e.getDescription();
+
             if (out == null || out.isEmpty()) {
                 out = "none";
             }
+
         }
 
         return out;
 
     }
-
+    
+    /**
+     * 
+     * @param eventId
+     * @return 
+     */
     public Boolean canAccept(String eventId) {
 
         return getEvent(eventId).getMaybeGoing().contains(getUser());
 
     }
-    
-    
-    
 
+    /**
+     * 
+     * @param eventId
+     * @return 
+     */
     public Boolean canDecline(String eventId) {
 
         Event e = getEvent(eventId);
-
         return e.getMaybeGoing().contains(getUser()) || e.getAttendee().contains(getUser());
 
     }
-
+    
+    /**
+     * 
+     * @param eventId
+     * @return 
+     */
     public Boolean isCreator(String eventId) {
 
         return getEvent(eventId).getCreator().equals(getUser());
 
     }
-
+    
+    /**
+     * 
+     * @param eventId
+     * @return 
+     */
     public Boolean isObserver(String eventId) {
 
         return getEvent(eventId).getRelated().contains(getUser());
 
     }
 
+    /**
+     * 
+     * @param eventId
+     * @return 
+     */
     public String getPeople(String eventId) {
 
         Event e = getEvent(eventId);
-
         String people = "";
 
         for (User u : e.getAttendee()) {
@@ -304,8 +431,14 @@ public class EventFacade {
         return people;
 
     }
-
+    
+    /**
+     * 
+     * @param eventId
+     * @return 
+     */
     public Integer getGeoname(String eventId) {
+        
         try {
             return Integer.parseInt(getEvent(eventId).getWeather().getLocationCode());
         } catch (NullPointerException e) {
@@ -313,15 +446,27 @@ public class EventFacade {
         }
 
     }
-
+    
+    /**
+     * 
+     * @param eventId
+     * @return 
+     */
     public double getDuration(String eventId) {
+        
         Event e = getEvent(eventId);
-
         return ((double) e.getEnd().getTime() - (double) e.getStart().getTime()) / 3600000;
+        
     }
-
+    
+    /**
+     * 
+     * @param eventId 
+     */
     public void deleteEvent(int eventId) {
+        
         Event event = em.find(Event.class, eventId);
+        
         event.getAttendee().stream().map((u) -> man.newInformation(u, event.getCreator().toString() + " has just deleted the event: \"" + event.getName() + "\"")).map((info) -> {
             em.merge(info);
             return info;

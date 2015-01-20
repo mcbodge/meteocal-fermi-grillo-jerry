@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.meteocal.business.boundary;
 
 import com.meteocal.business.control.EventCreationManager;
@@ -10,7 +5,6 @@ import com.meteocal.business.control.LogInManager;
 import com.meteocal.business.control.OpenWeatherMapController;
 import com.meteocal.business.control.UserCalendarManager;
 import com.meteocal.business.entity.Event;
-import com.meteocal.business.entity.Location;
 import com.meteocal.business.entity.User;
 import com.meteocal.business.entity.Weather;
 import java.io.BufferedReader;
@@ -23,24 +17,19 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.sql.Timestamp;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.Stateless;
-import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
-import org.primefaces.event.FileUploadEvent;
 import org.primefaces.json.JSONException;
 import org.primefaces.model.UploadedFile;
 
@@ -72,10 +61,12 @@ public class UploadFacade {
      * @param f the uploaded file
      */
     private void setCalendar(File f) {
+        
         //ucm.startUpload(getUser(lim.getLoggedUserName()), f);
         if (ucm.verifyFile(f)) {
             extractFromFile(f, getUser(lim.getLoggedUserName()));
         }
+        
     }
 
     /**
@@ -85,11 +76,13 @@ public class UploadFacade {
      * @return the user entity
      */
     private User getUser(String username) {
+        
         try {
             return em.createNamedQuery("User.findByUserName", User.class).setParameter("userName", username).getSingleResult();
         } catch (NoResultException ex) {
             return null;
         }
+        
     }
 
     /**
@@ -98,10 +91,12 @@ public class UploadFacade {
      * @param up the UploadedFile in the cache
      */
     public void upload(UploadedFile up) {
+        
         // Do what you want with the file
         try {
             copyFile(Integer.toString(up.hashCode()), up.getInputstream());
         } catch (IOException e) {
+            
         }
 
     }
@@ -113,6 +108,7 @@ public class UploadFacade {
      * @param in initialized input stream
      */
     public void copyFile(String hash, InputStream in) {
+        
         try {
             File file = new File(FacesContext.getCurrentInstance().getExternalContext().getRealPath("files/") + File.separatorChar + hash);
 
@@ -133,6 +129,7 @@ public class UploadFacade {
         } catch (IOException e) {
 
         }
+        
     }
 
     /**
@@ -201,10 +198,13 @@ public class UploadFacade {
                 Date e_start = formatter.parse(e_str_start);
                 Date e_end = formatter.parse(e_str_end);
                 Integer e_geoname = null;
+                
                 if(e_str_geoname != null && !e_str_geoname.equals("") && !e_str_geoname.equals("null")){
                     e_geoname = Integer.parseInt(e_str_geoname);
                 }
+                
                 Integer e_constraint = null;
+                
                 if(e_str_constraint != null && !e_str_constraint.equals("") && !e_str_constraint.equals("null")){
                     e_constraint = Integer.parseInt(e_str_constraint);
                 }
@@ -220,6 +220,7 @@ public class UploadFacade {
 
                 //save event if it have been created     
                 if (event != null) {
+                    
                     //save in db
                     em.flush();
                     event = em.merge(event);
@@ -228,6 +229,7 @@ public class UploadFacade {
                     if (e_geoname == null) {
                         //no weather condition is given
                     } else {
+                        
                         //create weather constraint and bind it to the event
                         Weather weather;
                         weather = new Weather(event.getEventId(), e_geoname);
@@ -244,6 +246,7 @@ public class UploadFacade {
                         Calendar cal_day = Calendar.getInstance();
                         cal_day.setTime(event.getStart());
                         int day = cal_day.get(Calendar.DAY_OF_YEAR) - cal_today.get(Calendar.DAY_OF_YEAR) + 1;
+                        
                         if (day < 17) {
                             try {
                                 weather.setForecast(owmc.getForecast(e_geoname, day));
@@ -252,12 +255,15 @@ public class UploadFacade {
                                 Logger.getLogger(PersonalFacade.class.getName()).log(Level.SEVERE, null, ex);
                             }
                         }
+                        
                         em.persist(weather);
                         em.flush();
+                        
                     }
 
                 }
             }
+            
             //close stream
             reader.close();
             is.close();
@@ -270,40 +276,41 @@ public class UploadFacade {
 
     }
 
+    /**
+     * 
+     * @param creator
+     * @param start
+     * @param end
+     * @return 
+     */
     private int getNumOverlappingEvents(User creator, Date start, Date end) {
+        
         em.flush();
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         int count = 0;
+        
         try {
             String query = "SELECT COUNT(e.event_id) FROM events e LEFT JOIN answers a ON e.event_id = a.event_id "
                     + "WHERE (((e.creator = ?) OR ( a.answer_value = 1 AND a.user_id = ?)) "
-                    + "AND("
-                    + "(e.start_date <= ? AND e.end_date >= ? ) OR"
-                    + "(e.start_date >= ? AND e.end_date >= ? AND e.start_date < ? ) OR"
-                    + "(e.start_date <= ? AND e.end_date <= ? AND e.end_date > ? ) OR"
-                    + "(e.start_date > ? AND e.end_date < ? ) "
-                    + ")"
-                    + ")";
+                    + "AND ((e.start_date <= ? AND e.end_date >= ? ) "
+                    + "OR (e.start_date >= ? AND e.end_date >= ? AND e.start_date < ? ) "
+                    + "OR (e.start_date <= ? AND e.end_date <= ? AND e.end_date > ? ) "
+                    + "OR (e.start_date > ? AND e.end_date < ? ) ))";
             Long l = (Long) em.createNativeQuery(query)
-                    .setParameter(1, creator.getUserId())
-                    .setParameter(2, creator.getUserId())
-                    .setParameter(3, formatter.format(start))
-                    .setParameter(4, formatter.format(end))
-                    .setParameter(5, formatter.format(start))
-                    .setParameter(6, formatter.format(end))
-                    .setParameter(7, formatter.format(end))
-                    .setParameter(8, formatter.format(start))
-                    .setParameter(9, formatter.format(end))
-                    .setParameter(10, formatter.format(start))
-                    .setParameter(11, formatter.format(start))
-                    .setParameter(12, formatter.format(end))
+                    .setParameter(1, creator.getUserId()).setParameter(2, creator.getUserId())
+                    .setParameter(3, formatter.format(start)).setParameter(4, formatter.format(end))
+                    .setParameter(5, formatter.format(start)).setParameter(6, formatter.format(end)).setParameter(7, formatter.format(end))
+                    .setParameter(8, formatter.format(start)).setParameter(9, formatter.format(end)).setParameter(10, formatter.format(start))
+                    .setParameter(11, formatter.format(start)).setParameter(12, formatter.format(end))
                     .getSingleResult();
             count = l.intValue();
         } catch (NoResultException ex) {
 
         }
+        
         Logger.getLogger(PersonalFacade.class.getName()).log(Level.INFO, "-- num overlapping events = {0}", count);
         return count;
+        
     }
 
 }

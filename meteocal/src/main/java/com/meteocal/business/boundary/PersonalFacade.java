@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.meteocal.business.boundary;
 
 import com.meteocal.business.control.EventCreationManager;
@@ -17,8 +12,6 @@ import com.meteocal.business.entity.Location;
 import com.meteocal.business.entity.User;
 import com.meteocal.business.entity.Weather;
 import com.meteocal.gui.PersonalBean;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -27,12 +20,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.ejb.EJB;
 import javax.ejb.Stateful;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
@@ -194,6 +185,7 @@ public class PersonalFacade {
         }
         Logger.getLogger(PersonalFacade.class.getName()).log(Level.INFO, "STOP createEvent PersonalFacade ---------------");
         return result;
+        
     }
 
     /**
@@ -202,80 +194,91 @@ public class PersonalFacade {
      * @return the User you are looking for
      */
     public User getUser(String username) {
+        
         try {
             return em.createNamedQuery("User.findByUserName", User.class).setParameter("userName", username).getSingleResult();
         } catch (NoResultException ex) {
             return null;
         }
+        
     }
 
+    /**
+     * 
+     * @param creator
+     * @param start
+     * @param end
+     * @return 
+     */
     public int getNumOverlappingEvents(User creator, Date start, Date end) {
+        
         em.flush();
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         int count = 0;
         try {
             String query = "SELECT COUNT(e.event_id) FROM events e LEFT JOIN answers a ON e.event_id = a.event_id "
                     + "WHERE (((e.creator = ?) OR ( a.answer_value = 1 AND a.user_id = ?)) "
-                    + "AND("
-                    + "(e.start_date <= ? AND e.end_date >= ? ) OR"
-                    + "(e.start_date >= ? AND e.end_date >= ? AND e.start_date < ? ) OR"
-                    + "(e.start_date <= ? AND e.end_date <= ? AND e.end_date > ? ) OR"
-                    + "(e.start_date > ? AND e.end_date < ? ) "
-                    + ")"
-                    + ")";
+                    + "AND ((e.start_date <= ? AND e.end_date >= ? ) "
+                    + "OR (e.start_date >= ? AND e.end_date >= ? AND e.start_date < ? ) "
+                    + "OR (e.start_date <= ? AND e.end_date <= ? AND e.end_date > ? ) "
+                    + "OR (e.start_date > ? AND e.end_date < ? ) ) )";
             Long l = (Long) em.createNativeQuery(query)
-                    .setParameter(1, creator.getUserId())
-                    .setParameter(2, creator.getUserId())
-                    .setParameter(3, formatter.format(start))
-                    .setParameter(4, formatter.format(end))
-                    .setParameter(5, formatter.format(start))
-                    .setParameter(6, formatter.format(end))
-                    .setParameter(7, formatter.format(end))
-                    .setParameter(8, formatter.format(start))
-                    .setParameter(9, formatter.format(end))
-                    .setParameter(10, formatter.format(start))
-                    .setParameter(11, formatter.format(start))
-                    .setParameter(12, formatter.format(end))
+                    .setParameter(1, creator.getUserId()).setParameter(2, creator.getUserId())
+                    .setParameter(3, formatter.format(start)).setParameter(4, formatter.format(end))
+                    .setParameter(5, formatter.format(start)).setParameter(6, formatter.format(end)).setParameter(7, formatter.format(end))
+                    .setParameter(8, formatter.format(start)).setParameter(9, formatter.format(end)).setParameter(10, formatter.format(start))
+                    .setParameter(11, formatter.format(start)).setParameter(12, formatter.format(end))
                     .getSingleResult();
             count = l.intValue();
         } catch (NoResultException ex) {
 
         }
+        
         Logger.getLogger(PersonalFacade.class.getName()).log(Level.INFO, "-- num overlapping events = {0}", count);
         return count;
+        
     }
-
+    
+    /**
+     * 
+     * @param creator
+     * @param start
+     * @param end
+     * @param eventId
+     * @return 
+     */
     private int getNumOverlappingEvents(User creator, Date start, Date end, int eventId) {
+        
         em.flush();
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         int count = 0;
+        
         try {
+            
             String query = "SELECT COUNT(e.event_id) FROM events e LEFT JOIN answers a ON e.event_id = a.event_id "
                     + "WHERE (((e.creator = ?) OR ( a.answer_value = 1 AND a.user_id = ?)) "
-                    + "AND(" + "(e.start_date <= ? AND e.end_date >= ? ) OR (e.start_date >= ? AND e.end_date >= ? AND e.start_date < ? ) OR"
-                    + "(e.start_date <= ? AND e.end_date <= ? AND e.end_date > ? ) OR (e.start_date > ? AND e.end_date < ? )))"
+                    + "AND ((e.start_date <= ? AND e.end_date >= ? ) "
+                    + "OR (e.start_date >= ? AND e.end_date >= ? AND e.start_date < ? ) "
+                    + "OR (e.start_date <= ? AND e.end_date <= ? AND e.end_date > ? ) "
+                    + "OR (e.start_date > ? AND e.end_date < ? )))"
                     + "AND e.event_id <> ?";
             Long l = (Long) em.createNativeQuery(query)
-                    .setParameter(1, creator.getUserId())
-                    .setParameter(2, creator.getUserId())
-                    .setParameter(3, formatter.format(start))
-                    .setParameter(4, formatter.format(end))
-                    .setParameter(5, formatter.format(start))
-                    .setParameter(6, formatter.format(end))
-                    .setParameter(7, formatter.format(end))
-                    .setParameter(8, formatter.format(start))
-                    .setParameter(9, formatter.format(end))
-                    .setParameter(10, formatter.format(start))
-                    .setParameter(11, formatter.format(start))
-                    .setParameter(12, formatter.format(end))
+                    .setParameter(1, creator.getUserId()).setParameter(2, creator.getUserId())
+                    .setParameter(3, formatter.format(start)).setParameter(4, formatter.format(end))
+                    .setParameter(5, formatter.format(start)).setParameter(6, formatter.format(end)).setParameter(7, formatter.format(end))
+                    .setParameter(8, formatter.format(start)).setParameter(9, formatter.format(end)).setParameter(10, formatter.format(start))
+                    .setParameter(11, formatter.format(start)).setParameter(12, formatter.format(end))
                     .setParameter(13, eventId)
                     .getSingleResult();
             count = l.intValue();
+            
         } catch (NoResultException ex) {
 
         }
+        
         Logger.getLogger(PersonalFacade.class.getName()).log(Level.INFO, "-- num overlapping events = {0}", count);
         return count;
+        
     }
 
     /**
@@ -284,7 +287,9 @@ public class PersonalFacade {
      * @return a lost of strings of distinct available countries
      */
     public List<String> getCountries() {
+        
         return em.createNativeQuery("SELECT DISTINCT country FROM locations").getResultList();
+        
     }
 
     /**
@@ -294,7 +299,9 @@ public class PersonalFacade {
      * @return a list of provinces that are in the given country
      */
     public List<String> getProvinces(String c) {
+        
         return em.createNativeQuery("SELECT DISTINCT admin2 FROM locations l WHERE l.country = ? ORDER BY admin2").setParameter(1, c).getResultList();
+        
     }
 
     /**
@@ -305,7 +312,9 @@ public class PersonalFacade {
      * @return a list of cities that are in the given province
      */
     public List<String> getCities(String c, String p) {
+        
         return em.createNativeQuery("SELECT name FROM locations l WHERE l.country = ? AND l.admin2 = ? ORDER BY name").setParameter(1, c).setParameter(2, p).getResultList();
+        
     }
 
     /**
@@ -317,7 +326,9 @@ public class PersonalFacade {
      * @return location id (geonameid)
      */
     public Integer getGeoname(String c, String p, String n) {
+        
         return (Integer) em.createNativeQuery("SELECT geonameid FROM locations l WHERE l.country = ? AND l.admin2 = ? AND l.name = ?").setParameter(1, c).setParameter(2, p).setParameter(3, n).getSingleResult();
+        
     }
 
     /**
@@ -327,11 +338,15 @@ public class PersonalFacade {
      * calendar as private" otherwise
      */
     public String getCalendarString() {
+        
         String out = "Set calendar as public";
+        
         if (getUser(getLoggedUser()).isPublicCalendar()) {
             out = "Set calendar as private";
         }
+        
         return out;
+        
     }
 
     /**
@@ -340,8 +355,10 @@ public class PersonalFacade {
      *
      */
     public void togglePrivacy() {
+        
         User u = getUser(getLoggedUser());
         u.setPublicCalendar(!u.isPublicCalendar());
+        
     }
 
     /**
@@ -350,6 +367,7 @@ public class PersonalFacade {
      * @return a link to the file to be downloaded
      */
     public void startDownload() {
+        
         FacesContext fc = FacesContext.getCurrentInstance();
         ExternalContext ec = fc.getExternalContext();
 
@@ -357,6 +375,7 @@ public class PersonalFacade {
         ec.setResponseContentType("application/octet-stream"); // Check http://www.iana.org/assignments/media-types for all types. Use if necessary ExternalContext#getMimeType() for auto-detection based on filename.
         //ec.setResponseContentLength(contentLength); // Set it with the file size. This header is optional. It will work if it's omitted, but the download progress will be unknown.
         ec.setResponseHeader("Content-Disposition", "attachment; filename=\"" + getLoggedUser() + "_meteocal.dat" + "\""); // The Save As popup magic is done here. You can give it any file name you want, this only won't work in MSIE, it will use current request URL as file name instead.
+        
         try {
             InputStream input = ucm.startDownload(getUser(getLoggedUser()));
             OutputStream output = ec.getResponseOutputStream();
@@ -372,7 +391,9 @@ public class PersonalFacade {
         } catch (IOException ex) {
             Logger.getLogger(PersonalBean.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
         fc.responseComplete(); // Important! Otherwise JSF will attempt to render the response which obviously will fail since it's already written with a file and closed.
+        
     }
 
     /**
@@ -381,6 +402,7 @@ public class PersonalFacade {
      * @return ScheduleModel contains all events
      */
     public ScheduleModel getAllEvents() {
+        
         Logger.getLogger(PersonalFacade.class.getName()).log(Level.INFO, "START getAllEvents() -------------------");
         ScheduleModel eventModel = new DefaultScheduleModel();
         User user = getUser(getLoggedUser());
@@ -395,10 +417,18 @@ public class PersonalFacade {
                 eventModel.addEvent(new DefaultScheduleEvent(Character.toString((char) 254) + ev.getName(), ev.getStart(), ev.getEnd()));
             }
         });
+        
         Logger.getLogger(PersonalFacade.class.getName()).log(Level.INFO, "STOP getAllEvents() -------------------");
         return eventModel;
+        
     }
 
+    /**
+     * 
+     * @param from
+     * @param to
+     * @return 
+     */
     public ScheduleModel getEvents(Date from, Date to) {
 
         ScheduleModel eventModel = new DefaultScheduleModel();
@@ -416,29 +446,56 @@ public class PersonalFacade {
 
         return eventModel;
     }
-
+    
+    /**
+     * 
+     * @param param
+     * @return 
+     */
     public List<String> searchUser(String param) {
+        
         List<String> result = new ArrayList<>();
         String query = "SELECT * FROM users WHERE (UPPER(users.user_name) LIKE UPPER(?) OR UPPER(users.first_name) LIKE UPPER(?) OR UPPER(users.last_name) LIKE UPPER(?)) AND users.user_name <> ?";
         List<User> users_founded = em.createNativeQuery(query, User.class)
-                .setParameter(1, param + "%")
-                .setParameter(2, param + "%")
-                .setParameter(3, param + "%")
-                .setParameter(4, getLoggedUser())
+                .setParameter(1, param + "%").setParameter(2, param + "%").setParameter(3, param + "%").setParameter(4, getLoggedUser())
                 .getResultList();
         Logger.getLogger(PersonalFacade.class.getName()).log(Level.INFO, "-- query = {0}", query);
+        
         if (users_founded != null) {
             users_founded.stream().forEach((u) -> {
                 result.add(u.toString());
             });
         }
+        
         return result;
+        
     }
 
+    /**
+     * 
+     * @param username
+     * @return 
+     */
     public String getUserId(String username) {
+        
         return getUser(username).getUserId().toString();
+        
     }
-
+    
+    /**
+     * 
+     * @param eventId
+     * @param name
+     * @param location
+     * @param geoname
+     * @param dateTime
+     * @param duration
+     * @param invited_users
+     * @param event_private
+     * @param constraint
+     * @param description
+     * @return 
+     */
     public boolean updateEvent(int eventId, String name, String location, Integer geoname, Date dateTime, double duration, String invited_users, boolean event_private, String constraint, String description) {
 
         boolean result = false;
@@ -448,8 +505,7 @@ public class PersonalFacade {
         Event event = em.find(Event.class, eventId);
 
         //update the event if not overlap  
-        //TODO solve
-        if (/*!isFinished(eventId) &&*/name != null && dateTime != null && getNumOverlappingEvents(event.getCreator(), dateTime, end, eventId) < 1) {
+        if (name != null && dateTime != null && getNumOverlappingEvents(event.getCreator(), dateTime, end, eventId) < 1) {
 
             //verify mandatory fields (name, dateTime, duration)
             event.setName(name);
@@ -476,10 +532,6 @@ public class PersonalFacade {
             em.refresh(event);
 
             //set constraint
-            //TODO start - must all the geoname-dependent parameters (location and weather)
-            //issue in changing the weather constraint in the db (it doesn't change).
-            Logger.getLogger(PersonalFacade.class.getName()).log(Level.INFO, "XXXXXXXXXXXXXXXXXXXXX{0}", geoname);
-
             if (event.getWeather() != null) {
                 em.remove(event.getWeather());
                 em.flush();
@@ -519,7 +571,6 @@ public class PersonalFacade {
                 em.refresh(event);
 
             }
-                //TODO end
 
             //save in db
             if (invited_users_list == null || invited_users_list.isEmpty()) {
@@ -589,25 +640,43 @@ public class PersonalFacade {
         }
 
         return result;
+        
     }
-
+    
+    /**
+     * 
+     * @param eventId
+     * @return 
+     */
     public boolean isFinished(int eventId) {
+        
         boolean out = false;
         Event event = em.find(Event.class, eventId);
+        
         if (event.getEnd().before(new Date())) {
             out = true;
         }
+        
         return out;
+        
     }
 
+    /**
+     * 
+     * @return 
+     */
     public boolean haveGotNotifications() {
+        
         boolean out = false;
         User u = getUser(getLoggedUser());
+        
         //check info
         if (u.getInformations() != null && !u.getInformations().isEmpty() || u.getInvitations() != null && !u.getInvitations().isEmpty()) {
             out = true;
         }
+        
         return out;
+        
     }
 
 }
