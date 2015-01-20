@@ -16,20 +16,26 @@
                 MeteoCal
                 <h:outputLabel value="beta" style="font-size: small"/>
             </h1>
-            <h:form id="loginform" >
-                <h:panelGrid columns="1" style="text-align: right">
-                    <!--<p:outputLabel for="username" value="User name"/>-->
-                    <p:inputText id="username" value="#{homeBean.userName}" required="true" requiredMessage="User name is required"/>
-                    <p:watermark for="username" value="user name" id="watermarkun"/>
-                    <!--<p:outputLabel for="pass" value="Password"/>-->
-                    <p:password id="pass" value="#{homeBean.password}" required="true" requiredMessage="Password is required"/>
-                    <p:watermark for="pass" value="password" id="watermarkp" />
-                    <p:commandButton id="submit" action="#{homeBean.submitLogIn()}" value="Login" ajax="true" update="@all"/>
-                </h:panelGrid>
-                <h:messages  style="color: red"/>
-            </h:form><br/><br/>
-            <p:link outcome="registration" value="Don't have an account?"/><br/>
-            <p:link outcome="problems" value="Can't access your account?"/><br/>
+            <h:panelGrid columns="2" style="text-align: right">
+                <img src="/meteocal/files/logo.png" border="16" style="border-color:transparent"/>
+                <h:form id="loginform" >
+
+                    <h:panelGrid columns="1" style="text-align: right">
+                        <p:inputText id="username" value="#{homeBean.userName}" required="true" requiredMessage="User name is required"/>
+                        <p:watermark for="username" value="user name" id="watermarkun"/>
+                        <p:password id="pass" value="#{homeBean.password}" required="true" requiredMessage="Password is required"/>
+                        <p:watermark for="pass" value="password" id="watermarkp" />
+                        <p:commandButton id="submit" action="#{homeBean.submitLogIn()}" value="Login" ajax="true" update="@all"/>
+                    </h:panelGrid>
+
+                    <h:messages  style="color: red"/>
+                </h:form>
+                <br/>
+                <p:link outcome="registration" value="Don't have an account?"/>
+                <br/>
+                <p:link outcome="problems" value="Can't access your account?"/>
+            </h:panelGrid>
+
         </div>
     </h:body>
 
