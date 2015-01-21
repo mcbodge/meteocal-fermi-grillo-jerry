@@ -195,14 +195,14 @@ public class EventManager {
                     case EXTREME_HAIL: //P
                         break;
                     default:
-                        out = wc.isRain();
+                        out = !wc.isRain();
                 }
                 break;
             case 3: //Requires snow
                 out = wc.equals(WeatherCondition.SNOW);
                 break;
             case 4: //No extreme conditions
-                out = wc.isExtreme();
+                out = !wc.isExtreme();
                 break;
             default:
         }
