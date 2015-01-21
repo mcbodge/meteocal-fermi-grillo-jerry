@@ -8,12 +8,9 @@ import com.meteocal.business.entity.Information;
 import com.meteocal.business.entity.User;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.ejb.Stateful;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -64,7 +61,6 @@ public class NotificationsFacade {
      */
     public List<ArrayList<String>> getCompleteList() {
         
-        Logger.getLogger(NotificationsFacade.class.getName()).log(Level.INFO, "?-- START getCompleteList() --");
         ArrayList<String> row = new ArrayList<>();//{"type", "from", "text", "event_id", "disabled"};
         List<ArrayList<String>> list = new ArrayList<>();
         
@@ -94,7 +90,6 @@ public class NotificationsFacade {
 
             //add element
             list.add(row);
-            Logger.getLogger(NotificationsFacade.class.getName()).log(Level.INFO, "|-- information added:{0}", row.toString());
             
         }
 
@@ -109,10 +104,8 @@ public class NotificationsFacade {
             row.add(e.getEventId().toString());
             row.add(String.valueOf(!canAccept(e)));
             list.add(row);
-            Logger.getLogger(NotificationsFacade.class.getName()).log(Level.INFO, "---| invitation added: {0}", row.toString());
         }
         
-        Logger.getLogger(NotificationsFacade.class.getName()).log(Level.INFO, "?-- END getComleteList() --");
         return list;
         
     }
@@ -168,7 +161,6 @@ public class NotificationsFacade {
 
         }
         
-        Logger.getLogger(PersonalFacade.class.getName()).log(Level.INFO, "|-->-- num overlapping events = {0}", count);
         return count;
         
     }
@@ -200,7 +192,6 @@ public class NotificationsFacade {
         }
         info = null;
         em.flush();
-        Logger.getLogger(NotificationsFacade.class.getName()).log(Level.INFO, "-- information read");
         
     }
 
@@ -228,7 +219,6 @@ public class NotificationsFacade {
             Information info = ev_m.newInformation(event.getCreator(), user.toString() + " is attending your event: " + event.getName(), event);
             em.merge(info);
             em.flush();
-            Logger.getLogger(NotificationsFacade.class.getName()).log(Level.INFO, "-- invitation accepted.");
         }
 
     }
@@ -250,9 +240,7 @@ public class NotificationsFacade {
             em.persist(answer);
             em.flush();
         }
-        
-        Logger.getLogger(NotificationsFacade.class.getName()).log(Level.INFO, "-- invitation declined.");
-        
+                
     }
     
     public void turnBack (int eventId) {
@@ -264,6 +252,18 @@ public class NotificationsFacade {
             em.flush();
         }
         
+    }
+    
+    public boolean eventExist(int eventId){
+        
+        boolean out = false;
+        
+        if(em.find(Event.class, eventId) != null){
+            out = true;
+        }
+        
+        return out;
+    
     }
     
 }

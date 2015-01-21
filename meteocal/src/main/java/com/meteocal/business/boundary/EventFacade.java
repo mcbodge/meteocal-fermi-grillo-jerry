@@ -482,7 +482,6 @@ public class EventFacade {
     
     public String loadWeatherImage(String eventId){
         Integer code = getEvent(eventId).getWeather().getForecast();
-        System.out.println(code.toString());
         String out;
         
         if (code == null) {

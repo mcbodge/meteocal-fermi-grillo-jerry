@@ -53,7 +53,7 @@ public class IssuesDataManager{
             
             //email text parts
             String subject = "METEOCAL: password request";
-            String body = "Dear " + fullname + ",\nYour new temporary password is:\t" + password + "\n\n\nPLEASE DO NOT REPLY TO THIS EMAIL";
+            String body = "Dear " + fullname + ",\nYour new password is:\t" + password + "\n\n\nPLEASE DO NOT REPLY TO THIS EMAIL";
             email_mng.sendEmail(email, subject, body);
             
             //edit user's pasword

@@ -29,13 +29,13 @@ import javax.inject.Named;
 @ManagedBean
 @RequestScoped
 public class NotificationsBean implements Serializable {
-
+    
     @EJB
     NotificationsFacade nf;
-
+    
     private String title;
     private List<ArrayList<String>> string_list;
-
+    
     public NotificationsBean() {
     }
 
@@ -43,15 +43,15 @@ public class NotificationsBean implements Serializable {
     public List<ArrayList<String>> getString_list() {
         return string_list;
     }
-
+    
     public void setString_list(List<ArrayList<String>> string_list) {
         this.string_list = string_list;
     }
-
+    
     public String getTitle() {
         return title;
     }
-
+    
     public void setTitle(String title) {
         this.title = title;
     }
@@ -61,15 +61,15 @@ public class NotificationsBean implements Serializable {
     public void init() {
         string_list = new ArrayList<>();
         Logger.getLogger(NotificationsBean.class.getName()).log(Level.INFO, "NOTIFICATIONS BEAN INIT---------START");
-        if(nf.getCompleteList().isEmpty()){
+        if (nf.getCompleteList().isEmpty()) {
             title = "No notifications to show";
-        }else{
+        } else {
             title = "Your Notifications";
             string_list = nf.getCompleteList();
         }
         Logger.getLogger(NotificationsBean.class.getName()).log(Level.INFO, "NOTIFICATIONS BEAN INIT---------END");
     }
-
+    
     public String showButton(String type) {
         String out = "false";
         if (type.equals("invitation")) {
@@ -77,7 +77,7 @@ public class NotificationsBean implements Serializable {
         }
         return out;
     }
-
+    
     public String iconPath(String type) {
         String out = "https://cdn3.iconfinder.com/data/icons/49handdrawing/256x256/info.png";
         if (type.equals("invitation")) {
@@ -85,26 +85,26 @@ public class NotificationsBean implements Serializable {
         }
         return out;
     }
-
+    
     public String accept(String id, String type) {
         
         if (type.equals("invitation")) {
             //accept invitation
             nf.acceptInvitation(Integer.parseInt(id));
-        }else{
+        } else {
             //hide information
             nf.readInformation(Integer.parseInt(id));
         }
         //refresh
         return "notifications?faces-redirect=true";
     }
-
+    
     public String decline(String eventId) {
         //decline invitation
         nf.declineInvitation(Integer.parseInt(eventId));
         return "notifications?faces-redirect=true";
     }
-
+    
     public String acceptText(String type) {
         String out = "Got it";
         if (type.equals("invitation")) {
@@ -113,9 +113,9 @@ public class NotificationsBean implements Serializable {
         return out;
     }
     
-    public void openEvent(Integer eventId){
+    public void openEvent(Integer eventId) {
         ExternalContext exc = FacesContext.getCurrentInstance().getExternalContext();
-
+        
         exc.getSessionMap().put("eventId", eventId);
 
         //bind the ID of the original event 
@@ -126,7 +126,7 @@ public class NotificationsBean implements Serializable {
         }
     }
     
-    public String hasEvent(Integer eventId){
-        return Boolean.toString(eventId!=null);
+    public String hasEvent(Integer eventId) {
+        return Boolean.toString(eventId != null && nf.eventExist(eventId)) ;
     }
 }
