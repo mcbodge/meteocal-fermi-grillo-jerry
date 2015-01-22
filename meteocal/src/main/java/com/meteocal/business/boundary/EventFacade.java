@@ -486,7 +486,7 @@ public class EventFacade {
         if (e.getWeather() != null) {
             code = e.getWeather().getForecast();
         }
-        String out = "https://cdn0.iconfinder.com/data/icons/sketchy-weather-icons-by-azuresol/221/backdrop_cloud_weather.png";;
+        String out = "https://cdn0.iconfinder.com/data/icons/sketchy-weather-icons-by-azuresol/221/backdrop_cloud_weather.png";
 
         if (code == null) {
             out = "https://cdn0.iconfinder.com/data/icons/sketchy-weather-icons-by-azuresol/221/backdrop_cloud_weather.png";

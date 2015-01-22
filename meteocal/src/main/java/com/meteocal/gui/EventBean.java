@@ -177,7 +177,7 @@ public class EventBean implements Serializable {
 
     }
 
-    public String loadWeatehrImage() {
+    public String loadWeatherImage() {
         
         return ef.loadWeatherImage(eventId);
         
