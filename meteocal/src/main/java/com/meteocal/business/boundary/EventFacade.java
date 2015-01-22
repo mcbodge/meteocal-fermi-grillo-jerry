@@ -360,11 +360,11 @@ public class EventFacade {
         return out;
 
     }
-    
+
     /**
-     * 
+     *
      * @param eventId
-     * @return 
+     * @return
      */
     public Boolean canAccept(String eventId) {
 
@@ -373,9 +373,9 @@ public class EventFacade {
     }
 
     /**
-     * 
+     *
      * @param eventId
-     * @return 
+     * @return
      */
     public Boolean canDecline(String eventId) {
 
@@ -383,22 +383,22 @@ public class EventFacade {
         return e.getMaybeGoing().contains(getUser()) || e.getAttendee().contains(getUser());
 
     }
-    
+
     /**
-     * 
+     *
      * @param eventId
-     * @return 
+     * @return
      */
     public Boolean isCreator(String eventId) {
 
         return getEvent(eventId).getCreator().equals(getUser());
 
     }
-    
+
     /**
-     * 
+     *
      * @param eventId
-     * @return 
+     * @return
      */
     public Boolean isObserver(String eventId) {
 
@@ -407,9 +407,9 @@ public class EventFacade {
     }
 
     /**
-     * 
+     *
      * @param eventId
-     * @return 
+     * @return
      */
     public String getPeople(String eventId) {
 
@@ -431,14 +431,14 @@ public class EventFacade {
         return people;
 
     }
-    
+
     /**
-     * 
+     *
      * @param eventId
-     * @return 
+     * @return
      */
     public Integer getGeoname(String eventId) {
-        
+
         try {
             return Integer.parseInt(getEvent(eventId).getWeather().getLocationCode());
         } catch (NullPointerException e) {
@@ -446,27 +446,27 @@ public class EventFacade {
         }
 
     }
-    
+
     /**
-     * 
+     *
      * @param eventId
-     * @return 
+     * @return
      */
     public double getDuration(String eventId) {
-        
+
         Event e = getEvent(eventId);
         return ((double) e.getEnd().getTime() - (double) e.getStart().getTime()) / 3600000;
-        
+
     }
-    
+
     /**
-     * 
-     * @param eventId 
+     *
+     * @param eventId
      */
     public void deleteEvent(int eventId) {
-        
+
         Event event = em.find(Event.class, eventId);
-        
+
         event.getAttendee().stream().map((u) -> man.newInformation(u, event.getCreator().toString() + " has just deleted the event: \"" + event.getName() + "\"")).map((info) -> {
             em.merge(info);
             return info;
@@ -479,11 +479,15 @@ public class EventFacade {
         em.flush();
 
     }
-    
-    public String loadWeatherImage(String eventId){
-        Integer code = getEvent(eventId).getWeather().getForecast();
-        String out;
-        
+
+    public String loadWeatherImage(String eventId) {
+        Event e = getEvent(eventId);
+        Integer code = null;
+        if (e.getWeather() != null) {
+            code = e.getWeather().getForecast();
+        }
+        String out = "https://cdn0.iconfinder.com/data/icons/sketchy-weather-icons-by-azuresol/221/backdrop_cloud_weather.png";;
+
         if (code == null) {
             out = "https://cdn0.iconfinder.com/data/icons/sketchy-weather-icons-by-azuresol/221/backdrop_cloud_weather.png";
         } else if (199 < code && code < 233) {
