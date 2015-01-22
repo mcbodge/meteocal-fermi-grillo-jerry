@@ -11,7 +11,7 @@
         <div align="left" >
             <h1>Create an account</h1>
             <h:form>
-                <h:panelGrid id="grid" columns="3" cellpadding="5">
+                <h:panelGrid id="grid" columns="3" cellpadding="5" style="color: black; font-family: sans-serif">
                     
                     <h:outputLabel for="firstname" value="Name" />
                     <p:inputText id="firstname" value="#{registrationBean.firstName}" required="true" requiredMessage="first name required" />
@@ -47,9 +47,11 @@
                     <p:password id="newpasswordagain" value="#{registrationBean.password}" label="Password 2" required="true" requiredMessage="a password is required" validatorMessage="password mismatch" />
                     <p:message for="newpasswordagain" />
                     
-                    <br></br>
+                    <br/>
+                    <h:panelGrid columns="2">
                     <p:commandButton value="Create Account" id="createaccount" action="#{registrationBean.createAccount()}" update="grid" validateClient="true" style="margin-right:10px" />
                     <p:button outcome="home" value="Cancel" />
+                    </h:panelGrid>
                     
                     <p:watermark for="firstname" value="first" id="wfirst"/>
                     <p:watermark for="lastname" value="last" id="wlast"/>
@@ -64,69 +66,3 @@
         </div>        
     </h:body>
 </html>
-
-
-<!--
-
-<?xml version='1.0' encoding='UTF-8' ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-   <html xmlns="http://www.w3.org/1999/xhtml"  
-    xmlns:h="http://java.sun.com/jsf/html"  
-    xmlns:f="http://java.sun.com/jsf/core"  
-    xmlns:p="http://primefaces.org/ui">  
-
-      
-    <h:head>
-        <title>Sign Up</title>
-        <link href="main.css" rel="stylesheet" type="text/css"/>
-    </h:head>
-    <h:body style="color: #3366ff">
-        <div align="left" >
-            <h1>Create an account</h1>
-            <h:form>
-                
-                                              
-                <h:panelGrid id="grid" columns="3" cellpadding="5">
-                    <h:outputLabel for="firstname" value="First Name:" />
-                    <p:inputText id="firstname" value="" label="FirstName" required="true" validatorMessage="this field is required" />
-                    <p:message for="firstname" />
-                    
-                    <h:outputLabel for="lastname" value="Last Name:" />
-                    <p:inputText id="lastname" value="" required="true" label="LastName" validatorMessage="this field is required" />
-                    <p:message for="lastname" />
-                    
-                    <h:outputLabel for="username" value="User Name:" />                    
-                    <p:inputText id="username" value="" required="true" label="UserName" validatorMessage="this field is required" />
-                    <p:message for="username" />
-                    
-                    <h:outputLabel for="email" value="Personal email:" />                    
-                    <p:inputText id="email" value="" validatorMessage="An e-mail address is required">
-                        <f:validateRegex pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
-                    </p:inputText>
-                    <p:message for="email" />
-                                                         
-                    <h:outputLabel for="emailagain" value="Reenter email:" />
-                    <p:inputText type="email" id="emailagain" value="" required="true" validatorMessage="Value does not match email pattern." />
-                    <p:message for="emailagain" />
-                                                            
-                    <h:outputLabel for="newpassword" value="Create password (8-characters minimun)" />
-                    <p:password id="newpassword" value="" required="true" match="newpasswordagain" validatorMessage="Password mis-match" />
-                    <p:message for="newpassword" />
-                    
-                    <h:outputLabel for="newpasswordagain" value="re-enter password:" />
-                    <p:password id="newpasswordagain" value="" required="true" validatorMessage="Password mis-match" />
-                    <p:message for="newpasswordagain" />
-                    
-                    <p:commandButton value="Create Account" id="createaccount" actionListener="#{registrationBean.createAccount()}" update="grid" validateClient="true" style="margin-right:10px" />
-                    
-                    <p:button outcome="#{navigation.redirectToLogin()}" value="Cancel" />
-                                                          
-                </h:panelGrid>
-
-            </h:form>
-          
-        </div>        
-    </h:body>
-</html>
-
--->
