@@ -58,6 +58,7 @@ public class EventCreationManager {
      * @param p the privacy value 0 for public, 1 for private.
      * @param constraint the generated constraint value of the event, or null.
      * @param description the description of the event, or null.
+     * @param numOverlappingEvents
      * @return null if no event is created.
      */
     public Event newEvent(User creator, String name, Date start, Date end, String location, List<User> invited, boolean p, Integer constraint, String description, int numOverlappingEvents) {

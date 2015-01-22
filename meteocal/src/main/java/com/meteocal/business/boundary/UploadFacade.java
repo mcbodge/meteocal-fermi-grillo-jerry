@@ -162,7 +162,7 @@ public class UploadFacade {
             user_file = reader.readLine();
 
             while ((line = reader.readLine()) != null) {
-                //line = eventid   name    location    start   end   descr   constraint
+                //line = eventid   name    location  geoname  start   end   descr   constraint
                 token = new StringTokenizer(line, "\t");
 
                 e_id = token.nextToken();
