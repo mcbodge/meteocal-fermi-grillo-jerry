@@ -9,10 +9,10 @@
 
 
 
-    <h:body style="color: #3366ff; font-family: sans-serif">
+    <h:body style="font-family: sans-serif">
 
         <h:form>
-            <h:panelGrid id="grid2" columns="2"  cellpadding="3" width="100%">
+            <h:panelGrid style="color: #3366ff" id="grid2" columns="2"  cellpadding="3" width="100%">
                 <p:column style="width:85%;">
                     <div style="float: left; ">
                         <h:commandLink value="MeteoCal" style="font-size: large; font-weight: bold; padding-right: 2px" action="personal?faces-redirect=true"/>
@@ -42,15 +42,24 @@
         <hr style=" background-color: #3366ff; height: 5px" />
 
         <h2>Upload the calendar</h2>
-        <br></br>
-        <h:outputLabel value="Only personal (w/o invited people) events will be imported"/>
+        <h:panelGrid columns="1">
+            <br></br>
 
-        <h:form enctype="multipart/form-data">
-            <p:fileUpload value="#{uploadBean.file}" mode="simple" />
-            <p:commandButton value="Submit" ajax="false" actionListener="#{uploadBean.uploadSingle()}" />
-        </h:form>
-     
-        
+            
+
+
+
+            <h:form enctype="multipart/form-data">
+                <br/>
+                <p:fileUpload value="#{uploadBean.file}" mode="simple" />
+                <br/>
+                <br/>
+                <p:commandButton style="float: right" value="Submit" ajax="false" actionListener="#{uploadBean.uploadSingle()}" />
+                <br/>
+            </h:form>
+            <h:outputLabel style="color: gray" value="Only personal events (i.e. w/o invited people) will be imported."/>
+        </h:panelGrid>
+
     </h:body>
 </html>
 
