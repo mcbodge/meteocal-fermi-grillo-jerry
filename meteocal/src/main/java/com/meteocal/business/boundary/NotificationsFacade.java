@@ -249,8 +249,12 @@ public class NotificationsFacade {
         Answer a = (Answer)em.createNativeQuery("SELECT * FROM answers a WHERE a.event_id = ? AND a.user_id = ?",Answer.class).setParameter(1, eventId).setParameter(2, user.getUserId()).getSingleResult();
         if (event != null && a.getValue()) {
             a.setValue(false);
-            em.flush();
+            //em.flush();
         }
+        em.merge(event);
+        em.merge(user);
+        em.merge(a);
+        em.flush();
         
     }
     
