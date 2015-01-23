@@ -33,6 +33,7 @@ public class EventBean implements Serializable {
 
     private String eventId;
     private String menuShowable;
+    private String weatherIco;
 
     //<editor-fold defaultstate="collapsed" desc="GETTERS AND SETTERS">
     public String getMenuShowable() {
@@ -50,6 +51,15 @@ public class EventBean implements Serializable {
     public void setEventId(String eventId) {
         this.eventId = eventId;
     }
+
+    public String getWeatherIco() {
+        return weatherIco;
+    }
+
+    public void setWeatherIco(String weatherIco) {
+        this.weatherIco = weatherIco;
+    }
+    
     //</editor-fold>
 
     public EventBean() {
@@ -60,6 +70,8 @@ public class EventBean implements Serializable {
     private void init() {
         eventId = FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("eventId").toString();
         menuShowable = ef.isObserver(eventId).toString();
+        weatherIco = ef.loadWeatherImage(eventId);
+        
     }
 
     public String getName() {
@@ -149,6 +161,7 @@ public class EventBean implements Serializable {
         
         return out;
     }
+    
 
     public String deleteEvent() {
         ef.deleteEvent(Integer.parseInt(eventId));
@@ -182,10 +195,6 @@ public class EventBean implements Serializable {
 
     }
 
-    public String loadWeatherImage() {
-        
-        return ef.loadWeatherImage(eventId);
-        
-    }
+  
 
 }
