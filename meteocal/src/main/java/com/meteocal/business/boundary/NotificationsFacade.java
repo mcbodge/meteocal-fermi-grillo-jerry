@@ -67,7 +67,7 @@ public class NotificationsFacade {
         for (Iterator<Information> it = getInformations().iterator(); it.hasNext();) {
             row = new ArrayList<>();
             Information info = it.next();
-            
+            Event e = info.getEventId();
             //type
             row.add("information");
             
@@ -83,7 +83,7 @@ public class NotificationsFacade {
             row.add(info.getText());
             
             //info_id
-            row.add(info.getInformationId().toString());
+            row.add(e.getEventId().toString());
             
             //disable accept button
             row.add("false");
@@ -190,7 +190,6 @@ public class NotificationsFacade {
         if (info != null) {
             em.remove(info);
         }
-        info = null;
         em.flush();
         
     }

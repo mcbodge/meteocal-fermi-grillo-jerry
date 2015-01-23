@@ -486,7 +486,7 @@ public class EventFacade {
         if (e.getWeather() != null) {
             code = e.getWeather().getForecast();
         }
-        String out = "backdrop.png";
+        String out;
 
         if (code == null) {
             out = "backdrop.png";

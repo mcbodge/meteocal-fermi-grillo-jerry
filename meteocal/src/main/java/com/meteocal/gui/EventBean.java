@@ -70,7 +70,7 @@ public class EventBean implements Serializable {
     private void init() {
         eventId = FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("eventId").toString();
         menuShowable = ef.isObserver(eventId).toString();
-        weatherIco = ef.loadWeatherImage(eventId);
+        weatherIco = "/meteocal/files/ico-weather/" + ef.loadWeatherImage(eventId);
         
     }
 
