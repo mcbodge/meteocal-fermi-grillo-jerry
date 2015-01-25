@@ -182,6 +182,7 @@ public class EventManager {
 
         switch (constraint) {
             case 1: //Requires clear sky
+                out = !wc.isCloudy() && !wc.isRain() && !wc.isSpecial();
                 break;
             case 2: //Requires no precipitation
                 switch (wc) {
