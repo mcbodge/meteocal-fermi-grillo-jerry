@@ -32,45 +32,45 @@ public class NotificationsFacade {
     LogInManager lm;
 
     /**
-     * 
-     * @return 
+     *
+     * @return
      */
     private List<Information> getInformations() {
-        
+
         User user = getUser(lm.getLoggedUserName());
         em.refresh(user);
         return user.getInformations();
-        
+
     }
 
     /**
-     * 
-     * @return 
+     *
+     * @return
      */
     private List<Event> getInvitations() {
-        
+
         User user = getUser(lm.getLoggedUserName());
         em.refresh(user);
         return user.getInvitations();
-        
+
     }
 
     /**
-     * 
-     * @return 
+     *
+     * @return
      */
     public List<ArrayList<String>> getCompleteList() {
-        
+
         ArrayList<String> row = new ArrayList<>();//{"type", "from", "text", "event_id", "disabled"};
         List<ArrayList<String>> list = new ArrayList<>();
-        
+
         for (Iterator<Information> it = getInformations().iterator(); it.hasNext();) {
             row = new ArrayList<>();
             Information info = it.next();
             Event e = info.getEventId();
             //type
             row.add("information");
-            
+
             //from
             if (info.getEventId() == null) {
                 row.add("MeteoCal Service");
@@ -78,22 +78,23 @@ public class NotificationsFacade {
                 //Dall evento
                 row.add("Event: " + info.getEventId().getName());
             }
-            
+
             //text
             row.add(info.getText());
-            
+
             //info_id
-            row.add(e.getEventId().toString());
-            
+            //row.add(e.getEventId().toString());
+            row.add(info.getInformationId().toString());
+
             //disable accept button
             row.add("false");
 
             //add element
             list.add(row);
-            
+
         }
 
-        for (Iterator<Event> it = getInvitations().iterator(); it.hasNext();) {            
+        for (Iterator<Event> it = getInvitations().iterator(); it.hasNext();) {
             //row = {"type", "from", "text", "event_id", "disabled"};
             row = new ArrayList<>();
             Event e = it.next();
@@ -105,41 +106,41 @@ public class NotificationsFacade {
             row.add(String.valueOf(!canAccept(e)));
             list.add(row);
         }
-        
+
         return list;
-        
+
     }
-    
+
     /**
-     * 
+     *
      * @param e
-     * @return 
+     * @return
      */
     public boolean canAccept(Event e) {
-        
+
         boolean out = false;
-        
+
         if (getNumOverlappingEvents(getUser(lm.getLoggedUserName()), e.getStart(), e.getEnd()) == 0) {
             out = true;
         }
-        
+
         return out;
-        
+
     }
-    
+
     /**
-     * 
+     *
      * @param creator
      * @param start
      * @param end
-     * @return 
+     * @return
      */
     private int getNumOverlappingEvents(User creator, Date start, Date end) {
-        
+
         em.flush();
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         int count = 0;
-        
+
         try {
             String query = "SELECT COUNT(e.event_id) FROM events e LEFT JOIN answers a ON e.event_id = a.event_id "
                     + "WHERE (((e.creator = ?) OR ( a.answer_value = 1 AND a.user_id = ?)) "
@@ -147,7 +148,7 @@ public class NotificationsFacade {
                     + "OR (e.start_date >= ? AND e.end_date >= ? AND e.start_date < ? ) "
                     + "OR (e.start_date <= ? AND e.end_date <= ? AND e.end_date > ? ) "
                     + "OR (e.start_date > ? AND e.end_date < ? ) ))";
-            
+
             Long l = (Long) em.createNativeQuery(query)
                     .setParameter(1, creator.getUserId()).setParameter(2, creator.getUserId())
                     .setParameter(3, formatter.format(start)).setParameter(4, formatter.format(end))
@@ -156,13 +157,13 @@ public class NotificationsFacade {
                     .setParameter(11, formatter.format(start)).setParameter(12, formatter.format(end))
                     .getSingleResult();
             count = l.intValue();
-            
+
         } catch (NoResultException ex) {
 
         }
-        
+
         return count;
-        
+
     }
 
     /**
@@ -171,49 +172,50 @@ public class NotificationsFacade {
      * @return the User you are looking for
      */
     private User getUser(String username) {
-        
+
         try {
             return em.createNamedQuery("User.findByUserName", User.class).setParameter("userName", username).getSingleResult();
         } catch (NoResultException ex) {
             return null;
         }
-        
+
     }
-    
+
     /**
-     * 
-     * @param infoId 
+     *
+     * @param infoId
      */
     public void readInformation(int infoId) {
-        
+        System.out.println("infoid : " + infoId);
         Information info = em.find(Information.class, infoId);
         if (info != null) {
             em.remove(info);
         }
         em.flush();
-        
+
     }
 
     /**
-     * 
-     * @param eventId 
+     *
+     * @param eventId
      */
     public void acceptInvitation(int eventId) {
-        
+
         Event event = em.find(Event.class, eventId);
         User user = getUser(lm.getLoggedUserName());
-        
+
         if (event != null) {
             ev_m.acceptInvitation(user, event);
 
             //save into the db
             em.merge(event);
             em.merge(user);
+            em.flush();
 
             //add answer
             Answer answer = new Answer(event.getEventId(), user.getUserId(), true);
             em.persist(answer);
-            
+
             //new information for the creator
             Information info = ev_m.newInformation(event.getCreator(), user.toString() + " is attending your event: " + event.getName(), event);
             em.merge(info);
@@ -223,14 +225,14 @@ public class NotificationsFacade {
     }
 
     /**
-     * 
-     * @param eventId 
+     *
+     * @param eventId
      */
     public void declineInvitation(int eventId) {
-        
+
         Event event = em.find(Event.class, eventId);
         User user = getUser(lm.getLoggedUserName());
-        
+
         if (event != null) {
             ev_m.declineInvitation(user, event);
             em.merge(event);
@@ -239,13 +241,13 @@ public class NotificationsFacade {
             em.persist(answer);
             em.flush();
         }
-                
+
     }
-    
-    public void turnBack (int eventId) {
+
+    public void turnBack(int eventId) {
         Event event = em.find(Event.class, eventId);
         User user = getUser(lm.getLoggedUserName());
-        Answer a = (Answer)em.createNativeQuery("SELECT * FROM answers a WHERE a.event_id = ? AND a.user_id = ?",Answer.class).setParameter(1, eventId).setParameter(2, user.getUserId()).getSingleResult();
+        Answer a = (Answer) em.createNativeQuery("SELECT * FROM answers a WHERE a.event_id = ? AND a.user_id = ?", Answer.class).setParameter(1, eventId).setParameter(2, user.getUserId()).getSingleResult();
         if (event != null && a.getValue()) {
             a.setValue(false);
             //em.flush();
@@ -254,19 +256,28 @@ public class NotificationsFacade {
         em.merge(user);
         em.merge(a);
         em.flush();
-        
+
     }
-    
-    public boolean eventExist(int eventId){
-        
+
+    public boolean eventExist(Integer eventId) {
+
         boolean out = false;
-        
-        if(em.find(Event.class, eventId) != null){
+
+        if (eventId != null && em.find(Event.class, eventId) != null) {
             out = true;
         }
-        
+
         return out;
-    
+
     }
-    
+
+    public Integer eventIdFromInfo(int infoId) {
+        Integer out = null;
+        Information info = em.find(Information.class, infoId);
+        if (info != null) {
+            out = info.getEventId().getEventId();
+        }
+        return out;
+    }
+
 }
