@@ -57,7 +57,7 @@
                         <h:panelGrid columns="3" style="margin-top: 5px;">
                             <p:commandButton value="#{notificationsBean.acceptText(record.get(0))}" action="#{notificationsBean.accept(record.get(3),record.get(0))}" disabled="#{record.get(4)}" id="accept_btn"  icon="ui-icon-check" title="accept" />
                             <p:commandButton value="Decline" action="#{notificationsBean.decline(record.get(3))}" id="decline_btn" icon="ui-icon-close" title="decline" rendered="#{notificationsBean.showButton(record.get(0))}" />
-                            <p:commandButton value="Go to event" action="#{notificationsBean.openEvent(record.get(3))}" rendered="#{notificationsBean.hasEvent(record.get(3))}"/>
+                            <p:commandButton value="Go to event" action="#{notificationsBean.openEvent(record.get(0), record.get(3))}" rendered="#{notificationsBean.hasEvent(record.get(0), record.get(3))}"/>
                         </h:panelGrid>
                     </p:outputPanel>
                 </p:column>

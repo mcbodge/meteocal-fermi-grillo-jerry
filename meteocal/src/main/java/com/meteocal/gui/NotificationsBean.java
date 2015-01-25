@@ -113,11 +113,13 @@ public class NotificationsBean implements Serializable {
         return out;
     }
     
-    public void openEvent(Integer eventId) {
+    public void openEvent(String type, Integer eventId) {
         ExternalContext exc = FacesContext.getCurrentInstance().getExternalContext();
-        
-        exc.getSessionMap().put("eventId", eventId);
-
+        if (type.equals("invitation")) {
+            exc.getSessionMap().put("eventId", eventId);
+        }else{
+            exc.getSessionMap().put("eventId", nf.eventIdFromInfo(eventId));
+        }
         //bind the ID of the original event 
         try {
             exc.redirect("event.xhtml?faces-includeViewParams=true");
@@ -126,7 +128,13 @@ public class NotificationsBean implements Serializable {
         }
     }
     
-    public String hasEvent(Integer eventId) {
-        return Boolean.toString(eventId != null && nf.eventExist(eventId)) ;
+    public String hasEvent(String type, Integer eventId) {
+        int event_id = eventId;
+        if (type.equals("invitation")) {
+           
+        }else{
+            event_id = nf.eventIdFromInfo(eventId);
+        }
+        return Boolean.toString(eventId != null && nf.eventExist(event_id)) ;
     }
 }
