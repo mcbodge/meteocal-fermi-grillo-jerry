@@ -102,7 +102,7 @@ public class PersonalFacade {
                 User u = null;
                 while (people.hasMoreElements()) {
                     u = getUser(people.nextToken().trim());
-                    if (u != null) {
+                    if (u != null && !u.getUserName().equals(getLoggedUser())) {
                         invited_users_list.add(u);
                         System.out.println("-- User " + u.getUserName() + " added to invited_user_list");
                     }
@@ -507,7 +507,7 @@ public class PersonalFacade {
                 while (people.hasMoreElements()) {
                     u = getUser(people.nextToken().trim());
 
-                    if (u != null) {
+                    if (u != null && !u.getUserName().equals(getLoggedUser())) {
                         invited_users_list.add(u);
                     }
                 }

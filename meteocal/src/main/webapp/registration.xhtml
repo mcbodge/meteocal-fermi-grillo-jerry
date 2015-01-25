@@ -22,8 +22,9 @@
                     <p:message for="lastname" />
                     
                     <h:outputLabel value="User name" />
-                    <p:inputText id="username" value="#{registrationBean.username}" required="true" requiredMessage="a user name is required" validatorMessage="user name must be more than 4 characters"> 
+                    <p:inputText id="username" value="#{registrationBean.username}" required="true" requiredMessage="a user name is required" validatorMessage="user name must be alphanumeric and more than 4 characters"> 
                         <f:validateLength minimum="4" />
+                        <f:validateRegex pattern="^[a-zA-Z0-9_]+$" />
                     </p:inputText>
                     <p:message for="username" /> 
                     

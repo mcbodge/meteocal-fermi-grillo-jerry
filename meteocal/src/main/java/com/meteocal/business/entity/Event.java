@@ -387,14 +387,6 @@ public class Event implements Serializable {
     }
 
     // </editor-fold>
-    // <editor-fold desc="Entity properties (Invitation notification)">
-    //if necessary, move in control (event manager)
-
-    /*    public Integer loadOptions(User u){
-     return null;
-    
-     } */
-    // </editor-fold>
-    
+  
     
 }

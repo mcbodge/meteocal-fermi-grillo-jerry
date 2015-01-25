@@ -165,33 +165,6 @@ public class Weather implements Serializable {
         return "com.meteocal.business.entity.Weather[ eventId=" + eventId + " ]";
     }
     
-    // <editor-fold desc="Entity properties (Weather forecast)">
-
-    /*    public void update(){
-    
-    }*/
-
-    
-    
-    // </editor-fold>
-    
-    
-    // <editor-fold desc="Entity properties (Weather constraint)">
-    
-
-    /**
-     * true  - w/o constraints
-     * true  - w/constrainsts && constraints are ok wrt the forecast
-     * false - otherwise
-     * 
-     */
-    /*public boolean check(){
-        if (this.constraint == null || this.constraint == this.forecast) //MANUEL pls fix the second condition
-            return true;
-        return false;
-    }*/
-    
-    
-    // </editor-fold>
+  
     
 }

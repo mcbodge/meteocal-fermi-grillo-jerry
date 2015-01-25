@@ -80,11 +80,7 @@ public class Information implements Serializable {
     public Integer getInformationId() {
         return informationId;
     }
-    /*
-    public void setInformationId(Integer informationId) {
-        this.informationId = informationId;
-    }
-    */
+   
     public String getText() {
         return text;
     }

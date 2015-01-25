@@ -5,12 +5,10 @@
  */
 package com.meteocal.business.entity;
 
-import com.meteocal.business.boundary.PersonalFacade;
 import com.meteocal.business.control.LogInManager;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -64,9 +62,10 @@ public class User implements Serializable {
     @Column(name = "user_id", nullable = false)
     private Integer userId;
 
+    @Pattern(regexp = "^[a-zA-Z0-9_]+$", message = "Invalid username")
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 15)
+    @Size(min = 4, max = 15)
     @Column(name = "user_name", nullable = false, length = 15)
     private String userName;
 
