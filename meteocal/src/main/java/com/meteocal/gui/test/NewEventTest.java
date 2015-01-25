@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.meteocal.gui;
+package com.meteocal.gui.test;
 
 import com.meteocal.business.boundary.EventFacade;
 import com.meteocal.business.boundary.HomeFacade;
