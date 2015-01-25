@@ -22,7 +22,6 @@ import org.primefaces.model.LazyScheduleModel;
 import org.primefaces.model.ScheduleEvent;
 import org.primefaces.model.ScheduleModel;
 import org.primefaces.event.SelectEvent;
-import org.primefaces.model.StreamedContent;
 
 /**
  *
