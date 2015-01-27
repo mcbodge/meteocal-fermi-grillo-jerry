@@ -29,3 +29,6 @@ https://meteocal-fermi-grillo-jerry.googlecode.com/svn/meteocal/src/main/java/co
 
 SQL script:
 https://meteocal-fermi-grillo-jerry.googlecode.com/svn/downloads/meteocaldb-dump.sql
+
+Amount of hours:
+https://meteocal-fermi-grillo-jerry.googlecode.com/svn/deliveries/AmountOfHours_MeteoCal_MGFFJJ.xlsx
